@@ -1,0 +1,86 @@
+package com.example.masonwest.lifestyle_app;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import java.util.List;
+
+/**
+ */
+public class MasterListFragment extends Fragment {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private static Bundle mBundleRecyclerViewState;
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+
+    public MasterListFragment() {
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View fragmentView = inflater.inflate(R.layout.fragment_master_list, container, false);
+
+        //Get the recycler view
+        mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.rv_Master);
+
+        //Tell Android that we know the size of the recyclerview doesn't change
+        mRecyclerView.setHasFixedSize(true);
+
+        //Set the layout manager
+        layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        //Get data from main activity
+        CustomViewsList customListData = getArguments().getParcelable("item_list");
+        List<String> inputList = customListData.getItemList();
+
+        //Set the adapter
+        mAdapter = new MyRVAdapter(inputList);
+        mRecyclerView.setAdapter(mAdapter);
+
+        return fragmentView;
+    }
+
+//    @Override
+//    public void onPause()
+//    {
+//        super.onPause();
+//
+//        // save RecyclerView state
+//        mBundleRecyclerViewState = new Bundle();
+//        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+//        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+//    }
+//
+//    @Override
+//    public void onResume()
+//    {
+//        super.onResume();
+//
+//        // restore RecyclerView state
+//        if (mBundleRecyclerViewState != null) {
+//            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+//            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+//        }
+//    }
+
+}
