@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+//TODO: need to add a tag or id to all the fragments we create and there is a method, like findByID or something to find them.
+
 public class ItemViewDetailFragment extends Fragment {
 
     private TextView mTvItemDetail;
