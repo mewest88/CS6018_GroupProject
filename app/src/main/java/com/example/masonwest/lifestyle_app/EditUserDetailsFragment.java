@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -28,7 +29,7 @@ public class EditUserDetailsFragment extends Fragment
     //Member variables
     private EditText mEtFirstName, mEtLastName, mEtAge;
     private Button mBtSubmit, mBtPicture;
-    private String mFirstName, mLastName, mFullName, mAgeString;
+    private String mFirstName, mLastName, mAgeString;
     private ImageView mIvPic;
     int mAge;
     Bundle thumbnailImage;
@@ -56,7 +57,7 @@ public class EditUserDetailsFragment extends Fragment
     //Callback interface
     // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
-        public void onDataPass(String fullName, String age, Bundle thumbnailImage);
+        public void onDataPass(String firstName, String lastName, String age, Bundle thumbnailImage);
     }
 
     @Nullable
@@ -93,7 +94,36 @@ public class EditUserDetailsFragment extends Fragment
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.button_submit: {
+                //Collect the first name, last name
+                mFirstName = mEtFirstName.getText().toString();
+                mLastName = mEtLastName.getText().toString();
 
+                //Remove any leading spaces or tabs on the first and last name
+                mFirstName = mFirstName.replaceAll("^\\s+", "");
+                mLastName = mLastName.replaceAll("^\\s+", "");
+
+                //Collect the age
+                mAgeString = mEtAge.getText().toString();
+
+                //Check if the EditText's for first and last name strings are empty
+                if (mFirstName.matches("")) {
+                    Toast.makeText(getActivity(), "Enter a first name please!", Toast.LENGTH_SHORT).show();
+                } else if (mLastName.matches("")) {
+                    Toast.makeText(getActivity(), "Enter a last name please!", Toast.LENGTH_SHORT).show();
+                } else if (mAgeString.matches("")) {
+                    Toast.makeText(getActivity(), "Please enter a valid birth date in the form mm/dd/yyyy.", Toast.LENGTH_SHORT).show();
+                    // TODO: Add a line to convert the entered age into an int, than I can do this check easily.
+//                } else if (mAge < 0 || mAge > 150) {
+//                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
+//                            , Toast.LENGTH_SHORT).show();
+                } else if (thumbnailImage == null){
+                    Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
+                    //Start an activity and pass the EditText string to it.
+                    mDataPasser.onDataPass(mFirstName, mLastName, mAgeString, thumbnailImage);
+                }
+                break;
             }
             case R.id.button_takePicture: {
                 //The button press should open a camera
