@@ -5,21 +5,42 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser {
 
-    private static CustomViewsList mCustomListData = new CustomViewsList();
+//    private static CustomViewsList mCustomListData = new CustomViewsList();
     private MasterListFragment mMasterListFragment;
 //    public static final int OPEN_NEW_ACTIVITY = 124;
+
+    private ArrayList<String> mItemList;
+    private ArrayList<String> mItemDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // ----------------------------------------------------------------------------------------
+        mItemList = new ArrayList<>();
+        mItemList.add("Weight Tracker");
+        mItemList.add("BMI");
+        mItemList.add("Weather");
+        mItemList.add("Hikes");
+        mItemList.add("User Profile");
+        mItemDetails = new ArrayList<>();
+        mItemDetails.add("Weight Tracker Details");
+        mItemDetails.add("BMI Details");
+        mItemDetails.add("Weather Details");
+        mItemDetails.add("Hikes Details");
+        mItemDetails.add("User Profile Details");
+// ----------------------------------------------------------------------------------------
+
         //Put this into a bundle
         Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putParcelable("item_list",mCustomListData);
+        fragmentBundle.putStringArrayList("item_list",mItemList);
 
         //Create the fragment
         mMasterListFragment = new MasterListFragment();
@@ -40,11 +61,16 @@ public class MainActivity extends AppCompatActivity
         fTrans.commit();
     }
 
+//    //Implement getter for item details at a position
+//    public String getItemDetail(int position) {
+//        return mItemDetails.get(position);
+//    }
+
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
     @Override
     public void passData(int position) {
         //Get the string data corresponding to the detail view
-        String itemDetailString = mCustomListData.getItemDetail(position);
+        String itemDetailString = mItemDetails.get(position);
 
         //Put this into a bundle
         Bundle detailBundle = new Bundle();

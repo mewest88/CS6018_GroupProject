@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,11 +51,12 @@ public class MasterListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         //Get data from main activity
-        CustomViewsList customListData = getArguments().getParcelable("item_list");
-        List<String> inputList = customListData.getItemList();
+//        CustomViewsList customListData = getArguments().getParcelable("item_list");
+//        List<String> inputList = customListData.getItemList();
+        ArrayList<String> mItemList = getArguments().getStringArrayList("item_list");
 
         //Set the adapter
-        mAdapter = new MyRVAdapter(inputList);
+        mAdapter = new MyRVAdapter(mItemList);
         mRecyclerView.setAdapter(mAdapter);
 
         return fragmentView;
