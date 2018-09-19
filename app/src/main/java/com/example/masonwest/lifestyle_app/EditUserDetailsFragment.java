@@ -72,8 +72,8 @@ public class EditUserDetailsFragment extends Fragment
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
         mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
-        mBtSubmit.setOnClickListener(this);
-        mBtPicture.setOnClickListener(this);
+//        mBtSubmit.setOnClickListener(this);
+//        mBtPicture.setOnClickListener(this);
 
         return fragmentView;
     }

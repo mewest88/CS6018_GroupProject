@@ -1,6 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity
 
 //    private static CustomViewsList mCustomListData = new CustomViewsList();
     private MasterListFragment mMasterListFragment;
+    private EditUserDetailsFragment mUserDetailFragment;
 //    public static final int OPEN_NEW_ACTIVITY = 124;
 
     private ArrayList<String> mItemList;
@@ -23,9 +25,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //
+// ----------------------------------------------------------------------------------------
+//        //CREATE THE VIEW TO ENTER USER INFORMATION
+        mUserDetailFragment = new EditUserDetailsFragment();
+//
+//        //Replace the fragment container
+//        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+//        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag");
+//        fTrans.commit();
 
-        // ----------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------
+        //CREATE THE LIST OF HEADERS...
         mItemList = new ArrayList<>();
         mItemList.add("Weight Tracker");
         mItemList.add("BMI");
@@ -59,14 +69,10 @@ public class MainActivity extends AppCompatActivity
         }
         else{
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist");
+//            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_masterlist");
         }
         fTrans.commit();
     }
-
-//    //Implement getter for item details at a position
-//    public String getItemDetail(int position) {
-//        return mItemDetails.get(position);
-//    }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
     @Override
@@ -102,9 +108,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public
-
-    boolean isTablet()
+    public boolean isTablet()
     {
         return getResources().getBoolean(R.bool.isTablet);
     }
