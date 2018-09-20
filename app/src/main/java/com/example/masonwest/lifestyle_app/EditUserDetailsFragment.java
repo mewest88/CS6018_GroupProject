@@ -47,23 +47,23 @@ public class EditUserDetailsFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        try{
-//            mDataPasser = (OnDataPass) context;
-//        }catch(ClassCastException e){
-//            throw new ClassCastException(context.toString() + " must implement OnDataPass");
-//        }
+        try{
+            mDataPasser = (OnDataPass) context;
+        }catch(ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
     }
 
     //Callback interface
     // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
-        public void onDataPass(String firstName, String lastName, String age, Bundle thumbnailImage);
+        public void onDataPass(String firstName, String lastName, int age, Bundle thumbnailImage);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
 
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
@@ -72,8 +72,8 @@ public class EditUserDetailsFragment extends Fragment
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
         mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
-//        mBtSubmit.setOnClickListener(this);
-//        mBtPicture.setOnClickListener(this);
+        mBtSubmit.setOnClickListener(this);
+        mBtPicture.setOnClickListener(this);
 
         return fragmentView;
     }
@@ -104,6 +104,7 @@ public class EditUserDetailsFragment extends Fragment
 
                 //Collect the age
                 mAgeString = mEtAge.getText().toString();
+                mAge = Integer.parseInt(mAgeString);
 
                 //Check if the EditText's for first and last name strings are empty
                 if (mFirstName.matches("")) {
@@ -113,15 +114,15 @@ public class EditUserDetailsFragment extends Fragment
                 } else if (mAgeString.matches("")) {
                     Toast.makeText(getActivity(), "Please enter a valid birth date in the form mm/dd/yyyy.", Toast.LENGTH_SHORT).show();
                     // TODO: Add a line to convert the entered age into an int, than I can do this check easily.
-//                } else if (mAge < 0 || mAge > 150) {
-//                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
-//                            , Toast.LENGTH_SHORT).show();
+                } else if (mAge < 0 || mAge > 150) {
+                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
+                            , Toast.LENGTH_SHORT).show();
                 } else if (thumbnailImage == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
                     //Start an activity and pass the EditText string to it.
-                    mDataPasser.onDataPass(mFirstName, mLastName, mAgeString, thumbnailImage);
+                    mDataPasser.onDataPass(mFirstName, mLastName, mAge, thumbnailImage);
                 }
                 break;
             }
