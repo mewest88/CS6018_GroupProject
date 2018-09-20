@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass {
 
     private MasterListFragment mMasterListFragment;
+    private SignUpHeaderFragment mSignUpHeaderFragment;
+    private AppHeaderFragment mAppHeaderFragment;
     private EditUserDetailsFragment mUserDetailFragment;
 //    public static final int OPEN_NEW_ACTIVITY = 124;
 
@@ -30,10 +32,16 @@ public class MainActivity extends AppCompatActivity
 
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag");
+        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
+//        fTrans.commit();
+
+        mSignUpHeaderFragment = new SignUpHeaderFragment();
+
+        //Replace the fragment container
+        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
         fTrans.commit();
 
-        //CREATE THE LIST OF HEADERS...
+        //Create the list of headers
         mItemList = new ArrayList<>();
         mItemList.add("Weight Tracker");
         mItemList.add("BMI");
@@ -93,20 +101,18 @@ public class MainActivity extends AppCompatActivity
         // Pull the bitmap image from the bundle
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
-        //User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Enum sexPassed, Bitmap profilePicPassed) {
-        newUser = new User(1, firstName, lastName, age, 72, 160, "Salt Lake", "USA", thumbnail);
+//        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
+        newUser = new User(1, firstName, lastName, age, 72, 160, "Salt Lake", "USA", thumbnail, "male");
 
+        //MASTER LIST WORK
         //Get the Master List fragment
         mMasterListFragment = new MasterListFragment();
 
         //Send data to it
-        Bundle sentData = new Bundle();
-        sentData.putString("FN_DATA",firstName);
-        sentData.putString("LN_DATA",lastName);
-        sentData.putBundle("PIC_DATA", thumbnailImage);
-        sentData.putStringArrayList("item_list",mItemList);
+        Bundle masterListDataBundle = new Bundle();
+        masterListDataBundle.putStringArrayList("item_list",mItemList);
         //Pass data to the fragment
-        mMasterListFragment.setArguments(sentData);
+        mMasterListFragment.setArguments(masterListDataBundle);
 
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -121,6 +127,21 @@ public class MainActivity extends AppCompatActivity
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist");
 //            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_masterlist");
         }
+//        fTrans.addToBackStack(null);
+//        fTrans.commit();
+
+        //HEADER WORK
+        mAppHeaderFragment = new AppHeaderFragment();
+
+        //Send data to it
+        Bundle headerBundle = new Bundle();
+        headerBundle.putString("FN_DATA",firstName);
+        headerBundle.putString("LN_DATA",lastName);
+        headerBundle.putBundle("PIC_DATA", thumbnailImage);
+        //Pass data to the fragment
+        mAppHeaderFragment.setArguments(headerBundle);
+
+        fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "header_frag");
         fTrans.addToBackStack(null);
         fTrans.commit();
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lifestyle_App</string>
+    <string name="appName">Lifestyle App</string>
     <string name="enterFN">Enter First:</string>
     <string name="firstName">First Name</string>
     <string name="enterLN">Enter Last:</string>
@@ -12,4 +12,5 @@
     <string name="fullName">Your Full Name:</string>
     <string name="profilePic">Profile Picture:</string>
     <string name="age">Your Age:</string>
+    <string name="welcomeHeader">Hello! Welcome to the Lifestyle App.</string>
 </resources>
