@@ -8,15 +8,15 @@
     tools:context=".MainActivity">
 
     <FrameLayout
+        android:id="@+id/fl_frag_masterlist_container_tablet"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/fl_frag_masterlist_container_tablet"
         android:layout_weight="1.5"
         />
     <FrameLayout
+        android:id="@+id/fl_frag_itemdetail_container_tablet"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:id="@+id/fl_frag_itemdetail_container_tablet"
         />
 </LinearLayout>
