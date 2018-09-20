@@ -25,8 +25,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-// ----------------------------------------------------------------------------------------
-//        //CREATE THE VIEW TO ENTER USER INFORMATION
+        //CREATE THE VIEW TO ENTER USER INFORMATION
         mUserDetailFragment = new EditUserDetailsFragment();
 
         //Replace the fragment container
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity
         fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag");
         fTrans.commit();
 
-// ----------------------------------------------------------------------------------------
         //CREATE THE LIST OF HEADERS...
         mItemList = new ArrayList<>();
         mItemList.add("Weight Tracker");
@@ -48,20 +46,7 @@ public class MainActivity extends AppCompatActivity
         mItemDetails.add("Weather Details");
         mItemDetails.add("Hikes Details");
         mItemDetails.add("User Profile Details");
-// ----------------------------------------------------------------------------------------
 
-////        If we're on a tablet, the master fragment appears on the left pane. If we're on a phone,
-////        it takes over the whole screen
-//        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-//        if(isTablet()){
-//            //Pane 1: Master list
-//            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment,"frag_masterlist");
-//        }
-//        else{
-//            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist");
-////            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_masterlist");
-//        }
-//        fTrans.commit();
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
