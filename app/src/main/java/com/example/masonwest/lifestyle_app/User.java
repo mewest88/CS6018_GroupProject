@@ -36,7 +36,7 @@ public class User {
     }
     public float calculateBMI() {
         if(weightLBS != 0 && heightInches != 0) {
-            return weightLBS/heightInches;
+            return weightLBS/heightInches; //TODO: i think this needs to be divided by height again.
         }
         return 0; //should be error?
     }
