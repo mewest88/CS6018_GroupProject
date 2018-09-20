@@ -8,22 +8,19 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tv_header_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:textColor="#000000"
-        android:text="APP HEADER"
-        />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fl_header_phone"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="16dp">
+    </FrameLayout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fl_frag_masterlist_container_phone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tv_header_data"
+        android:layout_below="@id/fl_header_phone"
         android:padding="16dp">
-
     </FrameLayout>
 
 </RelativeLayout>
