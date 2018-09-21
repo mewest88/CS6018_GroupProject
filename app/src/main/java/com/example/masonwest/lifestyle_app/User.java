@@ -112,4 +112,8 @@ public class User {
     public void updateFitnessGoal(String fitnessGoalPassed) {
         fitnessGoal = fitnessGoalPassed;
     }
+
+    public float getBMI() {
+        return BMI;
+    }
 }
