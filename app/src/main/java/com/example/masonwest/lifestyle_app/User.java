@@ -2,9 +2,11 @@ package com.example.masonwest.lifestyle_app;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 public class User {
     private String sex;
-    private String fitnessGoal;
+    private String fitnessGoal; //overall weight goal or gain/loss per week goal
     private String activityLevel;
     private int userID;
     private String firstName;
@@ -18,9 +20,8 @@ public class User {
     private double BMR;
     private double desiredBMR;
     private float BMI;
-    private String overallGoal; //overall weight goal or gain/loss per week goal
     private float weightChangeGoal; //positive or negative based on fitness goal?
-    private float desiredWeight; //potentially not used?
+    private float targetWeight;
     private double recommendedCalorieIntake;
 
     User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
@@ -73,13 +74,17 @@ public class User {
         }
     }
     //call if they have a weekly goal
-    public void adjustRecommendedCalorieIntakeByWeeklyGoal(float weeklyWeightChangeGoal) {
+    public void adjustRecommendedCalorieIntakeByWeeklyGoal() {
         //lose/gain 1 pound: 500 calorie deficit per week
-        recommendedCalorieIntake += 500 * weeklyWeightChangeGoal; //check if <1200 in fragment?
+        recommendedCalorieIntake += 500 * weightChangeGoal; //check if <1200 in fragment?
     }
-    public void adjustRecommendedCalorieIntakeByTotalGoal(float totalWeightChangeGoal) {
+    //call if they have a target goal (pass the difference in weights)
+    //also updates weightChangeGoal
+    public void adjustRecommendedCalorieIntakeByTotalGoal() {
         //lose/gain 1 pound: 500 calorie deficit per week over 12 week horizon
-        recommendedCalorieIntake += 500 * totalWeightChangeGoal / 12;
+        float weightDifference = targetWeight - weightLBS; //negative number equals lose weight
+        weightChangeGoal = weightDifference / 12;
+        recommendedCalorieIntake += 500 * weightDifference / 12;
     }
 
     //only called if userID already exists
@@ -100,10 +105,19 @@ public class User {
     }
 
     //these called in fitnessGoals Module
-    public void updateOverallGoal(String goal) {
-        overallGoal = goal;
+//    public void updateOverallGoal(String goal) {
+//        overallGoal = goal;
+//    }
+    public double getWeightChangeGoal() {
+        return weightChangeGoal;
     }
-    public void updateWeightChangeGoal(float changeGoal) {
+    public String getSex() {
+        return sex;
+    }
+    public void updateTargetWeight(float targetWeightGoal) {
+        targetWeight = targetWeightGoal;
+    }
+    public void updateWeeklyGainLoss(float changeGoal) {
         weightChangeGoal = changeGoal;
     }
     public void updateActivityLevel(String activityLevelPassed) {
@@ -112,8 +126,20 @@ public class User {
     public void updateFitnessGoal(String fitnessGoalPassed) {
         fitnessGoal = fitnessGoalPassed;
     }
+    public double getRecommendedCalorieIntake() {
+        return recommendedCalorieIntake;
+    }
 
+    public Bitmap getProfilePic() {
+        return profilePic;
+    }
+    public String getName() {
+        return firstName + " " + lastName;
+    }
     public float getBMI() {
         return BMI;
+    }
+    public int getUserID() {
+        return userID;
     }
 }
