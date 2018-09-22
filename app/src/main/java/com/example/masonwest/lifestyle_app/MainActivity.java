@@ -60,34 +60,53 @@ public class MainActivity extends AppCompatActivity
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
     @Override
     public void passData(int position) {
-        //Get the string data corresponding to the detail view
+//        //Get the string data corresponding to the detail view
         String itemDetailString = mItemDetails.get(position);
 
-        //Put this into a bundle
+//        //Put this into a bundle
         Bundle detailBundle = new Bundle();
         detailBundle.putString("item_detail",itemDetailString);
 
-        //If we're on a tablet, the fragment occupies the second pane (right). If we're on a phone,
-        //the fragment is
-        if(isTablet()) {
-            //Create a new detail fragment
-            ItemViewDetailFragment detailViewFragment = new ItemViewDetailFragment();
+        //AT THIS POINT - i have the position, so I need to have a switch statement to tell the passData which fragment to open
 
-            //Pass data to the fragment
-            detailViewFragment.setArguments(detailBundle);
 
-            //Replace the detail fragment container
-            FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-            fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, detailViewFragment, "frag_itemdetail");
-            fTrans.addToBackStack(null);
-            fTrans.commit();
-        }
-        else{ //On a phone
-            //Start ItemDetailActivity, pass the string along
-            Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-            sendIntent.putExtras(detailBundle);
+        switch(position) {
+            case 0: {
+                //If we're on a tablet, the fragment occupies the second pane (right). If we're on a phone, the fragment is replaced
+                if (isTablet()) {
+                    //Create a new detail fragment
+                    ItemViewDetailFragment detailViewFragment = new ItemViewDetailFragment();
 
-            startActivity(sendIntent);
+                    //Pass data to the fragment
+                                detailViewFragment.setArguments(detailBundle);
+
+                    //Replace the detail fragment container
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, detailViewFragment, "frag_itemdetail");
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
+                } else { //On a phone
+                    //Start ItemDetailActivity, pass the string along
+                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                                sendIntent.putExtras(detailBundle);
+
+                    startActivity(sendIntent);
+                }
+            }
+            case 1: {
+                if (isTablet()) {
+                    //Create a new detail fragment
+                    BmiFragment bmiFragment = new BmiFragment();
+                    //Replace the detail fragment container
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_bmi");
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
+                } else {
+                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    startActivity(sendIntent);
+                }
+            }
         }
     }
 

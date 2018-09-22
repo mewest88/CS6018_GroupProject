@@ -13,4 +13,5 @@
     <string name="profilePic">Profile Picture:</string>
     <string name="age">Your Age:</string>
     <string name="welcomeHeader">Hello! Welcome to the Lifestyle App.</string>
+    <string name="bmiTopLine">Your BMI</string>
 </resources>
