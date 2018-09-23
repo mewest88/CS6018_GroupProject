@@ -22,5 +22,6 @@
     <string name="welcomeHeader">Hello! Welcome to the Lifestyle App.</string>
     <string name="bmiTopLine">Your BMI</string>
     <string name="weatherHeader">WEATHER</string>
-    <string name="hikesHeader">HIKEZZZ</string>
+    <string name="hikesHeader">Find hikes in your current area by clicking search below.</string>
+    <string name="hikesButton">Search</string>
 </resources>
