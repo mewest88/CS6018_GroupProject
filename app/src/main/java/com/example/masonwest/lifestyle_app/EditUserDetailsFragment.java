@@ -13,9 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +30,10 @@ public class EditUserDetailsFragment extends Fragment
 
     // TODO: needs weight, height, sex, location added to everything!
     //Member variables
-    private EditText mEtFirstName, mEtLastName, mEtAge;
-    private Button mBtSubmit, mBtPicture;
+    private EditText mEtFirstName, mEtLastName ;
+    private Spinner mEtAge;
+    private ImageButton mBtSubmit ;
+    private Button mBtPicture;
     private String mFirstName, mLastName, mAgeString;
     private ImageView mIvPic;
     int mAge;
@@ -68,12 +73,45 @@ public class EditUserDetailsFragment extends Fragment
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-        mEtAge = (EditText) fragmentView.findViewById(R.id.et_Age);
+        mEtAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
-        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
+        mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
         mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
+        mEtAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                switch (position) {
+                    case 0:
+                        mAge = Integer.parseInt("");
+                        break;
+                    case 1:
+                        mAge = Integer.parseInt("");
+                        break;
+                    case 2:
+                        mAge = Integer.parseInt("");
+                        break;
+                    case 3:
+                        mAge = Integer.parseInt("");
+                        break;
+                    case 4:
+                        mAge = Integer.parseInt("");
+                        break;
+                    case 5:
+                        mAge = Integer.parseInt("");
+                        break;
+                }
+//                if(mAge > 2) {
+////                    Toast.makeText(getBaseContext(), weightChange[position], Toast.LENGTH_SHORT).show();
+//                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mEtAge.setSelection(1);
+            }
+        });
 
         return fragmentView;
     }
@@ -103,20 +141,20 @@ public class EditUserDetailsFragment extends Fragment
                 mLastName = mLastName.replaceAll("^\\s+", "");
 
                 //Collect the age
-                mAgeString = mEtAge.getText().toString();
-                mAge = Integer.parseInt(mAgeString);
+//                mAgeString = mEtAge.getText().toString();
+//                mAge = Integer.parseInt(mAgeString);
 
                 //Check if the EditText's for first and last name strings are empty
                 if (mFirstName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a first name please!", Toast.LENGTH_SHORT).show();
                 } else if (mLastName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a last name please!", Toast.LENGTH_SHORT).show();
-                } else if (mAgeString.matches("")) {
-                    Toast.makeText(getActivity(), "Please enter a valid birth date in the form mm/dd/yyyy.", Toast.LENGTH_SHORT).show();
+//                } else if (mAgeString.matches("")) {
+//                    Toast.makeText(getActivity(), "Please enter a valid birth date in the form mm/dd/yyyy.", Toast.LENGTH_SHORT).show();
                     // TODO: Add a line to convert the entered age into an int, than I can do this check easily.
-                } else if (mAge < 0 || mAge > 150) {
-                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
-                            , Toast.LENGTH_SHORT).show();
+//                } else if (mAge < 0 || mAge > 150) {
+//                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
+//                            , Toast.LENGTH_SHORT).show();
                 } else if (thumbnailImage == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {

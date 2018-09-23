@@ -8,6 +8,8 @@
     <string name="enterAge">Age</string>
     <string name="Age">Age in years</string>
     <string name="enterSex">Sex</string>
+    <string name="enterCity">City</string>
+    <string name="enterCountry">Country</string>
     <string name="enterHeight">Height</string>
     <string name="enterWeight">Weight</string>
     <string name="uploadIcon">Upload Icon</string>
