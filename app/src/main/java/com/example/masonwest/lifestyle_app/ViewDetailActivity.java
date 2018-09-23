@@ -23,7 +23,7 @@ public class ViewDetailActivity extends AppCompatActivity {
 //        mItemDetailFragment.setArguments();
 //        Object objectValue = extras.get("key");
 //        Class classValue = objectValue.getClass();
-        int position = extras.getInt("key");
+        int position = extras.getInt("click_position");
 
         switch(position) {
             case 0: {
