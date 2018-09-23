@@ -76,20 +76,21 @@ public class MainActivity extends AppCompatActivity
         switch(position) {
             case 0: { //Weight Goals Page
                 //If we're on a tablet, the fragment occupies the second pane (right). If we're on a phone, the fragment is replaced
-//                if (isTablet()) {
-//                    //Create a new detail fragment
-//                    FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
-//                    //Replace the detail fragment container
-//                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-//                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness");
-//                    fTrans.addToBackStack(null);
-//                    fTrans.commit();
-//                } else { //On a phone
-//                    //Start ItemDetailActivity, pass the string along
-//                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-//                    sendIntent.putExtras(positionBundle);
-//                    startActivity(sendIntent);
-//                }
+                if (isTablet()) {
+                    //Create a new detail fragment
+                    FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
+                    //Replace the detail fragment container
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness");
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
+                } else { //On a phone
+                    //Start ItemDetailActivity, pass the string along
+                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    sendIntent.putExtras(positionBundle);
+                    startActivity(sendIntent);
+                    break;
+                }
             }
             case 1: { //BMI Page
                 if (isTablet()) {

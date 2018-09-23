@@ -8,7 +8,7 @@ import android.widget.Switch;
 public class ViewDetailActivity extends AppCompatActivity {
 
     // Fragment member variables
-//    private FitnessGoalsFragment mFitnessFragment;
+    private FitnessGoalsFragment mFitnessFragment;
     private BmiFragment mBmiFragment;
     private WeatherFragment mWeatherFragment;
     private HikesFragment mHikesFragment;
@@ -28,10 +28,10 @@ public class ViewDetailActivity extends AppCompatActivity {
         switch(position) {
             case 0: {
                 //Create the fragment
-                mBmiFragment = new BmiFragment();
+                mFitnessFragment = new FitnessGoalsFragment();
                 //No need to check if we're on a tablet. This activity only gets created on phones.
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
                 fTrans.commit();
                 break;
             }

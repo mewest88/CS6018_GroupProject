@@ -4,6 +4,7 @@
     <string name="firstName">First Name</string>
     <string name="enterLN">Enter Last:</string>
     <string name="lastName">Last Name</string>
+    <string name="enter">Enter</string>
     <string name="enterAge">Enter Age:</string>
     <string name="Age">Age in years</string>
     <string name="takeAPic">Take a Pic</string>
