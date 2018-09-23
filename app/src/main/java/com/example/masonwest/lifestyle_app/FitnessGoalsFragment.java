@@ -37,11 +37,11 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
-            mDataPasser = (OnDataPass) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
-        }
+//        try{
+//            mDataPasser = (OnDataPass) context;
+//        }catch(ClassCastException e){
+//            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+//        }
     }
 
     //Callback interface
@@ -53,7 +53,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_fitness_goals, container, false);
 
         //we need to check if they've already been here before
         //null checks for activity level, change goal
