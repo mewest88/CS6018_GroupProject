@@ -1,43 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AppHeaderFragment">
+    tools:context=".AppHeaderFragment"
+    android:id="@+id/relativeLayout2">
 
-    <TextView
-        android:id="@+id/tv_app_name"
+
+    <View
+        android:id="@+id/view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="@string/appName"
-        />
+        android:layout_height="115dp"
+        android:alpha="0.7"
+        android:background="@color/yellowHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></View>
+
     <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/tv_app_name"
-        />
+        android:layout_alignParentTop="true" />
+
     <TextView
         android:id="@+id/tv_fn_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tv_app_name"
-        android:layout_marginLeft="8dp"
-        tools:text="Test"
-        />
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:text="@string/firstName"
+        android:textAllCaps="true"
+        android:textAppearance="@style/headerNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.356"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_ln_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_fn_data"
-        android:layout_below="@id/tv_app_name"
-        android:layout_marginLeft="8dp"
-        tools:text="Tester"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="@string/lastName"
+        android:textAllCaps="true"
+        android:textAppearance="@style/headerNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_fn_data"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/tv_healthLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:gravity="center"
+        android:text="@string/healthLevel"
+        android:textAllCaps="true"
+        android:textAppearance="@style/healthLevelText"
+        app:layout_constrainTop_toTopOf="@tv_fn_data"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+</android.support.constraint.ConstraintLayout>
