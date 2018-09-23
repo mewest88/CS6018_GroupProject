@@ -5,9 +5,15 @@
     <string name="enterLN">Enter Last:</string>
     <string name="lastName">Last Name</string>
     <string name="enter">Enter</string>
-    <string name="enterAge">Enter Age:</string>
+    <string name="enterAge">Age</string>
     <string name="Age">Age in years</string>
-    <string name="takeAPic">Take a Pic</string>
+    <string name="enterSex">Sex</string>
+    <string name="enterCity">City</string>
+    <string name="enterCountry">Country</string>
+    <string name="enterHeight">Height</string>
+    <string name="enterWeight">Weight</string>
+    <string name="uploadIcon">Upload Icon</string>
+    <string name="upload">Upload</string>
     <string name="submit">Submit</string>
     <string name="entryText2">Please take a profile picture.</string>
     <string name="fullName">Your Full Name:</string>

@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
-        newUser = new User(1, firstName, lastName, age, 72, 160, "Salt Lake", "USA", thumbnail, "male");
+        newUser = new User(1, firstName, lastName, 30, 72, 160, "Salt Lake", "USA", thumbnail, "male");
 
         //MASTER LIST WORK
         //Get the Master List fragment
