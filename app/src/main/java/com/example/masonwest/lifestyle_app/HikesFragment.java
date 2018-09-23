@@ -61,7 +61,7 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * Tells the app what to do when the submit button is clicked.
+     * When clicked, gets the current location from the phone and searches Google maps for mSearchTerm
      * @param view
      */
     @Override
@@ -76,7 +76,7 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
 
                 if (location!=null) {
                     TextView textView = view.findViewById(R.id.tv_Hikes_Information);
-                    textView.setText("" + location.toString());
+//                    textView.setText("" + location.toString());
                     //will comment out above once working
 
                     // Convert the Fused location to just latitude and longitude
@@ -88,6 +88,8 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
 
                     mLatLongString = latString + "," + lonString;
                     // example lat and long = 40.763056, -111.858674
+
+                    Toast.makeText(getActivity(), mLatLongString, Toast.LENGTH_LONG).show();
 
                     //We have to grab the search term and construct a URI object from it to search on maps
                     //We'll hardcode WEB's location here
@@ -101,7 +103,7 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
                         startActivity(mapIntent);
                     }
 
-                    Toast.makeText(getActivity(), "Searching Google Maps", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Searching Google Maps", Toast.LENGTH_SHORT).show();
                 }
             }
         });
