@@ -3,6 +3,7 @@ package com.example.masonwest.lifestyle_app;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     double mvUserBMR, mvUserWeight, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
     int mvUserHeight, mvUserAge;
     Bitmap mvUserPic;
-    TextView activityLevel, weightGoal, tvGoalDescription, tvActualGoal, currentWeight, tvRecommendedCalories;
+    TextView activityLevel, weightGoal, tvActualGoal, tvRecommendedCalories;
     public FitnessGoalsFragment() {
 
     }
@@ -37,11 +38,11 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        try{
-//            mDataPasser = (OnDataPass) context;
-//        }catch(ClassCastException e){
-//            throw new ClassCastException(context.toString() + " must implement OnDataPass");
-//        }
+        try{
+            mDataPasser = (OnDataPass) context;
+        }catch(ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
     }
 
     //Callback interface
@@ -57,11 +58,27 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         //we need to check if they've already been here before
         //null checks for activity level, change goal
-        //get from main
-        mvUserAge = 15;
-        mvUserHeight = 60;
-        mvUserWeight = 150;
-        mvUserSex = "Male";
+
+        if(savedInstanceState != null) {
+            mvUserAge = savedInstanceState.getInt("userAge");
+            mvUserHeight = savedInstanceState.getInt("userHeight");
+            mvUserWeight = savedInstanceState.getDouble("userWeight");
+            mvUserSex = savedInstanceState.getString("userSex");
+            mvUserBMR = savedInstanceState.getDouble("userBMR");
+            mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
+            mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
+            mvUserPic = savedInstanceState.getParcelable("userPic");
+        } else {
+            mvUserAge = getArguments().getInt("userAge");
+            mvUserHeight = getArguments().getInt("userHeight");
+            mvUserWeight = getArguments().getDouble("userWeight");
+            mvUserSex = getArguments().getString("userSex");
+            mvUserBMR = getArguments().getDouble("userBMR");
+            mvUserEnteredGoal = getArguments().getDouble("userEnteredGoal");
+            mvUserDailyRecommendedCalorieIntake = getArguments().getDouble("userCalories");
+            mvUserPic = getArguments().getParcelable("userPic");
+        }
+
 //        mvUserEnteredGoal; passed from main
 //        mvUserDailyRecommendedCalorieIntake; passed from main
 //        mvUserActivityLevel = passed from main(so we can know if they've visited this page before)
@@ -75,7 +92,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         activityLevel = fragmentView.findViewById(R.id.tv_activityLevel);
         activityLevel.setText("Select activity level:");
         activityLevelDropdown = fragmentView.findViewById(R.id.spin_activityLevelDropdown);
-        String [] activityLevelOptions = new String[5];
+        final String [] activityLevelOptions = new String[5];
         activityLevelOptions[0] = "Sedentary";
         activityLevelOptions[1] = "Lightly Active";
         activityLevelOptions[2] = "Moderately Active";
@@ -109,8 +126,16 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                if(mvUserActivityLevel.equals(null))
-                activityLevelDropdown.setSelection(2);
+                if(mvUserActivityLevel.equals("")) {
+                    activityLevelDropdown.setSelection(2);
+                } else {
+                    for(int i = 0; i < activityLevelOptions.length; i++) {
+                        if(mvUserActivityLevel.equals(activityLevelOptions[i])) {
+                            activityLevelDropdown.setSelection(i);
+                            break;
+                        }
+                    }
+                }
             }
         });
 
@@ -138,7 +163,15 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                weightChangeDropdown.setSelection(6);
+                if(mvUserEnteredGoal == 0) {
+                    weightChangeDropdown.setSelection(6);
+                }
+                for(int i = 0; i < weightChange.length; i++) {
+                    if(mvUserEnteredGoal == Double.parseDouble(weightChange[i])) {
+                        weightChangeDropdown.setSelection(i);
+                        break;
+                    }
+                }
             }
         });
 
@@ -209,5 +242,19 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         tvRecommendedCalories.setText("Recommended daily calorie intake: " + mvUserDailyRecommendedCalorieIntake);
         mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt("userAge", mvUserAge);
+        outState.putInt("userHeight", mvUserHeight);
+        outState.putDouble("userWeight", mvUserWeight);
+        outState.putString("userSex", mvUserSex);
+        outState.putDouble("userBMR", mvUserBMR);
+        outState.putDouble("userEnteredGoal", mvUserEnteredGoal);
+        outState.putDouble("userCalories", mvUserDailyRecommendedCalorieIntake);
+        outState.putParcelable("userPic", mvUserPic);
+
+        super.onSaveInstanceState(outState);
     }
 }
