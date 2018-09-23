@@ -14,4 +14,6 @@
     <string name="age">Your Age:</string>
     <string name="welcomeHeader">Hello! Welcome to the Lifestyle App.</string>
     <string name="bmiTopLine">Your BMI</string>
+    <string name="weatherHeader">WEATHER</string>
+    <string name="hikesHeader">HIKEZZZ</string>
 </resources>
