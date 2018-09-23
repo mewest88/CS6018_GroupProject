@@ -1,11 +1,8 @@
 package com.example.masonwest.lifestyle_app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -24,16 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class FitnessGoalsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class FitnessGoalsFragment extends Fragment implements View.OnClickListener {
 
-    EditUserDetailsFragment.OnDataPass mDataPasser;
-    String setActivityLevel = "";
-    Spinner activityLevelDropdown;
-    User tempUser;
-    String setGoal = "";
-    EditText goalEntry;
-    float userWeight = 0;
-    TextView activityLevel, weightGoal, goalDisplay, tvActualGoal, currentWeight, tvRecommendedCalories;
+    OnDataPass mDataPasser;
+    String mvUserActivityLevel, mvUserSex;
+    Spinner activityLevelDropdown, weightChangeDropdown;
+    double mvUserBMR, mvUserWeight, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
+    int mvUserHeight, mvUserAge;
+    Bitmap mvUserPic;
+    TextView activityLevel, weightGoal, tvGoalDescription, tvActualGoal, currentWeight, tvRecommendedCalories;
     public FitnessGoalsFragment() {
 
     }
@@ -41,8 +36,9 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         try{
-            mDataPasser = (EditUserDetailsFragment.OnDataPass) context;
+            mDataPasser = (OnDataPass) context;
         }catch(ClassCastException e){
             throw new ClassCastException(context.toString() + " must implement OnDataPass");
         }
@@ -51,7 +47,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     //Callback interface
     // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
-        public void onDataPass(String firstName, String lastName, int age, Bundle thumbnailImage);
+        void onDataPass(String activityLevel, double BMR, double dailyCalories, double goal);
     }
 
     @Nullable
@@ -59,15 +55,21 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
 
-        //Get the views
-//        mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
-//        mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-//        mEtAge = (EditText) fragmentView.findViewById(R.id.et_Age);
-//        mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
-//        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
-//        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
-//        mBtSubmit.setOnClickListener(this);
-//        mBtPicture.setOnClickListener(this);
+        //we need to check if they've already been here before
+        //null checks for activity level, change goal
+        //get from main
+        mvUserAge = 15;
+        mvUserHeight = 60;
+        mvUserWeight = 150;
+        mvUserSex = "Male";
+//        mvUserEnteredGoal; passed from main
+//        mvUserDailyRecommendedCalorieIntake; passed from main
+//        mvUserActivityLevel = passed from main(so we can know if they've visited this page before)
+//        mvUserPic = whatever;
+
+//        mFullName = getArguments().getString("fullName");
+//        mAge = getArguments().getString("age");
+//        thumbnailImage = getArguments().getParcelable("profilePic");
 
         //Activity Level
         activityLevel = fragmentView.findViewById(R.id.tv_activityLevel);
@@ -82,106 +84,130 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, activityLevelOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         activityLevelDropdown.setAdapter(adapter);
-        activityLevelDropdown.setOnItemSelectedListener(this);
+        activityLevelDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        //Target Weight, Weekly Gain/Loss
-        weightGoal = fragmentView.findViewById(R.id.tv_weightGoal);
-        weightGoal.setText("Please select your goal type:");
-        RadioButton targetButton = new RadioButton(getContext());
-        targetButton.setText("Target Weight");
-        RadioButton weeklyButton = new RadioButton(getContext());
-        weeklyButton.setText("Weekly Goal");
-        RadioGroup radioButtons = fragmentView.findViewById(R.id.rg_radioButtons);
-        radioButtons.addView(targetButton);
-        radioButtons.addView(weeklyButton);
-
-        radioButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == 0) {
-                    setGoal = "targetWeight";
-                } else {
-                    setGoal = "weeklyGoal";
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                switch (position) {
+                    case 0:
+                        mvUserActivityLevel = "Sedentary";
+                        break;
+                    case 1:
+                        mvUserActivityLevel = "Lightly Active";
+                        break;
+                    case 2:
+                        mvUserActivityLevel = "Moderately Active";
+                        break;
+                    case 3:
+                        mvUserActivityLevel = "Very Active";
+                        break;
+                    case 4:
+                        mvUserActivityLevel = "Extra Active";
+                        break;
                 }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                if(mvUserActivityLevel.equals(null))
+                activityLevelDropdown.setSelection(2);
+            }
         });
-        tempUser.updateFitnessGoal(setGoal);
+
+        //Weekly Gain/Loss
+        final String [] weightChange = new String[13];
+        double valueTemp = -3.0;
+        for(int i = 0; i < 13; i++) {
+            weightChange[i] = String.valueOf(valueTemp);
+            valueTemp += 0.5;
+        }
+        weightGoal = fragmentView.findViewById(R.id.tv_weightGoal);
+        weightGoal.setText("Please select your weekly weight change goal:");
+        weightChangeDropdown = fragmentView.findViewById(R.id.spin_weightChangeDropdown);
+        ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, activityLevelOptions);
+        goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weightChangeDropdown.setAdapter(goalAdapter);
+        weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mvUserEnteredGoal = Double.parseDouble(weightChange[position]);
+                if(mvUserEnteredGoal > 2) {
+//                    Toast.makeText(getBaseContext(), weightChange[position], Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                weightChangeDropdown.setSelection(6);
+            }
+        });
+
+//        RadioButton lossButton = new RadioButton(getContext());
+//        lossButton.setText("Loss");
+//        RadioButton gainButton = new RadioButton(getContext());
+//        gainButton.setText("Gain");
+//        RadioButton maintainButton = new RadioButton(getContext());
+//        maintainButton.setText("Maintain");
+//        maintainButton.setChecked(true);
+//
+//        RadioGroup radioButtons = fragmentView.findViewById(R.id.rg_radioButtons);
+//        radioButtons.addView(gainButton);
+//        radioButtons.addView(maintainButton);
+//        radioButtons.addView(lossButton);
+//
+//        radioButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+//        {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                if(checkedId == 0) {
+//                    mvUserGainLossGoal = "loss";
+//                } else if(checkedId == 1){
+//                    mvUserGainLossGoal = "maintain";
+//                } else {
+//                    mvUserGainLossGoal = "gain";
+//                }
+//            }
+//        });
 
         //Display
-        goalDisplay = fragmentView.findViewById(R.id.tv_targetWeight);
-        goalEntry = fragmentView.findViewById(R.id.et_goalEntry);
         Button calculateBMR = fragmentView.findViewById(R.id.button_calculateBMR);
+        calculateBMR.setOnClickListener(this);
         tvActualGoal = fragmentView.findViewById(R.id.tv_actualGoal);
-
-        currentWeight = fragmentView.findViewById(R.id.tv_currentWeight);
         tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);
-
-        if(setGoal == "targetWeight") {
-            goalDisplay.setText("Enter target weight in lbs:");
-        }
-        else {
-            goalDisplay.setText("Enter weekly gain/loss goal in lbs");
-        }
-
+//
+//        if(mvUserGainLossGoal == "loss") {
+//            tvGoalDescription.setText("Enter weekly loss goal: ");
+//            goalEntry = fragmentView.findViewById(R.id.et_goalEntry);
+//            mvUserEnteredGoal = Float.valueOf(goalEntry.getText().toString());
+//        } else if(mvUserGainLossGoal == "gain") {
+//            tvGoalDescription.setText("Enter weekly gain goal:");
+//            goalEntry = fragmentView.findViewById(R.id.et_goalEntry);
+//            mvUserEnteredGoal = Float.valueOf(goalEntry.getText().toString());
+//        }
         return fragmentView;
     }
 
 
     @Override
     public void onClick(View view) {
-        float enteredWeight = Float.valueOf(goalEntry.getText().toString());
-        switch (view.getId()) {
-            case R.id.button_calculateBMR: {
-                if(setGoal == "targetWeight") {
-                    tempUser.updateTargetWeight(enteredWeight);
-                    tempUser.calculateBMR(enteredWeight);
-                    tempUser.calculateRecommendedCalorieIntake();
-                    tempUser.adjustRecommendedCalorieIntakeByTotalGoal();
-                }
-                else {
-                    tempUser.calculateBMR(userWeight);
-                    tempUser.updateWeeklyGainLoss(enteredWeight);
-                    tempUser.calculateRecommendedCalorieIntake();
-                    tempUser.adjustRecommendedCalorieIntakeByWeeklyGoal();
-                }
-            }
+
+        mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
+        if(mvUserEnteredGoal < 0) {
+            tvActualGoal.setText("Your weekly goal: Lose " + -mvUserEnteredGoal + " pounds");
+        } else if(mvUserEnteredGoal == 0) {
+            tvActualGoal.setText("Your weekly goal: Maintain current weight");
+        } else {
+            tvActualGoal.setText("Your weekly goal: Gain " + mvUserEnteredGoal + " pounds");
         }
 
-        if(tempUser.getWeightChangeGoal() > 2) {
+        mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
+
+        int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
+        if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
             //toast warning
         }
-        int calorieLimit = tempUser.getSex() == "Male" ? 1200 : 1000;
-        if(tempUser.getRecommendedCalorieIntake() < calorieLimit) {
-            //toast warning
-        }
-        currentWeight.setText("Current weight: " + currentWeight);
-        tvActualGoal.setText("Target weekly weight change: " + tempUser.getWeightChangeGoal());
-        tvRecommendedCalories.setText("Recommended daily calorie intake: " + tempUser.getRecommendedCalorieIntake());
-    }
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
-        switch (position) {
-            case 0:
-                setActivityLevel = "Sedentary";
-                break;
-            case 1:
-                setActivityLevel = "Lightly Active";
-                break;
-            case 2:
-                setActivityLevel = "Moderately Active";
-                break;
-            case 3:
-                setActivityLevel = "Very Active";
-                break;
-            case 4:
-                setActivityLevel = "Extra Active";
-                break;
-        }
-        tempUser.updateActivityLevel(setActivityLevel);
-    }
-
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        activityLevelDropdown.setSelection(2);
+        tvRecommendedCalories.setText("Recommended daily calorie intake: " + mvUserDailyRecommendedCalorieIntake);
+        mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
     }
 }
