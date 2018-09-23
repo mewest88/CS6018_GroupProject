@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity
                     fTrans.commit();
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    Double bmiValue = newUser.getBMI();
+                    positionBundle.putDouble("bmi_data",bmiValue);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;

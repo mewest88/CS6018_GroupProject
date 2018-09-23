@@ -38,6 +38,12 @@ public class ViewDetailActivity extends AppCompatActivity {
             case 1: {
                 //Create the fragment
                 mBmiFragment = new BmiFragment();
+                // Get BMI from MainActivity
+                Double bmiValue = extras.getDouble("bmi_data");
+                // Make bundle to send to bmi fragment
+                Bundle bmiData = new Bundle();
+                bmiData.putDouble("bmi_data",bmiValue);
+                mBmiFragment.setArguments(bmiData);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
