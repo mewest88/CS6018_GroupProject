@@ -76,7 +76,7 @@ public class EditUserDetailsFragment extends Fragment
         mEtAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
-        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
+//        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
         mEtAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -124,7 +124,7 @@ public class EditUserDetailsFragment extends Fragment
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
             thumbnailImage = data.getExtras();
             mProfPic = (Bitmap) thumbnailImage.get("data");
-            mIvPic.setImageBitmap(mProfPic);
+//            mIvPic.setImageBitmap(mProfPic);
         }
     }
 
