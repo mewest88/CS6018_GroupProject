@@ -8,12 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +21,7 @@ import java.net.URL;
 
 public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, View.OnClickListener { //extend AppCompatActivity???
 
-//    private EditText mEtLocation; //TODO: change variable names appropriatley if this works
-    private TextView mEtLocation;
-    private TextView mTvTemp;
-    private TextView mTvPress;
-    private TextView mTvHum;
+    private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
     private String mLocation;
     private WeatherData mWeatherData;
     private Button mBtSubmit;
@@ -53,8 +47,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         View fragmentView = inflater.inflate(R.layout.fragment_weather, container, false);
 
         //Get the edit text and all the text views
-//        mEtLocation = (EditText) fragmentView.findViewById(R.id.et_location);
-        mEtLocation = (TextView) fragmentView.findViewById(R.id.et_location);
+        mTvLocation = (TextView) fragmentView.findViewById(R.id.tv_location);
         mTvTemp = (TextView) fragmentView.findViewById(R.id.tv_temp);
         mTvPress = (TextView) fragmentView.findViewById(R.id.tv_pressure);
         mTvHum = (TextView) fragmentView.findViewById(R.id.tv_humidity);
@@ -71,7 +64,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
 //        }
 
         //Set the text in the fragment
-        mEtLocation.setText("" + mLocation);
+        mTvLocation.setText("" + mLocation);
 
         getActivity().getSupportLoaderManager().initLoader(SEARCH_LOADER, null, this);
 
@@ -83,7 +76,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         switch(view.getId()){
             case R.id.button_submit:{
                 //Get the string from the edit text and sanitize the input
-                String inputFromEt = mEtLocation.getText().toString().replace(' ','&');
+                String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
                 loadWeatherData(inputFromEt);
                 Toast.makeText(getActivity(), "click worked", Toast.LENGTH_SHORT).show();
             }
@@ -167,5 +160,21 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
+    }
+
+    /**
+     * Allows the page to be lifecycle aware
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //Get the strings
+        mLocation = mTvLocation.getText().toString();
+
+        //Put them in the outgoing Bundle
+        outState.putString("BMI_TEXT",mLocation);
+
+        //Save the view hierarchy
+        super.onSaveInstanceState(outState);
     }
 }

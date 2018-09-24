@@ -158,11 +158,15 @@ public class EditUserDetailsFragment extends Fragment
             }
         });
 
-        String[] cityOptions = new String[4];
+        String[] cityOptions = new String[8];
         cityOptions[0] = "Salt Lake City";
-        cityOptions[1] = "New York City";
+        cityOptions[1] = "New York";
         cityOptions[2] = "San Francisco";
         cityOptions[3] = "Kamas";
+        cityOptions[4] = "Iztapalapa";
+        cityOptions[5] = "London";
+        cityOptions[6] = "San Juan";
+        cityOptions[7] = "Vancouver";
 
         final String[] finalCityOptions = cityOptions;
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
@@ -182,11 +186,15 @@ public class EditUserDetailsFragment extends Fragment
             }
         });
 
-        String[] countryOptions = new String[4];
-        countryOptions[0] = "USA";
-        countryOptions[1] = "Canada";
-        countryOptions[2] = "Puerto Rico";
-        countryOptions[3] = "Mexico";
+        String[] countryOptions = new String[8]; //Esay to get country codes here - https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=40.3633&lon=-73.3447&zoom=7
+        countryOptions[0] = "US";
+        countryOptions[1] = "CA";
+        countryOptions[2] = "PR";
+        countryOptions[3] = "MX";
+        countryOptions[4] = "GB";
+        countryOptions[5] = "ES";
+        countryOptions[6] = "FR";
+        countryOptions[7] = "JP";
 
         final String[] finalCountryOptions = countryOptions;
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);

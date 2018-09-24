@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity
                     fTrans.commit();
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    String location = newUser.getLocation();
+                    positionBundle.putString("location_data",location);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
-        newUser = new User(1, firstName, lastName, age, height, weight, "Salt Lake City", "US", thumbnail, sex);
+        newUser = new User(1, firstName, lastName, age, height, weight, city, country, thumbnail, sex);
         allUsers.add(newUser);
         //MASTER LIST WORK
         //Get the Master List fragment
