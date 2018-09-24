@@ -27,14 +27,14 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         mDailyCalories = dailyCalories;
         mGoal = goal;
 //        Intent toMain = new Intent(this, MainActivity.class);
-        Intent toMain = new Intent("updateFitnessGoals");
-        toMain.putExtra("activityLevel", mActivityLevel);
-        toMain.putExtra("BMR", mBMR);
-        toMain.putExtra("dailyCalories", mDailyCalories);
-        toMain.putExtra("goal", mGoal);
-
-        Log.d("sender", "Broadcasting message");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(toMain);
+//        Intent toMain = new Intent("updateFitnessGoals");
+//        toMain.putExtra("activityLevel", mActivityLevel);
+//        toMain.putExtra("BMR", mBMR);
+//        toMain.putExtra("dailyCalories", mDailyCalories);
+//        toMain.putExtra("goal", mGoal);
+//
+//        Log.d("sender", "Broadcasting message");
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(toMain);
     }
 
     @Override
@@ -53,7 +53,24 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
             case 0: {
                 //Create the fragment
                 mFitnessFragment = new FitnessGoalsFragment();
+                String firstName = extras.getString("userFirstName");
+                String lastName = extras.getString("userLastName");
+                String activityLevel = extras.getString("userActivityLevel");
+                int age = extras.getInt("userAge");
+                int weight = extras.getInt("userWeight");
+                int height = extras.getInt("userHeight");
+                double weightGoal = extras.getDouble("userGoal");
+
+                Bundle fitnessBundle = new Bundle();
+                fitnessBundle.putString("userFirstName", firstName);
+                fitnessBundle.putString("userLastName", lastName);
+                fitnessBundle.putString("userActivityLevel", activityLevel);
+                fitnessBundle.putInt("userAge", age);
+                fitnessBundle.putInt("userWeight", weight);
+                fitnessBundle.putInt("userHeight", height);
+                fitnessBundle.putDouble("userGoal", weightGoal);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
+                mFitnessFragment.setArguments(fitnessBundle);
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
                 fTrans.commit();

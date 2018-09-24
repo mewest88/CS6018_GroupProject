@@ -24,7 +24,7 @@ import android.widget.Toast;
 public class FitnessGoalsFragment extends Fragment implements View.OnClickListener {
 
     OnDataPass mDataPasser;
-    String mvUserActivityLevel, mvUserSex;
+    String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
     Spinner activityLevelDropdown, weightChangeDropdown;
     double mvUserBMR, mvUserWeight, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
     int mvUserHeight, mvUserAge;
@@ -60,6 +60,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         //null checks for activity level, change goal
 
         if(savedInstanceState != null) {
+            mUserFirstName = savedInstanceState.getString("userFirstName");
+            mUserLastName = savedInstanceState.getString("userLastName");
             mvUserAge = savedInstanceState.getInt("userAge");
             mvUserHeight = savedInstanceState.getInt("userHeight");
             mvUserWeight = savedInstanceState.getDouble("userWeight");
@@ -69,6 +71,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
             mvUserPic = savedInstanceState.getParcelable("userPic");
         } else {
+            mUserFirstName = getArguments().getString("userFirstName");
+            mUserLastName = getArguments().getString("userLastName");
             mvUserAge = getArguments().getInt("userAge");
             mvUserHeight = getArguments().getInt("userHeight");
             mvUserWeight = getArguments().getDouble("userWeight");
@@ -126,24 +130,25 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         });
 
         //Weekly Gain/Loss
-        final String [] weightChange = new String[13];
+        String [] weightChange = new String[13];
         double valueTemp = -3.0;
         for(int i = 0; i < 13; i++) {
             weightChange[i] = String.valueOf(valueTemp);
             valueTemp += 0.5;
         }
+        final String[] finalWeightChange = weightChange;
         weightGoal = fragmentView.findViewById(R.id.tv_weightGoal);
         weightGoal.setText("Please select your weekly weight change goal:");
         weightChangeDropdown = fragmentView.findViewById(R.id.spin_weightChangeDropdown);
-        ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, activityLevelOptions);
+        ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightChange);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightChangeDropdown.setAdapter(goalAdapter);
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mvUserEnteredGoal = Double.parseDouble(weightChange[position]);
+                mvUserEnteredGoal = Double.parseDouble(finalWeightChange[position]);
                 if(mvUserEnteredGoal > 2) {
-//                    Toast.makeText(getBaseContext(), weightChange[position], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), finalWeightChange[position], Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -152,8 +157,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
                 if(mvUserEnteredGoal == 0) {
                     weightChangeDropdown.setSelection(6);
                 }
-                for(int i = 0; i < weightChange.length; i++) {
-                    if(mvUserEnteredGoal == Double.parseDouble(weightChange[i])) {
+                for(int i = 0; i < finalWeightChange.length; i++) {
+                    if(mvUserEnteredGoal == Double.parseDouble(finalWeightChange[i])) {
                         weightChangeDropdown.setSelection(i);
                         break;
                     }

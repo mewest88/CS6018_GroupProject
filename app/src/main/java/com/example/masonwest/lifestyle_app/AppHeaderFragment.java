@@ -44,10 +44,10 @@ public class AppHeaderFragment extends Fragment {
 
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
         //Get the data that was sent in via onDataPass
-        mFirstName = getArguments().getString("FN_DATA");
-        mLastName = getArguments().getString("LN_DATA");
-        mFullName = getArguments().getString("FULLNAME_DATA");
-        pictureBundle = getArguments().getBundle("PIC_DATA");
+        mFirstName = getArguments().getString("userFirstName");
+        mLastName = getArguments().getString("userLastName");
+        mFullName = getArguments().getString("userFullName");
+        pictureBundle = getArguments().getBundle("userPic");
         thumbNail = (Bitmap) pictureBundle.get("data");
 
         //Set the data
