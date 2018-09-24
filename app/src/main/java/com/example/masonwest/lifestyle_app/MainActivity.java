@@ -1,14 +1,21 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass {
@@ -17,10 +24,27 @@ public class MainActivity extends AppCompatActivity
     private SignUpHeaderFragment mSignUpHeaderFragment;
     private AppHeaderFragment mAppHeaderFragment;
     private EditUserDetailsFragment mUserDetailFragment;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String activityLevel = intent.getStringExtra("activityLevel");
+            double BMR = intent.getDoubleExtra("BMR", 0);
+            double dailyCalories = intent.getDoubleExtra("dailyCalories", 0);
+            double goal = intent.getDoubleExtra("goal", 0);
+            newUser.updateActivityLevel(activityLevel);
+            newUser.updateBMR(BMR);
+            newUser.updateDailyRecommendedCalorieIntake(dailyCalories);
+            newUser.updateWeeklyGainLoss(goal);
+            Log.d("receiver", "Got message: " + activityLevel);
+        }
+    };
 //    public static final int OPEN_NEW_ACTIVITY = 124;
 
     private ArrayList<String> mItemList, mItemDetails;
     private User newUser;
+    private ArrayList<User> allUsers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +72,8 @@ public class MainActivity extends AppCompatActivity
         mItemList.add("Weather");
         mItemList.add("Hikes");
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("updateFitnessGoals"));
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -145,13 +171,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDataPass(String firstName, String lastName, int age, Bundle thumbnailImage) {
+    public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage) {
         // Pull the bitmap image from the bundle
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
-        newUser = new User(1, firstName, lastName, 30, 72, 160, "Salt Lake", "USA", thumbnail, "male");
-
+        newUser = new User(1, firstName, lastName, age, height, weight, "Salt Lake", "USA", thumbnail, "male");
+        allUsers.add(newUser);
         //MASTER LIST WORK
         //Get the Master List fragment
         mMasterListFragment = new MasterListFragment();
@@ -189,6 +215,11 @@ public class MainActivity extends AppCompatActivity
         headerBundle.putString("FN_DATA",firstName);
         headerBundle.putString("LN_DATA",lastName);
         headerBundle.putString("FULLNAME_DATA",fullName);
+        headerBundle.putInt("AGE_DATA", age);
+        headerBundle.putInt("WEIGHT_DATA", weight);
+        headerBundle.putInt("HEIGHT_DATA", height);
+        headerBundle.putString("CITY_DATA", city);
+        headerBundle.putString("COUNTRY_DATA", country);
         headerBundle.putBundle("PIC_DATA", thumbnailImage);
         //Pass data to the fragment
         mAppHeaderFragment.setArguments(headerBundle);
@@ -196,5 +227,11 @@ public class MainActivity extends AppCompatActivity
         fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "header_frag");
         fTrans.addToBackStack(null);
         fTrans.commit();
+    }
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 }

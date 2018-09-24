@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 /**
@@ -34,9 +37,9 @@ public class EditUserDetailsFragment extends Fragment
     private Spinner mEtAge;
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
-    private String mFirstName, mLastName, mAgeString;
+    private String mFirstName, mLastName, mAgeString, mCity, mCountry;
 //    private ImageView mIvPic;
-    int mAge;
+    int mAge, mHeight, mWeight;
     Bundle thumbnailImage;
     Bitmap mProfPic, picture;
 
@@ -62,7 +65,7 @@ public class EditUserDetailsFragment extends Fragment
     //Callback interface
     // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
-        public void onDataPass(String firstName, String lastName, int age, Bundle thumbnailImage);
+        void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage);
     }
 
     @Nullable
@@ -79,29 +82,20 @@ public class EditUserDetailsFragment extends Fragment
 //        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
+
+        String[] ageOptions = new String[120];
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, ageOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mEtAge.setAdapter(adapter);
+
+        for(int i = 0; i < 120; i++) {
+            ageOptions[i] = String.valueOf(i);
+        }
+        final String[] finalOptions = ageOptions;
         mEtAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                switch (position) {
-                    case 0:
-                        mAge = Integer.parseInt("");
-                        break;
-                    case 1:
-                        mAge = Integer.parseInt("");
-                        break;
-                    case 2:
-                        mAge = Integer.parseInt("");
-                        break;
-                    case 3:
-                        mAge = Integer.parseInt("");
-                        break;
-                    case 4:
-                        mAge = Integer.parseInt("");
-                        break;
-                    case 5:
-                        mAge = Integer.parseInt("");
-                        break;
-                }
+                mAge = Integer.parseInt(finalOptions[position]);
 //                if(mAge > 2) {
 ////                    Toast.makeText(getBaseContext(), weightChange[position], Toast.LENGTH_SHORT).show();
 //                }
@@ -160,7 +154,7 @@ public class EditUserDetailsFragment extends Fragment
                 } else {
                     Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
                     //Start an activity and pass the EditText string to it.
-                    mDataPasser.onDataPass(mFirstName, mLastName, mAge, thumbnailImage);
+                    mDataPasser.onDataPass(mFirstName, mLastName, mAge, mHeight, mWeight, mCity, mCountry, thumbnailImage);
                 }
                 break;
             }
@@ -187,10 +181,11 @@ public class EditUserDetailsFragment extends Fragment
 //        picture = (Bitmap) thumbnailImage.get("data"); //TODO: this is not working right
 
         //Put them in the outgoing Bundle
-        outState.putString("FN_TEXT",mFirstName);
-        outState.putString("LN_TEXT",mLastName);
-        outState.putParcelable("PIC_DATA",picture);
-
+        outState.putString("FN_TEXT", mFirstName);
+        outState.putString("LN_TEXT", mLastName);
+        outState.putParcelable("PIC_DATA", picture);
+        outState.putInt("AGE_TEXT", mAge);
+        outState.putInt("WEIGHT_TEXT", mWeight);
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
     }
