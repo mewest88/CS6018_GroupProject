@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity
 
         //Create the list of headers
         mItemList = new ArrayList<>();
-        mItemList.add("Weight Tracker");
-        mItemList.add("BMI");
-        mItemList.add("Weather");
-        mItemList.add("Hikes");
+        mItemList.add("Weight Tracker >");
+        mItemList.add("BMI >");
+        mItemList.add("Weather >");
+        mItemList.add("Hikes >");
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("updateFitnessGoals"));
