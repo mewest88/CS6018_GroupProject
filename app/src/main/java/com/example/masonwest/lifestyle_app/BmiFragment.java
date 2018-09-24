@@ -30,7 +30,6 @@ public class BmiFragment extends Fragment {
         super.onAttach(context);
     }
 
-    //TODO: make lifecycle aware - use ass2 part1 as reference
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
