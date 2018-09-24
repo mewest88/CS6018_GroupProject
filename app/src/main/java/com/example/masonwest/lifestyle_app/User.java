@@ -12,7 +12,7 @@ public class User {
     private String lastName;
     private int age;
     private int heightInches;
-    private double weightLBS;
+    private int weightLBS;
     private String city;
     private String country;
     private Bitmap profilePic;
@@ -21,7 +21,7 @@ public class User {
     private double weightChangeGoal; //positive or negative based on fitness goal?
     private double recommendedDailyCalorieIntake;
 
-    User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
+    User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, int weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
         userID = userIDPassed;
         firstName = firstNamePassed;
         lastName = lastNamePassed;
@@ -74,7 +74,7 @@ public class User {
     }
 
     //only called if userID already exists
-    public void updateUser(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
+    public void updateUser(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, int weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
         //error checking can be done on data entry
         //        if(userID != userIDPassed) {
         //            return;
@@ -96,6 +96,21 @@ public class User {
     }
     public String getSex() {
         return sex;
+    }
+    public int getAge() {
+        return age;
+    }
+    public int getWeight() {
+        return weightLBS;
+    }
+    public int getHeight() {
+        return heightInches;
+    }
+    public String getActivityLevel() {
+        return activityLevel;
+    }
+    public double getGoal() {
+        return weightChangeGoal;
     }
     public void updateWeeklyGainLoss(double changeGoal) {
         weightChangeGoal = changeGoal;
