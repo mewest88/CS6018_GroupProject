@@ -71,7 +71,7 @@
 
     <style name="buttonText">
         <item name="android:textSize">
-            30sp
+            40sp
         </item>
 
         <item name="android:textColor">
