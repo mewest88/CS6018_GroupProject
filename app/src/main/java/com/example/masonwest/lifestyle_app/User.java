@@ -36,8 +36,10 @@ public class User {
     //call before sending BMI to BMI fragment
     public void calculateBMI() {
         if(weightLBS > 0 && heightInches > 0) {
+            double w = weightLBS;
+            double h = heightInches;
             //multiply by 703 for english system vs metric system
-            BMI = (weightLBS / (heightInches * heightInches)) * 703;
+            BMI = (w / (h * h)) * 703.0;
         } else {
             return; //if 0/null notify in fragment?
         }
