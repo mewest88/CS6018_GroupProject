@@ -47,13 +47,6 @@ public class MainActivity extends AppCompatActivity
         mItemList.add("BMI");
         mItemList.add("Weather");
         mItemList.add("Hikes");
-        mItemList.add("User Profile");
-//        mItemDetails = new ArrayList<>();
-//        mItemDetails.add("Weight Tracker Details");
-//        mItemDetails.add("BMI Details");
-//        mItemDetails.add("Weather Details");
-//        mItemDetails.add("Hikes Details");
-//        mItemDetails.add("User Profile Details");
 
     }
 
