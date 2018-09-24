@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class AppHeaderFragment extends Fragment {
 
     // Member Variables
-    private String mFirstName, mLastName;
+    private String mFirstName, mLastName, mFullName;
     private TextView mTvFirstName, mTvLastName, mTvAge;
     private ImageView mIvPicture;
     private Bundle pictureBundle;
@@ -39,23 +39,24 @@ public class AppHeaderFragment extends Fragment {
 
         //Get the text views and image view
         mTvFirstName = (TextView) view.findViewById(R.id.tv_fn_data);
-        mTvLastName = (TextView) view.findViewById(R.id.tv_ln_data);
+//        mTvLastName = (TextView) view.findViewById(R.id.tv_ln_data);
         mIvPicture = (ImageView) view.findViewById(R.id.iv_pic);
 
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
         //Get the data that was sent in via onDataPass
         mFirstName = getArguments().getString("FN_DATA");
         mLastName = getArguments().getString("LN_DATA");
+        mFullName = getArguments().getString("FULLNAME_DATA");
         pictureBundle = getArguments().getBundle("PIC_DATA");
         thumbNail = (Bitmap) pictureBundle.get("data");
 
         //Set the data
         if(mFirstName != null) {
-            mTvFirstName.setText("" + mFirstName);
+            mTvFirstName.setText("" + mFullName);
         }
-        if(mLastName != null) {
-            mTvLastName.setText("" + mLastName);
-        }
+//        if(mLastName != null) {
+//            mTvLastName.setText("" + mLastName);
+//        }
         //if statement to handle the bitmap image
         mIvPicture.setImageBitmap(thumbNail);
 

@@ -181,10 +181,14 @@ public class MainActivity extends AppCompatActivity
         //HEADER WORK
         mAppHeaderFragment = new AppHeaderFragment();
 
+        //Get full name
+        String fullName = newUser.getName();
+
         //Send data to it
         Bundle headerBundle = new Bundle();
         headerBundle.putString("FN_DATA",firstName);
         headerBundle.putString("LN_DATA",lastName);
+        headerBundle.putString("FULLNAME_DATA",fullName);
         headerBundle.putBundle("PIC_DATA", thumbnailImage);
         //Pass data to the fragment
         mAppHeaderFragment.setArguments(headerBundle);
