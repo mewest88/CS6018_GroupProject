@@ -11,9 +11,9 @@
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
-        android:layout_height="115dp"
-        android:alpha="0.6"
-        android:background="@color/yellowHeader"
+        android:layout_height="130dp"
+        android:alpha="1.0"
+        android:background="@drawable/ic_yellowgradientheader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
