@@ -35,10 +35,10 @@ public class EditUserDetailsFragment extends Fragment
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
     private String mFirstName, mLastName, mAgeString;
-    private ImageView mIvPic;
+//    private ImageView mIvPic;
     int mAge;
     Bundle thumbnailImage;
-    Bitmap mProfPic;
+    Bitmap mProfPic, picture;
 
     OnDataPass mDataPasser;
 
@@ -171,6 +171,53 @@ public class EditUserDetailsFragment extends Fragment
                     startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
+        }
+    }
+
+    //TODO: Lifecycle awareness is not working properly
+    /**
+     * Saves the state in case the app is closed or turned sideways
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //Collect input data
+        mFirstName = mEtFirstName.getText().toString();
+        mLastName = mEtLastName.getText().toString();
+//        picture = (Bitmap) thumbnailImage.get("data"); //TODO: this is not working right
+
+        //Put them in the outgoing Bundle
+        outState.putString("FN_TEXT",mFirstName);
+        outState.putString("LN_TEXT",mLastName);
+        outState.putParcelable("PIC_DATA",picture);
+
+        //Save the view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Used to restore the app in the case that the state needs to be saved
+     * @param savedInstanceState
+     */
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        //Restore the view hierarchy automatically
+        super.onViewStateRestored(savedInstanceState);
+
+        //check and make sure bundle is not null first
+        if(savedInstanceState != null) {
+            //Restore stuff
+            if ("FN_TEXT" == null) {
+                mEtFirstName.setText("");
+            } else {
+                mEtFirstName.setText(savedInstanceState.getString("FN_TEXT"));
+            }
+            if ("LN_TEXT" == null) {
+                mEtLastName.setText("");
+            } else {
+                mEtLastName.setText(savedInstanceState.getString("LN_TEXT"));
+            }
+            mProfPic = savedInstanceState.getParcelable("PIC_DATA");
         }
     }
 }
