@@ -19,6 +19,7 @@ public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
     private Double bmiValue;
+    private String mStringBMIData, bmiValueString, bmiData;
 
     public BmiFragment() {
         // Required empty public constructor
@@ -38,13 +39,34 @@ public class BmiFragment extends Fragment {
         //Get the views
         mTvBMIData = (TextView) fragmentView.findViewById(R.id.tv_bmi_data);
 
-        //Get the bmi double to display
-        bmiValue = getArguments().getDouble("bmi_data");
-        String bmiValueString = Double.toString(bmiValue);
+        if (savedInstanceState != null) {
+            bmiData = savedInstanceState.getString("BMI_TEXT");
+        }
+        else {
+            //Get the bmi double to display
+            bmiValue = getArguments().getDouble("bmi_data");
+            bmiValueString = Double.toString(bmiValue);
+        }
 
         //Set the text in the fragment
         mTvBMIData.setText("" + bmiValueString);
 
         return fragmentView;
+    }
+
+    /**
+     * Allows the page to be lifecycle aware
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //Get the strings
+        mStringBMIData = mTvBMIData.getText().toString();
+
+        //Put them in the outgoing Bundle
+        outState.putString("BMI_TEXT",mStringBMIData);
+
+        //Save the view hierarchy
+        super.onSaveInstanceState(outState);
     }
 }
