@@ -23,10 +23,12 @@ import java.net.URL;
 
 public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, View.OnClickListener { //extend AppCompatActivity???
 
-    private EditText mEtLocation;
+//    private EditText mEtLocation; //TODO: change variable names appropriatley if this works
+    private TextView mEtLocation;
     private TextView mTvTemp;
     private TextView mTvPress;
     private TextView mTvHum;
+    private String mLocation;
     private WeatherData mWeatherData;
     private Button mBtSubmit;
 
@@ -51,13 +53,25 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         View fragmentView = inflater.inflate(R.layout.fragment_weather, container, false);
 
         //Get the edit text and all the text views
-        mEtLocation = (EditText) fragmentView.findViewById(R.id.et_location);
+//        mEtLocation = (EditText) fragmentView.findViewById(R.id.et_location);
+        mEtLocation = (TextView) fragmentView.findViewById(R.id.et_location);
         mTvTemp = (TextView) fragmentView.findViewById(R.id.tv_temp);
         mTvPress = (TextView) fragmentView.findViewById(R.id.tv_pressure);
         mTvHum = (TextView) fragmentView.findViewById(R.id.tv_humidity);
 
         mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
         mBtSubmit.setOnClickListener(this);
+
+//        if (savedInstanceState != null) {
+//            mEtLocation = savedInstanceState.getString("BMI_TEXT");
+//        }
+//        else {
+            //Get the bmi double to display
+            mLocation = getArguments().getString("location_data");
+//        }
+
+        //Set the text in the fragment
+        mEtLocation.setText("" + mLocation);
 
         getActivity().getSupportLoaderManager().initLoader(SEARCH_LOADER, null, this);
 
