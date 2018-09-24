@@ -89,7 +89,7 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
                     mLatLongString = latString + "," + lonString;
                     // example lat and long = 40.763056, -111.858674
 
-                    Toast.makeText(getActivity(), mLatLongString, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),"Searching Google maps around " + mLatLongString, Toast.LENGTH_SHORT).show();
 
                     //We have to grab the search term and construct a URI object from it to search on maps
                     //We'll hardcode WEB's location here
@@ -102,8 +102,6 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
                     if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                         startActivity(mapIntent);
                     }
-
-//                    Toast.makeText(getActivity(), "Searching Google Maps", Toast.LENGTH_SHORT).show();
                 }
             }
         });
