@@ -171,12 +171,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDataPass(String firstName, String lastName, int age, Bundle thumbnailImage) {
+    public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage) {
         // Pull the bitmap image from the bundle
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
-        newUser = new User(1, firstName, lastName, 30, 72, 160, "Salt Lake", "USA", thumbnail, "male");
+        newUser = new User(1, firstName, lastName, age, height, weight, "Salt Lake", "USA", thumbnail, "male");
         allUsers.add(newUser);
         //MASTER LIST WORK
         //Get the Master List fragment
@@ -215,6 +215,11 @@ public class MainActivity extends AppCompatActivity
         headerBundle.putString("FN_DATA",firstName);
         headerBundle.putString("LN_DATA",lastName);
         headerBundle.putString("FULLNAME_DATA",fullName);
+        headerBundle.putInt("AGE_DATA", age);
+        headerBundle.putInt("WEIGHT_DATA", weight);
+        headerBundle.putInt("HEIGHT_DATA", height);
+        headerBundle.putString("CITY_DATA", city);
+        headerBundle.putString("COUNTRY_DATA", country);
         headerBundle.putBundle("PIC_DATA", thumbnailImage);
         //Pass data to the fragment
         mAppHeaderFragment.setArguments(headerBundle);

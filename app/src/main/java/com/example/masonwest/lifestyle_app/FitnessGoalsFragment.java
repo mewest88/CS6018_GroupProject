@@ -92,36 +92,22 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         activityLevel = fragmentView.findViewById(R.id.tv_activityLevel);
         activityLevel.setText("Select activity level:");
         activityLevelDropdown = fragmentView.findViewById(R.id.spin_activityLevelDropdown);
-        final String [] activityLevelOptions = new String[5];
+        String [] activityLevelOptions = new String[5];
         activityLevelOptions[0] = "Sedentary";
         activityLevelOptions[1] = "Lightly Active";
         activityLevelOptions[2] = "Moderately Active";
         activityLevelOptions[3] = "Very Active";
         activityLevelOptions[4] = "Extra Active";
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, activityLevelOptions);
+
+        final String[] finalOptions = activityLevelOptions;
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         activityLevelDropdown.setAdapter(adapter);
         activityLevelDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (position) {
-                    case 0:
-                        mvUserActivityLevel = "Sedentary";
-                        break;
-                    case 1:
-                        mvUserActivityLevel = "Lightly Active";
-                        break;
-                    case 2:
-                        mvUserActivityLevel = "Moderately Active";
-                        break;
-                    case 3:
-                        mvUserActivityLevel = "Very Active";
-                        break;
-                    case 4:
-                        mvUserActivityLevel = "Extra Active";
-                        break;
-                }
+                mvUserActivityLevel = finalOptions[position];
             }
 
             @Override
@@ -129,8 +115,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
                 if(mvUserActivityLevel.equals("")) {
                     activityLevelDropdown.setSelection(2);
                 } else {
-                    for(int i = 0; i < activityLevelOptions.length; i++) {
-                        if(mvUserActivityLevel.equals(activityLevelOptions[i])) {
+                    for(int i = 0; i < finalOptions.length; i++) {
+                        if(mvUserActivityLevel.equals(finalOptions[i])) {
                             activityLevelDropdown.setSelection(i);
                             break;
                         }
