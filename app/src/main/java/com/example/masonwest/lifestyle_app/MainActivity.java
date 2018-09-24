@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity
                     fTrans.commit();
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    String location = newUser.getLocation();
+                    positionBundle.putString("location_data",location);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
