@@ -26,8 +26,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     OnDataPass mDataPasser;
     String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
     Spinner activityLevelDropdown, weightChangeDropdown;
-    double mvUserBMR, mvUserWeight, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
-    int mvUserHeight, mvUserAge;
+    double mvUserBMR, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
+    int mvUserHeight, mvUserAge, mvUserWeight;
     Bitmap mvUserPic;
     TextView activityLevel, weightGoal, tvActualGoal, tvRecommendedCalories;
     public FitnessGoalsFragment() {
@@ -64,7 +64,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mUserLastName = savedInstanceState.getString("userLastName");
             mvUserAge = savedInstanceState.getInt("userAge");
             mvUserHeight = savedInstanceState.getInt("userHeight");
-            mvUserWeight = savedInstanceState.getDouble("userWeight");
+            mvUserWeight = savedInstanceState.getInt("userWeight");
             mvUserSex = savedInstanceState.getString("userSex");
             mvUserBMR = savedInstanceState.getDouble("userBMR");
             mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
@@ -75,7 +75,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mUserLastName = getArguments().getString("userLastName");
             mvUserAge = getArguments().getInt("userAge");
             mvUserHeight = getArguments().getInt("userHeight");
-            mvUserWeight = getArguments().getDouble("userWeight");
+            mvUserWeight = getArguments().getInt("userWeight");
             mvUserSex = getArguments().getString("userSex");
             mvUserBMR = getArguments().getDouble("userBMR");
             mvUserEnteredGoal = getArguments().getDouble("userEnteredGoal");
@@ -147,9 +147,6 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
                 mvUserEnteredGoal = Double.parseDouble(finalWeightChange[position]);
-                if(mvUserEnteredGoal > 2) {
-                    Toast.makeText(getContext(), finalWeightChange[position], Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
@@ -165,6 +162,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
                 }
             }
         });
+
 
 //        RadioButton lossButton = new RadioButton(getContext());
 //        lossButton.setText("Loss");
@@ -215,20 +213,24 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
+        if(mvUserEnteredGoal > 2) {
+            Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
+        }
+
         mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
         if(mvUserEnteredGoal < 0) {
-            tvActualGoal.setText("Your weekly goal: Lose " + -mvUserEnteredGoal + " pounds");
+            tvActualGoal.setText("Your weekly goal: Lose " + -mvUserEnteredGoal + " pound(s)");
         } else if(mvUserEnteredGoal == 0) {
             tvActualGoal.setText("Your weekly goal: Maintain current weight");
         } else {
-            tvActualGoal.setText("Your weekly goal: Gain " + mvUserEnteredGoal + " pounds");
+            tvActualGoal.setText("Your weekly goal: Gain " + mvUserEnteredGoal + " pound(s)");
         }
 
         mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
 
         int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
         if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
-            //toast warning
+            Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }
 
         tvRecommendedCalories.setText("Recommended daily calorie intake: " + mvUserDailyRecommendedCalorieIntake);

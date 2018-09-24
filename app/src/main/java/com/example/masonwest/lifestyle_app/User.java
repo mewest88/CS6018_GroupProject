@@ -44,11 +44,13 @@ public class User {
     }
     //should be called to calculate base BMR and also desiredBMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {
+        double weightMetric = currentWeightPassed / 2.2;
+        double heightMetric = heightPassed * 2.54;
         if(currentWeightPassed > 0 && heightPassed > 0 && agePassed > 0) {
             if (sexPassed.equals("Male")) {
-                return 655 + (4.35 * currentWeightPassed) + (4.7 * heightPassed) - (4.7 * agePassed);
+                return 5 + (10 * weightMetric) + (6.25 * heightMetric) - (5 * agePassed);
             } else {
-                return 66 + (6.23 * currentWeightPassed) + (12.7 * heightPassed) - (6.8 * agePassed);
+                return -161 + (10 * weightMetric) + (6.25 * heightMetric) - (5 * agePassed);
             }
         }
         else {

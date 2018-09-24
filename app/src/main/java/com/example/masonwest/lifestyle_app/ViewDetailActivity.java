@@ -56,6 +56,7 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 String firstName = extras.getString("userFirstName");
                 String lastName = extras.getString("userLastName");
                 String activityLevel = extras.getString("userActivityLevel");
+                String sex = extras.getString("userSex");
                 int age = extras.getInt("userAge");
                 int weight = extras.getInt("userWeight");
                 int height = extras.getInt("userHeight");
@@ -65,6 +66,7 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 fitnessBundle.putString("userFirstName", firstName);
                 fitnessBundle.putString("userLastName", lastName);
                 fitnessBundle.putString("userActivityLevel", activityLevel);
+                fitnessBundle.putString("userSex", sex);
                 fitnessBundle.putInt("userAge", age);
                 fitnessBundle.putInt("userWeight", weight);
                 fitnessBundle.putInt("userHeight", height);
