@@ -77,6 +77,12 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
             case 2: {
                 //Create the fragment
                 mWeatherFragment = new WeatherFragment();
+                // Get Location from MainActivity
+                String location = extras.getString("location_data");
+                // Make bundle to send to weather fragment
+                Bundle locationData = new Bundle();
+                locationData.putString("location_data",location);
+                mWeatherFragment.setArguments(locationData);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment, "frag_weatherdetail");

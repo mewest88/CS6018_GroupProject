@@ -123,6 +123,7 @@ public class User {
     public double getBMI() {
         return BMI;
     }
+    public String getLocation() { return city + "," + country; }
     public int getUserID() {
         return userID;
     }
