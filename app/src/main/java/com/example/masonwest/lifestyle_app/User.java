@@ -107,6 +107,12 @@ public class User {
     public double getDailyRecommendedCalorieIntake() {
         return recommendedDailyCalorieIntake;
     }
+    public void updateDailyRecommendedCalorieIntake(double calorieIntake) {
+        recommendedDailyCalorieIntake = calorieIntake;
+    }
+    public void updateBMR(double BMRPassed) {
+        BMR = BMRPassed;
+    }
 
     public Bitmap getProfilePic() {
         return profilePic;
