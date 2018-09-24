@@ -37,7 +37,7 @@ public class User {
     public void calculateBMI() {
         if(weightLBS > 0 && heightInches > 0) {
             //multiply by 703 for english system vs metric system
-            BMI = 703 * weightLBS / (heightInches*heightInches);
+            BMI = (weightLBS / (heightInches * heightInches)) * 703;
         } else {
             return; //if 0/null notify in fragment?
         }

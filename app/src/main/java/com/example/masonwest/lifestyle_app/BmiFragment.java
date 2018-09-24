@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
+    private Double bmiValue;
 
     public BmiFragment() {
         // Required empty public constructor
@@ -28,6 +29,7 @@ public class BmiFragment extends Fragment {
         super.onAttach(context);
     }
 
+    //TODO: make lifecycle aware - use ass2 part1 as reference
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,8 +38,12 @@ public class BmiFragment extends Fragment {
         //Get the views
         mTvBMIData = (TextView) fragmentView.findViewById(R.id.tv_bmi_data);
 
-        //Get the strings to display
-        //get the users BMI info from the user class
+        //Get the bmi double to display
+        bmiValue = getArguments().getDouble("bmi_data");
+        String bmiValueString = Double.toString(bmiValue);
+
+        //Set the text in the fragment
+        mTvBMIData.setText("" + bmiValueString);
 
         return fragmentView;
     }
