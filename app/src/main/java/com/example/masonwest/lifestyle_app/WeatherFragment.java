@@ -161,4 +161,20 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
+
+    /**
+     * Allows the page to be lifecycle aware
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //Get the strings
+        mLocation = mTvLocation.getText().toString();
+
+        //Put them in the outgoing Bundle
+        outState.putString("BMI_TEXT",mLocation);
+
+        //Save the view hierarchy
+        super.onSaveInstanceState(outState);
+    }
 }
