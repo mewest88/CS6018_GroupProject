@@ -90,17 +90,17 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
 
-        Fragment mUserDetailFragment = new EditUserDetailsFragment();
+//        Fragment mUserDetailFragment = new EditUserDetailsFragment();
         //Replace the fragment container
-        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
+//        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
+//        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
 //        fTrans.commit();
 
-        Fragment mSignUpHeaderFragment = new SignUpHeaderFragment();
+//        Fragment mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
+//        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
         mDataPasser.onDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
-        fTrans.commit();
+//        fTrans.commit();
     }
 }
