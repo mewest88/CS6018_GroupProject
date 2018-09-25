@@ -7,6 +7,13 @@
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fl_header_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </FrameLayout>
+
     <FrameLayout
         android:id="@+id/fl_frag_masterlist_container_tablet"
         android:layout_width="0dp"
