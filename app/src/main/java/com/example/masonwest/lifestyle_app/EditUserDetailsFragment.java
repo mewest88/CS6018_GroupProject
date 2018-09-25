@@ -260,7 +260,11 @@ public class EditUserDetailsFragment extends Fragment
 //            mIvPic.setImageBitmap(mProfPic);
         }
     }
-
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//    }
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
@@ -334,6 +338,10 @@ public class EditUserDetailsFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
     /**
      * Used to restore the app in the case that the state needs to be saved
      * @param savedInstanceState
