@@ -37,7 +37,7 @@ public class EditUserDetailsFragment extends Fragment
     private Spinner mSpinnerAge, mSpinnerWeight, mSpinnerHeight, mSpinnerCity, mSpinnerCountry, mSpinnerSex;
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
-    private String mFirstName, mLastName, mAgeString, mCity, mCountry, mSex;
+    private String mFirstName, mLastName, mCity, mCountry, mSex;
 //    private ImageView mIvPic;
     int mAge, mHeight, mWeight;
     Bundle thumbnailImage;
@@ -72,21 +72,32 @@ public class EditUserDetailsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
-
-        //Get the views
-        mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
-        mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-        mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
-        mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
-        mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
-        mSpinnerSex = (Spinner) fragmentView.findViewById(R.id.et_Sex);
-        mSpinnerWeight = (Spinner) fragmentView.findViewById(R.id.et_Weight);
-        mSpinnerHeight = (Spinner) fragmentView.findViewById(R.id.et_Height);
-        mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
-        mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
-//        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
-        mBtSubmit.setOnClickListener(this);
-        mBtPicture.setOnClickListener(this);
+            mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
+            mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
+            mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
+            mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
+            mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
+            mSpinnerSex = (Spinner) fragmentView.findViewById(R.id.et_Sex);
+            mSpinnerWeight = (Spinner) fragmentView.findViewById(R.id.et_Weight);
+            mSpinnerHeight = (Spinner) fragmentView.findViewById(R.id.et_Height);
+            mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
+            mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
+            //        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
+            mBtSubmit.setOnClickListener(this);
+            mBtPicture.setOnClickListener(this);
+        if (savedInstanceState != null) {
+            mFirstName = savedInstanceState.getString("userFirstName");
+            mEtFirstName.setText(mFirstName);
+            mLastName = savedInstanceState.getString("userLastName");
+            mEtLastName.setText(mLastName);
+            mCity = savedInstanceState.getString("userCity");
+            mCountry = savedInstanceState.getString("userCountry");
+            mSex = savedInstanceState.getString("userSex");
+            mAge = savedInstanceState.getInt("userAge");
+            mHeight = savedInstanceState.getInt("userHeight");
+            mWeight = savedInstanceState.getInt("userWeight");
+            thumbnailImage = savedInstanceState.getBundle("userPic");
+        }
 
         String[] ageOptions = new String[120];
         for(int i = 0; i < 120; i++) {
