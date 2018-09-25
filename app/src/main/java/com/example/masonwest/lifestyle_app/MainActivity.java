@@ -18,28 +18,28 @@ import java.util.List;
 import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity
-        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass {
+        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private MasterListFragment mMasterListFragment;
     private SignUpHeaderFragment mSignUpHeaderFragment;
     private AppHeaderFragment mAppHeaderFragment;
     private EditUserDetailsFragment mUserDetailFragment;
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String activityLevel = intent.getStringExtra("activityLevel");
-            double BMR = intent.getDoubleExtra("BMR", 0);
-            double dailyCalories = intent.getDoubleExtra("dailyCalories", 0);
-            double goal = intent.getDoubleExtra("goal", 0);
-            newUser.updateActivityLevel(activityLevel);
-            newUser.updateBMR(BMR);
-            newUser.updateDailyRecommendedCalorieIntake(dailyCalories);
-            newUser.updateWeeklyGainLoss(goal);
-            Log.d("receiver", "Got message: " + activityLevel);
-        }
-    };
+//    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // Get extra data included in the Intent
+//            String activityLevel = intent.getStringExtra("activityLevel");
+//            double BMR = intent.getDoubleExtra("BMR", 0);
+//            double dailyCalories = intent.getDoubleExtra("dailyCalories", 0);
+//            double goal = intent.getDoubleExtra("goal", 0);
+//            newUser.updateActivityLevel(activityLevel);
+//            newUser.updateBMR(BMR);
+//            newUser.updateDailyRecommendedCalorieIntake(dailyCalories);
+//            newUser.updateWeeklyGainLoss(goal);
+//            Log.d("receiver", "Got message: " + activityLevel);
+//        }
+//    };
 //    public static final int OPEN_NEW_ACTIVITY = 124;
 
     private ArrayList<String> mItemList, mItemDetails;
@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity
         mItemList.add("Weather >");
         mItemList.add("Hikes >");
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("updateFitnessGoals"));
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+//                new IntentFilter("updateFitnessGoals"));
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         positionBundle.putInt("click_position",position);
 
         //AT THIS POINT - i have the position, so I need to have a switch statement to tell the passData which fragment to open
-
 
         switch(position) {
             case 0: { //Weight Goals Page
@@ -180,6 +179,7 @@ public class MainActivity extends AppCompatActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
+    //from EditUserFragment
     @Override
     public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage, String sex) {
         // Pull the bitmap image from the bundle
@@ -245,5 +245,20 @@ public class MainActivity extends AppCompatActivity
         // Unregister since the activity is about to be closed.
 //        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    public void onDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putString("userFirstName",firstName);
+        settingsBundle.putString("userLastName",lastName);
+        settingsBundle.putInt("userAge", age);
+        settingsBundle.putInt("userWeight", weight);
+        settingsBundle.putInt("userHeight", height);
+        settingsBundle.putString("userCity", city);
+        settingsBundle.putString("userCountry", country);
+        settingsBundle.putString("userSex", sex);
+        settingsBundle.putBundle("userPic", pic);
+        mUserDetailFragment.setArguments(settingsBundle);
     }
 }
