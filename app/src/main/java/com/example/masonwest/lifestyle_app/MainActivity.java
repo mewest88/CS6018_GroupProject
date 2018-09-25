@@ -57,8 +57,14 @@ public class MainActivity extends AppCompatActivity
         }
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
+
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment, "submit_frag"); //.getTag()???
+        }
+        else {
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
 //        fTrans.commit();
+        }
 
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         //Create the list of headers
         mItemList = new ArrayList<>();
-        mItemList.add("Weight Tracker >");
+        mItemList.add("Fitness Goals >");
         mItemList.add("BMI >");
         mItemList.add("Weather >");
         mItemList.add("Hikes >");
@@ -80,18 +86,10 @@ public class MainActivity extends AppCompatActivity
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
     @Override
     public void passData(int position) {
-//        //Get the string data corresponding to the detail view
-//        String itemDetailString = mItemDetails.get(position);
-
-//        //Put this into a bundle
-//        Bundle detailBundle = new Bundle();
-//        detailBundle.putString("item_detail",itemDetailString);
-
         Bundle positionBundle = new Bundle();
         positionBundle.putInt("click_position",position);
 
-        //AT THIS POINT - i have the position, so I need to have a switch statement to tell the passData which fragment to open
-
+        //Uses switch statement to tell the passData which fragment to open based on position
         switch(position) {
             case 0: { //Weight Goals Page
                 //If we're on a tablet, the fragment occupies the second pane (right). If we're on a phone, the fragment is replaced
