@@ -51,9 +51,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //CREATE THE VIEW TO ENTER USER INFORMATION
-        mUserDetailFragment = new EditUserDetailsFragment();
-
+        if(savedInstanceState == null) {
+            //CREATE THE VIEW TO ENTER USER INFORMATION
+            mUserDetailFragment = new EditUserDetailsFragment();
+        }
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
@@ -247,8 +248,20 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
+    //from App Header
     @Override
     public void onDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
+        //Replace the fragment container
+        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
+//        fTrans.commit();
+
+        mSignUpHeaderFragment = new SignUpHeaderFragment();
+
+        //Replace the fragment container
+        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
+
+
         Bundle settingsBundle = new Bundle();
         settingsBundle.putString("userFirstName",firstName);
         settingsBundle.putString("userLastName",lastName);
@@ -260,5 +273,6 @@ public class MainActivity extends AppCompatActivity
         settingsBundle.putString("userSex", sex);
         settingsBundle.putBundle("userPic", pic);
         mUserDetailFragment.setArguments(settingsBundle);
+        fTrans.commit();
     }
 }
