@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
+                    break;
                 } else { //On a phone
                     //Start ItemDetailActivity, pass the string along
                     positionBundle.putString("userFullName", mUserFullName);
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_BMI_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
+                    break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
                     positionBundle.putDouble("bmi_data",bmiValue);
@@ -132,17 +134,21 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             case 2: { //Weather Page
+                String location = newUser.getLocation();
                 if (isTablet()) {
                     //Create a new detail fragment
                     WeatherFragment weatherFragment = new WeatherFragment();
+                    Bundle locationData = new Bundle();
+                    locationData.putString("location_data",location);
+                    weatherFragment.setArguments(locationData);
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, weatherFragment, "frag_weather_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
+                    break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-                    String location = newUser.getLocation();
                     positionBundle.putString("location_data", location);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
@@ -158,6 +164,7 @@ public class MainActivity extends AppCompatActivity
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
+                    break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
                     sendIntent.putExtras(positionBundle);
