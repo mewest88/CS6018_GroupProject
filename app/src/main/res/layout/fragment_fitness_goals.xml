@@ -4,90 +4,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FitnessGoalsFragment">
+    tools:context=".FitnessGoalsFragment"
+    android:id="@+id/relativeLayout">
 
     <TextView
         android:id="@+id/tv_activityLevel"
-        android:layout_width="259dp"
-        android:layout_height="27dp"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="68dp"
-        android:text="Enter activityLevel:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/activityLevel"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/spin_activityLevelDropdown"
+        app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spin_activityLevelDropdown"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:spinnerMode="dropdown"
+        android:lineSpacingExtra="-8sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_marginTop="40dp"
+        android:background="#CCCACA"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_activityLevel" />
+        app:layout_constraintTop_toTopOf="@+id/spin_activityLevelDropdown" />
 
     <TextView
         android:id="@+id/tv_weightGoal"
-        android:layout_width="236dp"
-        android:layout_height="33dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="68dp"
-        android:text="Select Weight Loss:"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/healthLevel"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/spin_weightChangeDropdown"
+        app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spin_activityLevelDropdown" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_activityLevel" />
 
     <Spinner
         android:id="@+id/spin_weightChangeDropdown"
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_weightGoal" />
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="52dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@+id/spin_activityLevelDropdown"
+        app:layout_constraintTop_toTopOf="@+id/spin_activityLevelDropdown" />
 
-    <Button
-        android:id="@+id/button_calculateBMR"
-        android:layout_width="164dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="32dp"
-        android:text="Button"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_marginTop="40dp"
+        android:background="#CCCACA"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/spin_weightChangeDropdown" />
+
+
+    <ImageButton
+        android:id="@+id/button_calculateBMR"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/ic_submitarrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spin_weightChangeDropdown" />
+
+    <TextView
+        android:id="@+id/tv_actualGoalText"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/rajdhani_semibold"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/actualGoal"
+        android:textAppearance="@style/titleText"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/spin_weightChangeDropdown"
+        app:layout_constraintHorizontal_bias="0.192"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spin_weightChangeDropdown" />
 
     <TextView
         android:id="@+id/tv_actualGoal"
-        android:layout_width="195dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Your weekly goal:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="0.0"
+        android:textAppearance="@style/dynamicHealthText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_calculateBMR" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_actualGoalText" />
+
+    <TextView
+        android:id="@+id/tv_recommendedCaloriesText"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="168dp"
+        android:fontFamily="@font/rajdhani_semibold"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="Recommended Calories:"
+        android:textAppearance="@style/titleText"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_actualGoalText" />
 
     <TextView
         android:id="@+id/tv_recommendedCalories"
-        android:layout_width="314dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Recommended daily intake"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="0.0"
+        android:textAppearance="@style/dynamicHealthText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_actualGoal" />
-
+        app:layout_constraintTop_toBottomOf="@+id/tv_recommendedCaloriesText" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,77 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/ll"
-        android:layout_width="match_parent"
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="336dp"
+        android:layout_height="388dp"
+        android:alpha="0.5"
+        android:background="@drawable/ic_weather"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="117dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentLeft="true"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your location: "
-            android:layout_weight="0"
-            />
-        <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="City,Country"
-            android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/button_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            />
-    </LinearLayout>
+        android:gravity="center"
+        android:text="@string/weatherText"
+        android:textAppearance="@style/healthLevelText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="320dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/weatherLocation"
+        android:textAppearance="@style/healthLevelText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+    <Button
+        android:id="@+id/button_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="160dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="20dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location"
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <TextView
         android:id="@+id/tv_temp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll"
-        android:layout_alignParentLeft="true"
-        />
+        android:layout_marginLeft="160dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/weatherInfoText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location"
+        app:layout_constraintVertical_bias="0.068" />
 
     <TextView
         android:id="@+id/tv_pressure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_temp"
-        android:layout_alignParentLeft="true"
-        />
+        android:textAppearance="@style/weatherInfoText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temp"
+        app:layout_constraintVertical_bias="0.052" />
 
     <TextView
         android:id="@+id/tv_humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_pressure"
-        android:layout_alignParentLeft="true"
-        />
+        android:textAppearance="@style/weatherInfoText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
+        app:layout_constraintVertical_bias="0.063" />
 
     <TextView
         android:id="@+id/tv_wind_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_humidity"
-        android:layout_alignParentLeft="true"
-        />
+        android:textAppearance="@style/weatherInfoText"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_temp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_temp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_humidity" />
 
     <TextView
         android:id="@+id/tv_wind_deg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_wind_speed"
-        android:layout_alignParentLeft="true"
-        />
+        android:textAppearance="@style/weatherInfoText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
+        app:layout_constraintVertical_bias="0.162" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
