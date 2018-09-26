@@ -306,6 +306,8 @@ public class EditUserDetailsFragment extends Fragment
             thumbnailImage = data.getExtras();
             mProfPic = (Bitmap) thumbnailImage.get("data");
 //            mIvPic.setImageBitmap(mProfPic);
+            mBtPicture.setText("") ;
+            mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
         }
     }
 //
