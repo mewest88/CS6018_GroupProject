@@ -1,24 +1,16 @@
 package com.example.masonwest.lifestyle_app;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity
-        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
+        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
 
     private MasterListFragment mMasterListFragment;
     private SignUpHeaderFragment mSignUpHeaderFragment;
@@ -59,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
 
         if (isTablet()) {
-            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment, "submit_frag"); //.getTag()???
+            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "submit_frag");
         }
         else {
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
@@ -69,7 +61,12 @@ public class MainActivity extends AppCompatActivity
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
+        }
+        else {
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
+        }
         fTrans.commit();
 
         //Create the list of headers
@@ -235,7 +232,14 @@ public class MainActivity extends AppCompatActivity
         //Pass data to the fragment
         mAppHeaderFragment.setArguments(headerBundle);
 
-        fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "header_frag");
+        if(isTablet()){
+            //Pane 1: Master list
+            fTrans.replace(R.id.fl_header_tablet, mAppHeaderFragment, "app_header_frag");
+        }
+        else{
+            fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
+        }
+
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
@@ -248,7 +252,7 @@ public class MainActivity extends AppCompatActivity
 
     //from App Header
     @Override
-    public void onDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
+    public void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???

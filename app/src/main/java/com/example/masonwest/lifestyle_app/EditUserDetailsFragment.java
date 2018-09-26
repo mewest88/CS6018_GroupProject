@@ -58,7 +58,7 @@ public class EditUserDetailsFragment extends Fragment
         try{
             mDataPasser = (OnDataPass) context;
         }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
         }
     }
 
