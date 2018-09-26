@@ -49,9 +49,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
 
         if (isTablet()) {
-
             fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "submit_frag");
-
         }
         else {
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_userdetail_phone");
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
-
         if (isTablet()) {
             fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
         }
@@ -274,12 +271,23 @@ public class MainActivity extends AppCompatActivity
 
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "submit_frag");
+        }
+        else {
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_userdetail_phone");
+        }
 
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone");
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "frag_signupheader_tablet"); //.getTag()???
+        }
+        else {
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
+        }
 
         Bundle settingsBundle = new Bundle();
         settingsBundle.putString("userFirstName", firstName);
@@ -296,10 +304,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Call this function inside onClick of button
-
     public void showHideFragment(final Fragment fragment){
-
-//        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
         fragTransaction.setCustomAnimations(android.R.animator.fade_in,
                 android.R.animator.fade_out);
@@ -324,7 +329,7 @@ public class MainActivity extends AppCompatActivity
 
         if(isEditUser) {
             if(isTablet()) {
-                fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
+                fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment);
             } else {
                 fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
             }
