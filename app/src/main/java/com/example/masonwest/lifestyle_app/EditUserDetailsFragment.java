@@ -366,7 +366,7 @@ public class EditUserDetailsFragment extends Fragment
         //Put them in the outgoing Bundle
         outState.putString("userFirstName", mFirstName);
         outState.putString("userLastName", mLastName);
-        outState.putParcelable("userPic", picture);
+        outState.putBundle("userPic", thumbnailImage);
         outState.putInt("userAge", mAge);
         outState.putInt("userWeight", mWeight);
         outState.putInt("userHeight", mHeight);
@@ -411,7 +411,7 @@ public class EditUserDetailsFragment extends Fragment
             mCountry = savedInstanceState.getString("userCountry");
             mAge = savedInstanceState.getInt("userAge");
             if(savedInstanceState.getParcelable("userPic") != null) {
-                mProfPic = savedInstanceState.getParcelable("userPic");
+                thumbnailImage = savedInstanceState.getParcelable("userPic");
             }
         }
     }
