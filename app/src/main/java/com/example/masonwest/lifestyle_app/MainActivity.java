@@ -179,14 +179,15 @@ public class MainActivity extends AppCompatActivity
     //from EditUserFragment
     @Override
     public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage, String sex) {
+        // Hide EditUserData fragment
+        showHideFragment(mUserDetailFragment);
+
         // Pull the bitmap image from the bundle
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
         // Create a new user
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
         newUser = new User(1, firstName, lastName, age, height, weight, city, country, thumbnail, sex);
         allUsers.add(newUser);
-
-        showHideFragment(mUserDetailFragment);
 
         //MASTER LIST WORK
         //Get the Master List fragment
