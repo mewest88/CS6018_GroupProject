@@ -39,11 +39,12 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
-            mDataPasser = (OnDataPass) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
-        }
+        //TODO: commented this out to make this fragment work on the tablet
+//        try{
+//            mDataPasser = (OnDataPass) context;
+//        }catch(ClassCastException e){
+//            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
+//        }
     }
 
     //Callback interface
