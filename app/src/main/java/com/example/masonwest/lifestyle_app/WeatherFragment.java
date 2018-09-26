@@ -151,7 +151,8 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
                 e.printStackTrace();
             }
             if(mWeatherData!=null) {
-                mTvTemp.setText("" + Math.round(mWeatherData.getTemperature().getTemp() - 273.15) + " C");
+//                mTvTemp.setText("" + Math.round(mWeatherData.getTemperature().getTemp() - 273.15) + " C"); //Celcius conversion
+                mTvTemp.setText("" + Math.round(mWeatherData.getTemperature().getTemp() * 9/5 - 459.67) + " F"); //Farenheit conversion * (9/5) - 459.67
                 mTvHum.setText("" + mWeatherData.getCurrentCondition().getHumidity() + "%");
                 mTvPress.setText("" + mWeatherData.getCurrentCondition().getPressure() + " hPa");
             }
