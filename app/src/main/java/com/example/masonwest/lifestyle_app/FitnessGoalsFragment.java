@@ -92,7 +92,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         //Activity Level
         activityLevel = fragmentView.findViewById(R.id.tv_activityLevel);
-        activityLevel.setText("Select activity level:");
+        // activityLevel.setText("Select activity level:");
         activityLevelDropdown = fragmentView.findViewById(R.id.spin_activityLevelDropdown);
         String [] activityLevelOptions = new String[5];
         activityLevelOptions[0] = "Sedentary";
@@ -136,7 +136,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         }
         final String[] finalWeightChange = weightChange;
         weightGoal = fragmentView.findViewById(R.id.tv_weightGoal);
-        weightGoal.setText("Please select your weekly weight change goal:");
+       // weightGoal.setText("Please select your weekly weight change goal:");
         weightChangeDropdown = fragmentView.findViewById(R.id.spin_weightChangeDropdown);
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightChange);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -218,21 +218,21 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
         if(mvUserEnteredGoal < 0) {
-            tvActualGoal.setText("Your weekly goal: Lose " + -mvUserEnteredGoal + " pound(s)");
+            tvActualGoal.setText("" + -mvUserEnteredGoal);
         } else if(mvUserEnteredGoal == 0) {
-            tvActualGoal.setText("Your weekly goal: Maintain current weight");
+            tvActualGoal.setText("0.0");
         } else {
-            tvActualGoal.setText("Your weekly goal: Gain " + mvUserEnteredGoal + " pound(s)");
+            tvActualGoal.setText("" + mvUserEnteredGoal);
         }
 
         mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
-
+        int calories = (int) mvUserDailyRecommendedCalorieIntake ;
         int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
         if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }
 
-        tvRecommendedCalories.setText("Recommended daily calorie intake: " + mvUserDailyRecommendedCalorieIntake);
+        tvRecommendedCalories.setText(calories + " cal");
         mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
     }
     @Override
