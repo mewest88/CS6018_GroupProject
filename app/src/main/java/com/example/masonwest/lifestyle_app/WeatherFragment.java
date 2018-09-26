@@ -78,6 +78,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
                 //Get the string from the edit text and sanitize the input
                 String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
                 loadWeatherData(inputFromEt);
+                mBtSubmit.setVisibility(View.INVISIBLE) ;
                 Toast.makeText(getActivity(), "click worked", Toast.LENGTH_SHORT).show();
             }
             break;

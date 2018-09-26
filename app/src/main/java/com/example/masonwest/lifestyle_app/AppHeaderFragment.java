@@ -2,17 +2,13 @@ package com.example.masonwest.lifestyle_app;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +26,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     private Bundle pictureBundle;
     private Bitmap thumbNail;
     private ImageButton mButtonSettings;
-    OnDataPass mDataPasser;
+    HeaderDataPass mDataPasser;
 
     public AppHeaderFragment() {
 
@@ -40,13 +36,13 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         super.onAttach(context);
 
         try{
-            mDataPasser = (OnDataPass) context;
+            mDataPasser = (HeaderDataPass) context;
         }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
         }
     }
-    public interface OnDataPass{
-        void onDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
+    public interface HeaderDataPass {
+        void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
     }
     @Nullable
     @Override
@@ -61,7 +57,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         mButtonSettings = view.findViewById(R.id.settingsButton);
         mButtonSettings.setOnClickListener(this);
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
-        //Get the data that was sent in via onDataPass
+        //Get the data that was sent in via HeaderDataPass
         mFirstName = getArguments().getString("userFirstName");
         mLastName = getArguments().getString("userLastName");
         mFullName = getArguments().getString("userFullName");
@@ -100,7 +96,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
         //Replace the fragment container
 //        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
-        mDataPasser.onDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
+        mDataPasser.HeaderDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
 //        fTrans.commit();
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:id="@+id/relativeLayout" >
+    android:id="@+id/relativeLayout">
 
     <TextView
         android:id="@+id/et_firstName_hardcoded"
@@ -27,8 +27,8 @@
         android:id="@+id/et_firstName"
         android:layout_width="109dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginRight="75dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorWhite"
         android:gravity="center_horizontal"
@@ -103,7 +103,7 @@
 
     <Spinner
         android:id="@+id/et_Age"
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -140,7 +140,7 @@
 
     <Spinner
         android:id="@+id/et_City"
-        android:layout_width="109dp"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -177,7 +177,7 @@
 
     <Spinner
         android:id="@+id/et_Country"
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -214,7 +214,7 @@
 
     <Spinner
         android:id="@+id/et_Sex"
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -251,7 +251,7 @@
 
     <Spinner
         android:id="@+id/et_Height"
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -288,7 +288,7 @@
 
     <Spinner
         android:id="@+id/et_Weight"
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -346,8 +346,8 @@
 
     <ImageButton
         android:id="@+id/button_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/ic_submitarrow"
         app:layout_constraintEnd_toEndOf="parent"
@@ -361,9 +361,15 @@
         android:id="@+id/iv_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/button_submit"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_takePicture"
+        app:layout_constraintTop_toBottomOf="@id/et_Weight" />
+
+    <!--android:visibility="invisible"-->
+
 
 </android.support.constraint.ConstraintLayout>

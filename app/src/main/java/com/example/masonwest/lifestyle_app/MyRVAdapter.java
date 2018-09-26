@@ -39,7 +39,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
         try{
             mDataPasser = (DataPasser) mContext;
         }catch(ClassCastException e){
-            throw new ClassCastException(mContext.toString()+ " must implement OnDataPass");
+            throw new ClassCastException(mContext.toString()+ " must implement HeaderDataPass");
         }
 
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -58,6 +58,9 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
                                                  }
                                              }
         );
+
+        // if position is 0
+        // holder. imageview .setImageResource(R.drawable. //)
     }
 
     public void remove(int position){
