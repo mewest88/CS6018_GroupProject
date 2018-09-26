@@ -41,7 +41,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         try{
             mDataPasser = (OnDataPass) context;
         }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
         }
     }
 
@@ -143,6 +143,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightChange);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightChangeDropdown.setAdapter(goalAdapter);
+//        if(mvUserEnteredGoal)
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {

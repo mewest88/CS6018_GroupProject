@@ -9,7 +9,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +60,7 @@ public class EditUserDetailsFragment extends Fragment
         try{
             mDataPasser = (OnDataPass) context;
         }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
         }
     }
 
@@ -72,6 +74,7 @@ public class EditUserDetailsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
+
 
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
@@ -88,15 +91,32 @@ public class EditUserDetailsFragment extends Fragment
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
 
+        
+        if (savedInstanceState != null) {
+            mFirstName = savedInstanceState.getString("userFirstName");
+            mEtFirstName.setText(mFirstName);
+            mLastName = savedInstanceState.getString("userLastName");
+            mEtLastName.setText(mLastName);
+            mCity = savedInstanceState.getString("userCity");
+            mCountry = savedInstanceState.getString("userCountry");
+            mSex = savedInstanceState.getString("userSex");
+            mAge = savedInstanceState.getInt("userAge");
+            mHeight = savedInstanceState.getInt("userHeight");
+            mWeight = savedInstanceState.getInt("userWeight");
+            thumbnailImage = savedInstanceState.getBundle("userPic");
+        }
+
+
         String[] ageOptions = new String[120];
         for(int i = 0; i < 120; i++) {
-            ageOptions[i] = String.valueOf(i);
+            ageOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalAgeOptions = ageOptions;
         ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerAge.setAdapter(ageAdapter);
 
+        mSpinnerAge.setSelection(17);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
@@ -115,13 +135,17 @@ public class EditUserDetailsFragment extends Fragment
 
         String[] weightOptions = new String[400];
         for(int i = 0; i < 400; i++) {
-            weightOptions[i] = String.valueOf(i);
+            weightOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalWeightOptions = weightOptions;
         ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightOptions);
         weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerWeight.setAdapter(weightAdapter);
-
+        if(mWeight > 1) {
+            mSpinnerWeight.setSelection(mWeight - 1);
+        } else {
+            mSpinnerWeight.setSelection(99);
+        }
         mSpinnerWeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -132,19 +156,23 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerWeight.setSelection(150);
+                mSpinnerWeight.setSelection(149);
             }
         });
 
-        String[] heightOptions = new String[80];
-        for(int i = 0; i < 80; i++) {
-            heightOptions[i] = String.valueOf(i);
+        String[] heightOptions = new String[96];
+        for(int i = 0; i < 96; i++) {
+            heightOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalHeightOptions = heightOptions;
         ArrayAdapter<String> heightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalHeightOptions);
         heightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerHeight.setAdapter(heightAdapter);
-
+        if(mHeight > 1) {
+            mSpinnerHeight.setSelection(mHeight - 1);
+        } else {
+            mSpinnerHeight.setSelection(65);
+        }
         mSpinnerHeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -172,6 +200,18 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCity.setAdapter(cityAdapter);
+        if(mCity != null) {
+            int index = 0;
+            for(int i = 0; i < cityOptions.length; i++) {
+                if(cityOptions[i].equals(mCity)) {
+                    index = i;
+                    break;
+                }
+                mSpinnerCity.setSelection(index);
+            }
+        } else {
+            mSpinnerCity.setSelection(3);
+        }
 
         mSpinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -200,7 +240,18 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);
         countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCountry.setAdapter(countryAdapter);
-
+        if(mCountry != null) {
+            int index = 0;
+            for(int i = 0; i < countryOptions.length; i++) {
+                if(countryOptions[i].equals(mCountry)) {
+                    index = i;
+                    break;
+                }
+            }
+            mSpinnerCountry.setSelection(index);
+        } else {
+            mSpinnerCountry.setSelection(0);
+        }
         mSpinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -222,6 +273,14 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalSexOptions);
         sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerSex.setAdapter(sexAdapter);
+        if(mSex != null) {
+            if (mSex.equals("Female")) {
+                mSpinnerSex.setSelection(1);
+            }
+        } else {
+                mSpinnerSex.setSelection(1);
+            }
+        mSpinnerSex.setSelection(0);
 
         mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -249,7 +308,11 @@ public class EditUserDetailsFragment extends Fragment
 //            mIvPic.setImageBitmap(mProfPic);
         }
     }
-
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//    }
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
@@ -323,6 +386,10 @@ public class EditUserDetailsFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
     /**
      * Used to restore the app in the case that the state needs to be saved
      * @param savedInstanceState
@@ -335,18 +402,45 @@ public class EditUserDetailsFragment extends Fragment
         //check and make sure bundle is not null first
         if(savedInstanceState != null) {
             //Restore stuff
-            if ("userFirstName" == null) {
+
+            if (savedInstanceState.getString("userFirstName") == null) {
                 mEtFirstName.setText("");
             } else {
                 mEtFirstName.setText(savedInstanceState.getString("userFirstName"));
             }
-            if ("userLastName" == null) {
+            if (savedInstanceState.getString("userLastName") == null) {
                 mEtLastName.setText("");
             } else {
                 mEtLastName.setText(savedInstanceState.getString("userLastName"));
             }
-            mProfPic = savedInstanceState.getParcelable("userPic");
+
+            mSex = savedInstanceState.getString("userSex");
+            mCity = savedInstanceState.getString("userCity");
+            mCountry = savedInstanceState.getString("userCountry");
+            mAge = savedInstanceState.getInt("userAge");
+            if(savedInstanceState.getParcelable("userPic") != null) {
+                mProfPic = savedInstanceState.getParcelable("userPic");
+            }
         }
+    }
+
+    // Call this function inside onClick of button
+
+    public void showHideFragment(final Fragment fragment){
+
+        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
+                android.R.animator.fade_out);
+
+        if (fragment.isHidden()) {
+            fragTransaction.show(fragment);
+            Log.d("hidden","Show");
+        } else {
+            fragTransaction.hide(fragment);
+            Log.d("Shown","Hide");
+        }
+
+        fragTransaction.commit();
     }
 }
 
