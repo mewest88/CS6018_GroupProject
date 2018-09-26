@@ -101,13 +101,14 @@ public class EditUserDetailsFragment extends Fragment
 
         String[] ageOptions = new String[120];
         for(int i = 0; i < 120; i++) {
-            ageOptions[i] = String.valueOf(i);
+            ageOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalAgeOptions = ageOptions;
         ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerAge.setAdapter(ageAdapter);
 
+        mSpinnerAge.setSelection(17);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
@@ -126,13 +127,17 @@ public class EditUserDetailsFragment extends Fragment
 
         String[] weightOptions = new String[400];
         for(int i = 0; i < 400; i++) {
-            weightOptions[i] = String.valueOf(i);
+            weightOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalWeightOptions = weightOptions;
         ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightOptions);
         weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerWeight.setAdapter(weightAdapter);
-
+        if(mWeight > 1) {
+            mSpinnerWeight.setSelection(mWeight - 1);
+        } else {
+            mSpinnerWeight.setSelection(99);
+        }
         mSpinnerWeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -143,19 +148,23 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerWeight.setSelection(150);
+                mSpinnerWeight.setSelection(149);
             }
         });
 
-        String[] heightOptions = new String[80];
-        for(int i = 0; i < 80; i++) {
-            heightOptions[i] = String.valueOf(i);
+        String[] heightOptions = new String[96];
+        for(int i = 0; i < 96; i++) {
+            heightOptions[i] = String.valueOf(i + 1);
         }
         final String[] finalHeightOptions = heightOptions;
         ArrayAdapter<String> heightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalHeightOptions);
         heightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerHeight.setAdapter(heightAdapter);
-
+        if(mHeight > 1) {
+            mSpinnerHeight.setSelection(mHeight - 1);
+        } else {
+            mSpinnerHeight.setSelection(65);
+        }
         mSpinnerHeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -183,6 +192,18 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCity.setAdapter(cityAdapter);
+        if(mCity != null) {
+            int index = 0;
+            for(int i = 0; i < cityOptions.length; i++) {
+                if(cityOptions[i].equals(mCity)) {
+                    index = i;
+                    break;
+                }
+                mSpinnerCity.setSelection(index);
+            }
+        } else {
+            mSpinnerCity.setSelection(3);
+        }
 
         mSpinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -211,7 +232,18 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);
         countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCountry.setAdapter(countryAdapter);
-
+        if(mCountry != null) {
+            int index = 0;
+            for(int i = 0; i < countryOptions.length; i++) {
+                if(countryOptions[i].equals(mCountry)) {
+                    index = i;
+                    break;
+                }
+            }
+            mSpinnerCountry.setSelection(index);
+        } else {
+            mSpinnerCountry.setSelection(0);
+        }
         mSpinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -233,6 +265,14 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalSexOptions);
         sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerSex.setAdapter(sexAdapter);
+        if(mSex != null) {
+            if (mSex.equals("Female")) {
+                mSpinnerSex.setSelection(1);
+            }
+        } else {
+                mSpinnerSex.setSelection(1);
+            }
+        mSpinnerSex.setSelection(0);
 
         mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -354,17 +394,25 @@ public class EditUserDetailsFragment extends Fragment
         //check and make sure bundle is not null first
         if(savedInstanceState != null) {
             //Restore stuff
-            if ("userFirstName" == null) {
+
+            if (savedInstanceState.getString("userFirstName") == null) {
                 mEtFirstName.setText("");
             } else {
                 mEtFirstName.setText(savedInstanceState.getString("userFirstName"));
             }
-            if ("userLastName" == null) {
+            if (savedInstanceState.getString("userLastName") == null) {
                 mEtLastName.setText("");
             } else {
                 mEtLastName.setText(savedInstanceState.getString("userLastName"));
             }
-            mProfPic = savedInstanceState.getParcelable("userPic");
+
+            mSex = savedInstanceState.getString("userSex");
+            mCity = savedInstanceState.getString("userCity");
+            mCountry = savedInstanceState.getString("userCountry");
+            mAge = savedInstanceState.getInt("userAge");
+            if(savedInstanceState.getParcelable("userPic") != null) {
+                mProfPic = savedInstanceState.getParcelable("userPic");
+            }
         }
     }
 }
