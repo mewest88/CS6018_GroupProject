@@ -227,6 +227,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
         int calories = (int) mvUserDailyRecommendedCalorieIntake ;
+
         int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
         if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
