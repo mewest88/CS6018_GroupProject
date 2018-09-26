@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity
                 if (isTablet()) {
                     //Create a new detail fragment
                     FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
+                    //make a bundle and put the stuff in it
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness_tablet");
@@ -109,9 +110,14 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             case 1: { //BMI Page
+                newUser.calculateBMI();
+                Double bmiValue = newUser.getBMI();
                 if (isTablet()) {
                     //Create a new detail fragment
                     BmiFragment bmiFragment = new BmiFragment();
+                    Bundle bmiData = new Bundle();
+                    bmiData.putDouble("bmi_data",bmiValue);
+                    bmiFragment.setArguments(bmiData);
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_BMI_tablet");
@@ -119,8 +125,6 @@ public class MainActivity extends AppCompatActivity
                     fTrans.commit();
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-                    newUser.calculateBMI();
-                    Double bmiValue = newUser.getBMI();
                     positionBundle.putDouble("bmi_data",bmiValue);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
