@@ -58,6 +58,9 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
                                                  }
                                              }
         );
+
+        // if position is 0
+        // holder. imageview .setImageResource(R.drawable. //)
     }
 
     public void remove(int position){

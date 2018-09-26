@@ -38,7 +38,7 @@ public class EditUserDetailsFragment extends Fragment
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
     private String mFirstName, mLastName, mAgeString, mCity, mCountry, mSex;
-//    private ImageView mIvPic;
+    private ImageView mIvPic;
     int mAge, mHeight, mWeight;
     Bundle thumbnailImage;
     Bitmap mProfPic, picture;
@@ -84,7 +84,7 @@ public class EditUserDetailsFragment extends Fragment
         mSpinnerHeight = (Spinner) fragmentView.findViewById(R.id.et_Height);
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
-//        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
+        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
 

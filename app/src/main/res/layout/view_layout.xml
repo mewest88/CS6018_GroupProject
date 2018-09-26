@@ -7,7 +7,6 @@
     android:layout_marginTop="30dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
-
     android:gravity="center"
     >
 
@@ -17,7 +16,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/ic_lightning"
+        android:background="@drawable/lightningbolt"
         android:paddingLeft="10dp" />
 
     <TextView
