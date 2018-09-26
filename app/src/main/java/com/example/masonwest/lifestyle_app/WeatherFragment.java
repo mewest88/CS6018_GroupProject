@@ -79,7 +79,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
                 String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
                 loadWeatherData(inputFromEt);
                 mBtSubmit.setVisibility(View.INVISIBLE) ;
-                Toast.makeText(getActivity(), "click worked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "click worked", Toast.LENGTH_SHORT).show();
             }
             break;
         }
