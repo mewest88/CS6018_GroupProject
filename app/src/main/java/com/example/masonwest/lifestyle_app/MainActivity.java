@@ -89,7 +89,13 @@ public class MainActivity extends AppCompatActivity
                 if (isTablet()) {
                     //Create a new detail fragment
                     FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
-                    //make a bundle and put the stuff in it
+                    Bundle fitnessData = new Bundle();
+                    fitnessData.putString("userFullName", mUserFullName);
+                    fitnessData.putInt("userAge", mUserAge);
+                    fitnessData.putInt("userWeight", mUserWeight);
+                    fitnessData.putInt("userHeight", mUserHeight);
+                    fitnessData.putString("userSex", mUserSex);
+                    fitnessFragment.setArguments(fitnessData);
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness_tablet");
