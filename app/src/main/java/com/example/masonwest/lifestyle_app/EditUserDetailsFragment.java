@@ -9,7 +9,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -414,6 +416,25 @@ public class EditUserDetailsFragment extends Fragment
                 mProfPic = savedInstanceState.getParcelable("userPic");
             }
         }
+    }
+
+    // Call this function inside onClick of button
+
+    public void showHideFragment(final Fragment fragment){
+
+        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
+                android.R.animator.fade_out);
+
+        if (fragment.isHidden()) {
+            fragTransaction.show(fragment);
+            Log.d("hidden","Show");
+        } else {
+            fragTransaction.hide(fragment);
+            Log.d("Shown","Hide");
+        }
+
+        fragTransaction.commit();
     }
 }
 

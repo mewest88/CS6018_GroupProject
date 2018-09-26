@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -184,6 +185,9 @@ public class MainActivity extends AppCompatActivity
 //        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
         newUser = new User(1, firstName, lastName, age, height, weight, city, country, thumbnail, sex);
         allUsers.add(newUser);
+
+        showHideFragment(mUserDetailFragment);
+
         //MASTER LIST WORK
         //Get the Master List fragment
         mMasterListFragment = new MasterListFragment();
@@ -277,4 +281,25 @@ public class MainActivity extends AppCompatActivity
         mUserDetailFragment.setArguments(settingsBundle);
         fTrans.commit();
     }
+
+    // Call this function inside onClick of button
+
+    public void showHideFragment(final Fragment fragment){
+
+//        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
+                android.R.animator.fade_out);
+
+        if (fragment.isHidden()) {
+            fragTransaction.show(fragment);
+            Log.d("hidden","Show");
+        } else {
+            fragTransaction.hide(fragment);
+            Log.d("Shown","Hide");
+        }
+
+        fragTransaction.commit();
+    }
+
 }
