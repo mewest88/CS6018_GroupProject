@@ -142,6 +142,12 @@ public class User {
     public double getBMI() {
         return BMI;
     }
+    public double getBMR() {
+        return BMR;
+    }
+    public void setBMR(double passedBMR) {
+        BMR = passedBMR;
+    }
     public String getLocation() { return city + "," + country; }
     public int getUserID() {
         return userID;

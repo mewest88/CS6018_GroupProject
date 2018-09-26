@@ -77,9 +77,6 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserHeight = getArguments().getInt("userHeight");
             mvUserWeight = getArguments().getInt("userWeight");
             mvUserSex = getArguments().getString("userSex");
-            mvUserBMR = getArguments().getDouble("userBMR");
-            mvUserEnteredGoal = getArguments().getDouble("userEnteredGoal");
-            mvUserDailyRecommendedCalorieIntake = getArguments().getDouble("userCalories");
             mvUserPic = getArguments().getParcelable("userPic");
         }
 
