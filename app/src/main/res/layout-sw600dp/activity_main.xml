@@ -26,7 +26,7 @@
             android:id="@+id/fl_frag_masterlist_container_tablet"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5" />
+            android:layout_weight="1.4" />
 
         <FrameLayout
             android:id="@+id/fl_frag_itemdetail_container_tablet"

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.net.ConnectivityManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +17,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
 
-    private MasterListFragment mMasterListFragment;
-    private SignUpHeaderFragment mSignUpHeaderFragment;
-    private AppHeaderFragment mAppHeaderFragment;
-    private Fragment mUserDetailFragment;
+    private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private ArrayList<String> mItemList;
     private User newUser;
     private ArrayList<User> allUsers = new ArrayList<>();
+    private Boolean isEditUser = false;
+
+    String mUserActivityLevel, mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
+    double mUserBMR, mUserEnteredGoal, mUserDailyRecommendedCalorieIntake;
+    int mUserHeight, mUserAge, mUserWeight;
+    Bundle mUserProfilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +36,15 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState == null) {
             //CREATE THE VIEW TO ENTER USER INFORMATION
             mUserDetailFragment = new EditUserDetailsFragment();
+            isEditUser = true;
         } else {
-            mUserDetailFragment = getSupportFragmentManager().getFragment(savedInstanceState, "submit_frag");
+            mMasterListFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_masterlist");
+            mUserDetailFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_detail");
+            mSignUpHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "signup_header_frag");
+            mAppHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "app_header_frag");
+            isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
+
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
 
@@ -42,7 +52,7 @@ public class MainActivity extends AppCompatActivity
             fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "submit_frag");
         }
         else {
-            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag");
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_userdetail_phone");
         }
 
         mSignUpHeaderFragment = new SignUpHeaderFragment();
@@ -54,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         else {
             fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
         }
+
         fTrans.commit();
 
         //Create the list of headers
@@ -68,7 +79,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void passData(int position) {
         Bundle positionBundle = new Bundle();
-        positionBundle.putInt("click_position",position);
+        positionBundle.putInt("click_position", position);
+        //isEditUser should be false??
 
         //Uses switch statement to tell the passData which fragment to open based on position
         switch(position) {
@@ -79,18 +91,16 @@ public class MainActivity extends AppCompatActivity
                     FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 } else { //On a phone
                     //Start ItemDetailActivity, pass the string along
-                    positionBundle.putString("userFullName", newUser.getName());
-                    positionBundle.putInt("userAge", newUser.getAge());
-                    positionBundle.putInt("userWeight", newUser.getWeight());
-                    positionBundle.putInt("userHeight", newUser.getHeight());
-                    positionBundle.putString("userSex", newUser.getSex());
-                    positionBundle.putDouble("userGoal", newUser.getGoal());
-                    positionBundle.putString("userActivity", newUser.getActivityLevel());
+                    positionBundle.putString("userFullName", mUserFullName);
+                    positionBundle.putInt("userAge", mUserAge);
+                    positionBundle.putInt("userWeight", mUserWeight);
+                    positionBundle.putInt("userHeight", mUserHeight);
+                    positionBundle.putString("userSex", mUserSex);
 
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
                     sendIntent.putExtras(positionBundle);
@@ -104,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                     BmiFragment bmiFragment = new BmiFragment();
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_bmi");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_BMI_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 } else {
@@ -123,13 +133,13 @@ public class MainActivity extends AppCompatActivity
                     WeatherFragment weatherFragment = new WeatherFragment();
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, weatherFragment, "frag_weather");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, weatherFragment, "frag_weather_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
                     String location = newUser.getLocation();
-                    positionBundle.putString("location_data",location);
+                    positionBundle.putString("location_data", location);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
@@ -141,7 +151,7 @@ public class MainActivity extends AppCompatActivity
                     HikesFragment hikesFragment = new HikesFragment();
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes_tablet");
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 } else {
@@ -162,6 +172,19 @@ public class MainActivity extends AppCompatActivity
     //from EditUserFragment
     @Override
     public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage, String sex) {
+        mUserFirstName = firstName;
+        mUserLastName = lastName;
+        mUserFullName = firstName + " " + lastName;
+        mUserAge = age;
+        mUserHeight = height;
+        mUserWeight = weight;
+        mUserCity = city;
+        mUserCountry = country;
+        mUserSex = sex;
+        mUserProfilePic = thumbnailImage;
+
+        isEditUser = false;
+        
         // Hide EditUserData fragment
         showHideFragment(mUserDetailFragment);
 
@@ -189,12 +212,11 @@ public class MainActivity extends AppCompatActivity
         // it takes over the whole screen
         if(isTablet()){
             //Pane 1: Master list
-            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment,"frag_masterlist");
+            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment,"frag_masterlist_tablet");
         }
         else{
-            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist");
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist_phone");
         }
-
 
         //HEADER WORK
         mAppHeaderFragment = new AppHeaderFragment();
@@ -232,19 +254,44 @@ public class MainActivity extends AppCompatActivity
 
     //from App Header
     @Override
+
     public void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
+        mUserFirstName = firstName;
+        mUserLastName = lastName;
+        mUserFullName = firstName + " " + lastName;
+        mUserAge = age;
+        mUserHeight = height;
+        mUserWeight = weight;
+        mUserCity = city;
+        mUserCountry = country;
+        mUserSex = sex;
+        mUserProfilePic = pic;
+
+        isEditUser = true;
+
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
+
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "submit_frag");
+        }
+        else {
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_userdetail_phone");
+        }
 
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "frag_signupheader_tablet"); //.getTag()???
+        }
+        else {
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
+        }
 
         Bundle settingsBundle = new Bundle();
-        settingsBundle.putString("userFirstName",firstName);
-        settingsBundle.putString("userLastName",lastName);
+        settingsBundle.putString("userFirstName", firstName);
+        settingsBundle.putString("userLastName", lastName);
         settingsBundle.putInt("userAge", age);
         settingsBundle.putInt("userWeight", weight);
         settingsBundle.putInt("userHeight", height);
@@ -257,10 +304,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Call this function inside onClick of button
-
     public void showHideFragment(final Fragment fragment){
-
-//        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
         fragTransaction.setCustomAnimations(android.R.animator.fade_in,
                 android.R.animator.fade_out);
@@ -279,30 +323,51 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        FragmentTransaction fTrans2 = getSupportFragmentManager().beginTransaction();
-        if (isTablet()) {
-            fTrans2.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment, "submit_frag");
+        FragmentManager fMan = getSupportFragmentManager();
+        FragmentTransaction fTrans = fMan.beginTransaction();
+
+
+        if(isEditUser) {
+            if(isTablet()) {
+                fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment);
+            } else {
+                fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+            }
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
+        } else {
+            if(isTablet()) {
+                fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment);
+            } else {
+                fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment);
+            }
+            fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment);
         }
-        else {
-            fTrans2.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag");
-        }
-        //Replace the fragment container
-        fTrans2.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "signup_header_frag"); //.getTag()???
-        fTrans2.commit();
+        fTrans.commit();
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("editUserBoolean", isEditUser);
         super.onSaveInstanceState(outState);
-        if(mMasterListFragment != null) {
+        outState.putInt("userAge", mUserAge);
+        outState.putInt("userHeight", mUserHeight);
+        outState.putInt("userWeight", mUserWeight);
+        outState.putString("userSex", mUserSex);
+        outState.putString("userFirstName", mUserFirstName);
+        outState.putString("userLastName", mUserLastName);
+        outState.putString("userFullName", mUserFullName);
+        outState.putBundle("userPic", mUserProfilePic);
+
+        if(mMasterListFragment != null && mMasterListFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "frag_masterlist", mMasterListFragment);
         }
-        if(mUserDetailFragment != null) {
-            getSupportFragmentManager().putFragment(outState, "submit_frag", mUserDetailFragment);
-        }
-        if(mSignUpHeaderFragment != null) {
+//        if(mUserDetailFragment != null && mUserDetailFragment.isAdded()) {
+//            getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
+//        }
+        getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
+        if(mSignUpHeaderFragment != null && mSignUpHeaderFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "signup_header_frag", mSignUpHeaderFragment);
         }
-        if(mAppHeaderFragment != null) {
+        if(mAppHeaderFragment != null && mAppHeaderFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "app_header_frag", mAppHeaderFragment);
         }
     }

@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -77,9 +78,6 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserHeight = getArguments().getInt("userHeight");
             mvUserWeight = getArguments().getInt("userWeight");
             mvUserSex = getArguments().getString("userSex");
-            mvUserBMR = getArguments().getDouble("userBMR");
-            mvUserEnteredGoal = getArguments().getDouble("userEnteredGoal");
-            mvUserDailyRecommendedCalorieIntake = getArguments().getDouble("userCalories");
             mvUserPic = getArguments().getParcelable("userPic");
         }
 
@@ -193,7 +191,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 //        });
 
         //Display
-        Button calculateBMR = fragmentView.findViewById(R.id.button_calculateBMR);
+        ImageButton calculateBMR = fragmentView.findViewById(R.id.button_calculateBMR);
         calculateBMR.setOnClickListener(this);
         tvActualGoal = fragmentView.findViewById(R.id.tv_actualGoal);
         tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);

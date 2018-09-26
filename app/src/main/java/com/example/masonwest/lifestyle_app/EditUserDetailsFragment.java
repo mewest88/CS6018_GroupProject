@@ -327,25 +327,15 @@ public class EditUserDetailsFragment extends Fragment
                 mFirstName = mFirstName.replaceAll("^\\s+", "");
                 mLastName = mLastName.replaceAll("^\\s+", "");
 
-                //Collect the age
-//                mAgeString = mEtAge.getText().toString();
-//                mAge = Integer.parseInt(mAgeString);
-
                 //Check if the EditText's for first and last name strings are empty
                 if (mFirstName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a first name please!", Toast.LENGTH_SHORT).show();
                 } else if (mLastName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a last name please!", Toast.LENGTH_SHORT).show();
-//                } else if (mAgeString.matches("")) {
-//                    Toast.makeText(getActivity(), "Please enter a valid birth date in the form mm/dd/yyyy.", Toast.LENGTH_SHORT).show();
-                    // TODO: Add a line to convert the entered age into an int, than I can do this check easily.
-//                } else if (mAge < 0 || mAge > 150) {
-//                    Toast.makeText(getActivity(), "Please enter a valid birth date. 0 > Age < 150."
-//                            , Toast.LENGTH_SHORT).show();
                 } else if (thumbnailImage == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
                     //Start an activity and pass the EditText string to it.
                     mDataPasser.onDataPass(mFirstName, mLastName, mAge, mHeight, mWeight, mCity, mCountry, thumbnailImage, mSex);
                 }
@@ -376,7 +366,7 @@ public class EditUserDetailsFragment extends Fragment
         //Put them in the outgoing Bundle
         outState.putString("userFirstName", mFirstName);
         outState.putString("userLastName", mLastName);
-        outState.putParcelable("userPic", picture);
+        outState.putBundle("userPic", thumbnailImage);
         outState.putInt("userAge", mAge);
         outState.putInt("userWeight", mWeight);
         outState.putInt("userHeight", mHeight);
@@ -421,28 +411,9 @@ public class EditUserDetailsFragment extends Fragment
             mCountry = savedInstanceState.getString("userCountry");
             mAge = savedInstanceState.getInt("userAge");
             if(savedInstanceState.getParcelable("userPic") != null) {
-                mProfPic = savedInstanceState.getParcelable("userPic");
+                thumbnailImage = savedInstanceState.getParcelable("userPic");
             }
         }
-    }
-
-    // Call this function inside onClick of button
-
-    public void showHideFragment(final Fragment fragment){
-
-        FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
-                android.R.animator.fade_out);
-
-        if (fragment.isHidden()) {
-            fragTransaction.show(fragment);
-            Log.d("hidden","Show");
-        } else {
-            fragTransaction.hide(fragment);
-            Log.d("Shown","Hide");
-        }
-
-        fragTransaction.commit();
     }
 }
 
