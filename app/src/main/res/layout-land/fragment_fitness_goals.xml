@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".FitnessGoalsFragment"
     android:id="@+id/relativeLayout">
 
@@ -76,6 +76,7 @@
         app:layout_constraintTop_toTopOf="@+id/spin_activityLevelDropdown" />
 
     <View
+        android:id="@+id/view2"
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:layout_marginTop="40dp"
@@ -135,29 +136,28 @@
         android:id="@+id/tv_recommendedCaloriesText"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="26dp"
         android:fontFamily="@font/rajdhani_semibold"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="-16sp"
         android:text="Recommended Calories:"
         android:textAppearance="@style/titleText"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_actualGoalText" />
+        app:layout_constraintStart_toEndOf="@+id/tv_actualGoalText"
+        app:layout_constraintTop_toBottomOf="@id/view2" />
 
     <TextView
         android:id="@+id/tv_recommendedCalories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginLeft="244dp"
+        android:layout_marginStart="244dp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="-16sp"
         android:text="0.0"
         android:textAppearance="@style/dynamicHealthText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recommendedCaloriesText" />
-
 </android.support.constraint.ConstraintLayout>

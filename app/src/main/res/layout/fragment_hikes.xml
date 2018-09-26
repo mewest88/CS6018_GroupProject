@@ -9,7 +9,7 @@
 
     <ImageView
         android:layout_width="336dp"
-        android:layout_height="388dp"
+        android:layout_height="300dp"
         android:background="@drawable/ic_tree"
         android:alpha="0.5"
         app:layout_constraintBottom_toBottomOf="parent"

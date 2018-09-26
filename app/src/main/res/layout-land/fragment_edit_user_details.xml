@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/relativeLayout">
+
+    <TextView
+        android:id="@+id/et_firstName_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/firstName"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_firstName"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_firstName"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="384dp"
+        android:layout_marginRight="384dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorWhite"
+        android:gravity="center_horizontal"
+        android:hint="@string/enter"
+        android:lineSpacingExtra="-8sp"
+        android:textAppearance="@style/enterText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/et_lastName_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/lastName"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_lastName"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_firstName_hardcoded" />
+
+    <EditText
+        android:id="@+id/et_lastName"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:hint="@string/enter"
+        android:textAppearance="@style/enterText"
+        android:backgroundTint="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="@+id/et_firstName"
+        app:layout_constraintTop_toBottomOf="@+id/et_firstName" />
+
+    <TextView
+        android:id="@+id/et_Age_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterAge"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_Age"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_lastName_hardcoded" />
+
+    <Spinner
+        android:id="@+id/et_Age"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/et_lastName"
+        app:layout_constraintTop_toBottomOf="@+id/et_lastName" />
+
+    <TextView
+        android:id="@+id/et_city_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterCity"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_City"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_Age_hardcoded" />
+
+    <Spinner
+        android:id="@+id/et_City"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/et_Age"
+        app:layout_constraintTop_toBottomOf="@+id/et_Age" />
+
+    <TextView
+        android:id="@+id/et_country_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterCountry"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_Country"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_city_hardcoded" />
+
+    <Spinner
+        android:id="@+id/et_Country"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/et_City"
+        app:layout_constraintTop_toBottomOf="@+id/et_City" />
+
+    <TextView
+        android:id="@+id/et_Sex_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterSex"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintStart_toEndOf="@+id/et_firstName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/et_Sex"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toEndOf="@+id/et_Sex_hardcoded"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/et_Height_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterHeight"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintStart_toEndOf="@+id/et_lastName"
+        app:layout_constraintTop_toTopOf="@id/et_Sex" />
+
+    <Spinner
+        android:id="@+id/et_Height"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/et_Sex"
+        app:layout_constraintTop_toBottomOf="@+id/et_Sex" />
+
+    <TextView
+        android:id="@+id/et_Weight_hardcoded"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/enterWeight"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/et_Weight"
+        app:layout_constraintHorizontal_bias="0.979"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_Height_hardcoded" />
+
+    <Spinner
+        android:id="@+id/et_Weight"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/et_Height"
+        app:layout_constraintTop_toBottomOf="@+id/et_Height" />
+
+    <TextView
+        android:id="@+id/tv_enterPicture"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-16sp"
+        android:text="@string/uploadIcon"
+        android:textAppearance="@style/titleText"
+        app:layout_constraintEnd_toStartOf="@+id/button_takePicture"
+        app:layout_constraintHorizontal_bias="0.979"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_Weight_hardcoded" />
+
+    <Button
+        android:id="@+id/button_takePicture"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="-8sp"
+        android:text="@string/upload"
+        android:fontFamily="@font/rajdhani_semibold"
+        app:layout_constraintStart_toStartOf="@+id/et_Weight"
+        app:layout_constraintTop_toBottomOf="@+id/et_Weight" />
+
+    <ImageButton
+        android:id="@+id/button_submit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/ic_submitarrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_takePicture" />
+
+    <ImageView
+        android:id="@+id/iv_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_takePicture"
+        app:layout_constraintTop_toBottomOf="@id/et_Weight" />
+
+    <!--android:visibility="invisible"-->
+
+
+</android.support.constraint.ConstraintLayout>
