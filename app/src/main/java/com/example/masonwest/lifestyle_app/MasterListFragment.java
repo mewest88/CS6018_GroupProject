@@ -51,8 +51,6 @@ public class MasterListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         //Get data from main activity
-//        CustomViewsList customListData = getArguments().getParcelable("item_list");
-//        List<String> inputList = customListData.getItemList();
         ArrayList<String> mItemList = getArguments().getStringArrayList("item_list");
 
         //Set the adapter
@@ -62,27 +60,31 @@ public class MasterListFragment extends Fragment {
         return fragmentView;
     }
 
-//    @Override
-//    public void onPause()
-//    {
-//        super.onPause();
-//
-//        // save RecyclerView state
-//        mBundleRecyclerViewState = new Bundle();
-//        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-//        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-//    }
-//
-//    @Override
-//    public void onResume()
-//    {
-//        super.onResume();
-//
-//        // restore RecyclerView state
-//        if (mBundleRecyclerViewState != null) {
-//            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-//            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-//        }
-//    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
 
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        // restore RecyclerView state
+        if (mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
 }
