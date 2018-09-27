@@ -3,10 +3,7 @@ package com.example.masonwest.lifestyle_app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
-import android.net.ConnectivityManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +12,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
+        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private ArrayList<String> mItemList;
@@ -272,7 +269,7 @@ public class MainActivity extends AppCompatActivity
     //from App Header
     @Override
 
-    public void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
+    public void OnDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
         mUserFirstName = firstName;
         mUserLastName = lastName;
         mUserFullName = firstName + " " + lastName;
