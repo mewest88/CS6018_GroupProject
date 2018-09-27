@@ -352,17 +352,19 @@ public class MainActivity extends AppCompatActivity
         if(isEditUser) {
             if(isTablet()) {
                 fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment);
+                fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment);
             } else {
                 fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+                fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
             }
-            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
         } else {
             if(isTablet()) {
                 fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment);
+                fTrans.replace(R.id.fl_header_tablet, mAppHeaderFragment);
             } else {
                 fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment);
+                fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment);
             }
-            fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment);
         }
         fTrans.commit();
     }
