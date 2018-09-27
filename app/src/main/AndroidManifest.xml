@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ViewDetailActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
