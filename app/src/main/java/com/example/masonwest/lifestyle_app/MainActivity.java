@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity
             fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
         }
 
-        fTrans.addToBackStack(null);
+//        fTrans.addToBackStack(null);
         fTrans.commit();
     }
 
@@ -377,15 +377,27 @@ public class MainActivity extends AppCompatActivity
         if(mMasterListFragment != null && mMasterListFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "frag_masterlist", mMasterListFragment);
         }
-//        if(mUserDetailFragment != null && mUserDetailFragment.isAdded()) {
-//            getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
-//        }
-        getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
+        if(mUserDetailFragment != null && mUserDetailFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
+        }
+//        getSupportFragmentManager().putFragment(outState, "frag_detail", mUserDetailFragment);
         if(mSignUpHeaderFragment != null && mSignUpHeaderFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "signup_header_frag", mSignUpHeaderFragment);
         }
         if(mAppHeaderFragment != null && mAppHeaderFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "app_header_frag", mAppHeaderFragment);
         }
+    }
+    @Override
+    public void onBackPressed() {
+        FragmentManager fMan = getSupportFragmentManager();
+        FragmentTransaction fTrans = fMan.beginTransaction();
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
+        } else {
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+        }
+        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
+        fTrans.commit();
     }
 }
