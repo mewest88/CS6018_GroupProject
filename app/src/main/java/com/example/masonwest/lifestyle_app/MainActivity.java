@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity
         else {
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_detail");
         }
-
+        showHideFragment(mUserDetailFragment);
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
