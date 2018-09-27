@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     tools:context=".MainActivity"
     android:id="@+id/relativeLayout">
 
@@ -85,7 +86,7 @@
 
     <Spinner
         android:id="@+id/et_Age"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -141,7 +142,7 @@
 
     <Spinner
         android:id="@+id/et_Country"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -167,7 +168,7 @@
 
     <Spinner
         android:id="@+id/et_Sex"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
@@ -195,7 +196,7 @@
 
     <Spinner
         android:id="@+id/et_Height"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -223,7 +224,7 @@
 
     <Spinner
         android:id="@+id/et_Weight"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/btn_dropdown"
@@ -251,7 +252,7 @@
 
     <Button
         android:id="@+id/button_takePicture"
-        android:layout_width="109dp"
+        android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
