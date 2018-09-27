@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             case 1: { //BMI Page
-                double bmiValue = newUser.calculateBMI(mUserWeight, mUserHeight);
+                double bmiValue = User.calculateBMI(mUserWeight, mUserHeight);
                 if (isTablet()) {
                     //Create a new detail fragment
                     BmiFragment bmiFragment = new BmiFragment();

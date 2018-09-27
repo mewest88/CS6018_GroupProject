@@ -35,7 +35,11 @@ public class User {
     }
     //call before sending BMI to BMI fragment
     public static double calculateBMI(int weight, int height) {
-        return (weight / (height * height)) * 703.0;
+        double heightSquared = height * height;
+        double unconverted = weight / heightSquared;
+        double converted = unconverted * 703;
+        return converted;
+//        return (weight / (height * height)) * 703.0;
     }
     //should be called to calculate base BMR and also desiredBMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {

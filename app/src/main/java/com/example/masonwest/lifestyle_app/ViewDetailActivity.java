@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Switch;
 
+import static java.lang.Double.NaN;
+
 public class ViewDetailActivity extends AppCompatActivity implements FitnessGoalsFragment.OnDataPass {
 
     // Fragment member variables
@@ -20,6 +22,7 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
     private double mBMR;
     private double mDailyCalories;
     private double mGoal;
+    private double mBMIValue;
     @Override
     public void onDataPass(String activityLevel, double BMR, double dailyCalories, double goal) {
         mActivityLevel = activityLevel;
@@ -52,45 +55,57 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         switch(position) {
             case 0: {
                 //Create the fragment
-                mFitnessFragment = new FitnessGoalsFragment();
-                String firstName = extras.getString("userFirstName");
-                String lastName = extras.getString("userLastName");
-                String activityLevel = extras.getString("userActivityLevel");
-                String sex = extras.getString("userSex");
-                int age = extras.getInt("userAge");
-                int weight = extras.getInt("userWeight");
-                int height = extras.getInt("userHeight");
-                double weightGoal = extras.getDouble("userGoal");
+                if(savedInstanceState == null) {
+                    mFitnessFragment = new FitnessGoalsFragment();
 
-                Bundle fitnessBundle = new Bundle();
-                fitnessBundle.putString("userFirstName", firstName);
-                fitnessBundle.putString("userLastName", lastName);
-                fitnessBundle.putString("userActivityLevel", activityLevel);
-                fitnessBundle.putString("userSex", sex);
-                fitnessBundle.putInt("userAge", age);
-                fitnessBundle.putInt("userWeight", weight);
-                fitnessBundle.putInt("userHeight", height);
-                fitnessBundle.putDouble("userGoal", weightGoal);
-                //No need to check if we're on a tablet. This activity only gets created on phones.
-                mFitnessFragment.setArguments(fitnessBundle);
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
-                fTrans.commit();
+
+                    String firstName = extras.getString("userFirstName");
+                    String lastName = extras.getString("userLastName");
+                    String activityLevel = extras.getString("userActivityLevel");
+                    String sex = extras.getString("userSex");
+                    int age = extras.getInt("userAge");
+                    int weight = extras.getInt("userWeight");
+                    int height = extras.getInt("userHeight");
+                    double weightGoal = extras.getDouble("userGoal");
+
+                    Bundle fitnessBundle = new Bundle();
+                    fitnessBundle.putString("userFirstName", firstName);
+                    fitnessBundle.putString("userLastName", lastName);
+                    fitnessBundle.putString("userActivityLevel", activityLevel);
+                    fitnessBundle.putString("userSex", sex);
+                    fitnessBundle.putInt("userAge", age);
+                    fitnessBundle.putInt("userWeight", weight);
+                    fitnessBundle.putInt("userHeight", height);
+                    fitnessBundle.putDouble("userGoal", weightGoal);
+                    //No need to check if we're on a tablet. This activity only gets created on phones.
+                    mFitnessFragment.setArguments(fitnessBundle);
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
+                    fTrans.commit();
+                }
                 break;
             }
             case 1: {
-                //Create the fragment
-                mBmiFragment = new BmiFragment();
-                // Get BMI from MainActivity
-                Double bmiValue = extras.getDouble("bmi_data");
-                // Make bundle to send to bmi fragment
-                Bundle bmiData = new Bundle();
-                bmiData.putDouble("bmi_data",bmiValue);
-                mBmiFragment.setArguments(bmiData);
-                //No need to check if we're on a tablet. This activity only gets created on phones.
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
-                fTrans.commit();
+//                if(savedInstanceState == null) {
+                    //Create the fragment
+                    mBmiFragment = new BmiFragment();
+                    // Get BMI from MainActivity
+
+                if(getIntent().hasExtra("bmi_data")) {
+                    mBMIValue = extras.getDouble("bmi_data");
+                } else {
+                    mBMIValue = savedInstanceState.getDouble("userBMI");
+                }
+
+                    // Make bundle to send to bmi fragment
+                    Bundle bmiData = new Bundle();
+                    bmiData.putDouble("bmi_data", mBMIValue);
+                    mBmiFragment.setArguments(bmiData);
+                    //No need to check if we're on a tablet. This activity only gets created on phones.
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
+                    fTrans.commit();
+//                }
                 break;
             }
             case 2: {
@@ -127,5 +142,9 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
 //        fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mItemDetailFragment, "frag_itemdetail");
 //        fTrans.commit();
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putDouble("userBMI", mBMIValue);
+    }
 }
