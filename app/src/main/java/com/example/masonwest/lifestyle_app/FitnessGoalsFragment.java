@@ -82,10 +82,10 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
             mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
             mvUserPic = savedInstanceState.getParcelable("userPic");
-            if(savedInstanceState.getString("goalTextView") != null) {
+            if(goalText != null) {
                 tvActualGoal.setText(goalText);
             }
-            if(savedInstanceState.getString("caloriesTextView") != null) {
+            if(calText != null) {
                 tvRecommendedCalories.setText(calText);
             }
         } else {
@@ -231,13 +231,14 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         }
 
         mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
-        if(mvUserEnteredGoal < 0) {
-            tvActualGoal.setText("" + -mvUserEnteredGoal);
-        } else if(mvUserEnteredGoal == 0) {
-            tvActualGoal.setText("0.0");
-        } else {
-            tvActualGoal.setText("" + mvUserEnteredGoal);
-        }
+        tvActualGoal.setText(String.valueOf(mvUserEnteredGoal));
+//        if(mvUserEnteredGoal < 0) {
+//            tvActualGoal.setText("" + -mvUserEnteredGoal);
+//        } else if(mvUserEnteredGoal == 0) {
+//            tvActualGoal.setText("0.0");
+//        } else {
+//            tvActualGoal.setText("" + mvUserEnteredGoal);
+//        }
 
         mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
         int calories = (int) mvUserDailyRecommendedCalorieIntake ;
