@@ -55,13 +55,13 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
         mBtSubmit.setOnClickListener(this);
 
-//        if (savedInstanceState != null) {
-//            mEtLocation = savedInstanceState.getString("BMI_TEXT");
-//        }
-//        else {
+        if (savedInstanceState != null) {
+            mLocation = savedInstanceState.getString("LOC_TEXT");
+        }
+        else {
             //Get the bmi double to display
             mLocation = getArguments().getString("location_data");
-//        }
+        }
 
         //Set the text in the fragment
         mTvLocation.setText("" + mLocation);
@@ -174,7 +174,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         mLocation = mTvLocation.getText().toString();
 
         //Put them in the outgoing Bundle
-        outState.putString("BMI_TEXT",mLocation);
+        outState.putString("LOC_TEXT",mLocation);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);

@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<User> allUsers = new ArrayList<>();
     private Boolean isEditUser = false;
 
-    String mUserActivityLevel, mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
+    String mUserActivityLevel, mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry, mLocation;
     double mUserBMR, mUserEnteredGoal, mUserDailyRecommendedCalorieIntake;
     int mUserHeight, mUserAge, mUserWeight;
     Bundle mUserProfilePic;
@@ -153,12 +153,13 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             case 2: { //Weather Page
-                String location = mUserCity + "," + mUserCountry;
+                mLocation = mUserCity + "," + mUserCountry;
+//                mLocation = newUser.getLocation();
                 if (isTablet()) {
                     //Create a new detail fragment
                     WeatherFragment weatherFragment = new WeatherFragment();
                     Bundle locationData = new Bundle();
-                    locationData.putString("location_data",location);
+                    locationData.putString("location_data",mLocation);
                     weatherFragment.setArguments(locationData);
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-                    positionBundle.putString("location_data", location);
+                    positionBundle.putString("location_data", mLocation);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
@@ -387,6 +388,9 @@ public class MainActivity extends AppCompatActivity
         outState.putString("userFirstName", mUserFirstName);
         outState.putString("userLastName", mUserLastName);
         outState.putString("userFullName", mUserFullName);
+        outState.putString("userCity", mUserCity);
+        outState.putString("userCountry", mUserCountry);
+        outState.putString("userLocation", mLocation);
         outState.putBundle("userPic", mUserProfilePic);
 
         if(mMasterListFragment != null && mMasterListFragment.isAdded()) {

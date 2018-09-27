@@ -16,10 +16,10 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
 
     // Fragment member variables
     private FitnessGoalsFragment mFitnessFragment;
-    private Fragment mBmiFragment;
-    private WeatherFragment mWeatherFragment;
+    private Fragment mBmiFragment, mWeatherFragment;
+//    private WeatherFragment mWeatherFragment;
     private HikesFragment mHikesFragment;
-    private String mActivityLevel;
+    private String mActivityLevel, mLocation;
     private double mBMR;
     private double mDailyCalories;
     private double mGoal;
@@ -84,7 +84,6 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 break;
             }
             case 1: {
-
                 if (savedInstanceState == null) {
                     //Create the fragment
                     mBmiFragment = new BmiFragment();
@@ -93,30 +92,34 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                     mBmiFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_BMIdetail");
                     mBMIValue = savedInstanceState.getDouble("userBMI");
                 }
-
-                    //No need to check if we're on a tablet. This activity only gets created on phones.
-                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
-                    // Make bundle to send to bmi fragment
-                    Bundle bmiData = new Bundle();
-                    bmiData.putDouble("bmi_data", mBMIValue);
-                    mBmiFragment.setArguments(bmiData);
-                    fTrans.commit();
+                //No need to check if we're on a tablet. This activity only gets created on phones.
+                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
+                // Make bundle to send to bmi fragment
+                Bundle bmiData = new Bundle();
+                bmiData.putDouble("bmi_data", mBMIValue);
+                mBmiFragment.setArguments(bmiData);
+                fTrans.commit();
 
                 break;
             }
             case 2: {
-                //Create the fragment
-                mWeatherFragment = new WeatherFragment();
-                // Get Location from MainActivity
-                String location = extras.getString("location_data");
-                // Make bundle to send to weather fragment
-                Bundle locationData = new Bundle();
-                locationData.putString("location_data",location);
-                mWeatherFragment.setArguments(locationData);
-                //No need to check if we're on a tablet. This activity only gets created on phones.
+                if (savedInstanceState == null) {
+                    //Create the fragment
+                    mWeatherFragment = new WeatherFragment();
+                    // Get Location from MainActivity
+                    mLocation = extras.getString("location_data");
+                } else {
+//                    mWeatherFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_locationdetail");
+                    mWeatherFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_locationdetail");
+                    mLocation = savedInstanceState.getString("userLocation");
+                }
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment, "frag_weatherdetail");
+                // Make bundle to send to weather fragment
+                Bundle locationData = new Bundle();
+                locationData.putString("location_data",mLocation);
+                mWeatherFragment.setArguments(locationData);
                 fTrans.commit();
                 break;
             }
@@ -145,6 +148,10 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         if(mBmiFragment != null) {
             getSupportFragmentManager().putFragment(savedState, "frag_BMIdetail", mBmiFragment);
         }
+        if(mWeatherFragment != null) {
+            getSupportFragmentManager().putFragment(savedState, "frag_weatherdetail", mWeatherFragment);
+        }
         savedState.putDouble("userBMI", mBMIValue);
+        savedState.putString("userLocation", mLocation);
     }
 }
