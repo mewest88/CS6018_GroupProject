@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity
             mUserFirstName = savedInstanceState.getString("userFirstName");
             mUserLastName = savedInstanceState.getString("userLastName");
             mUserFullName = savedInstanceState.getString("userFullName");
+            mUserCity = savedInstanceState.getString("userCity");
+            mUserCountry = savedInstanceState.getString("userCountry");
             mUserProfilePic = savedInstanceState.getBundle("userPic");
         }
 
@@ -387,6 +389,8 @@ public class MainActivity extends AppCompatActivity
         outState.putString("userFirstName", mUserFirstName);
         outState.putString("userLastName", mUserLastName);
         outState.putString("userFullName", mUserFullName);
+        outState.putString("userCity", mUserCity);
+        outState.putString("userCountry", mUserCountry);
         outState.putBundle("userPic", mUserProfilePic);
 
         if(mMasterListFragment != null && mMasterListFragment.isAdded()) {
