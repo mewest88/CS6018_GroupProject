@@ -39,7 +39,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
         try{
             mDataPasser = (DataPasser) mContext;
         }catch(ClassCastException e){
-            throw new ClassCastException(mContext.toString()+ " must implement HeaderDataPass");
+            throw new ClassCastException(mContext.toString()+ " must implement OnDataPass");
         }
 
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);

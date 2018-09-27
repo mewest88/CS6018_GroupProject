@@ -26,7 +26,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     private Bundle pictureBundle;
     private Bitmap thumbNail;
     private ImageButton mButtonSettings;
-    HeaderDataPass mDataPasser;
+    OnDataPass mDataPasser;
 
     public AppHeaderFragment() {
 
@@ -36,13 +36,13 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         super.onAttach(context);
 
         try{
-            mDataPasser = (HeaderDataPass) context;
+            mDataPasser = (OnDataPass) context;
         }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
         }
     }
-    public interface HeaderDataPass {
-        void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
+    public interface OnDataPass {
+        void OnDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
     }
     @Nullable
     @Override
@@ -57,7 +57,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         mButtonSettings = view.findViewById(R.id.settingsButton);
         mButtonSettings.setOnClickListener(this);
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
-        //Get the data that was sent in via HeaderDataPass
+        //Get the data that was sent in via OnDataPass
         mFirstName = getArguments().getString("userFirstName");
         mLastName = getArguments().getString("userLastName");
         mFullName = getArguments().getString("userFullName");
@@ -96,7 +96,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
         //Replace the fragment container
 //        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
-        mDataPasser.HeaderDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
+        mDataPasser.OnDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
 //        fTrans.commit();
     }
 }
