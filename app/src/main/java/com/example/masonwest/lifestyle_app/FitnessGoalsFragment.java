@@ -248,7 +248,9 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         }
 
         tvRecommendedCalories.setText(calories + " cal");
-        mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
+        if (!isTablet()) {
+            mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
+        }
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
