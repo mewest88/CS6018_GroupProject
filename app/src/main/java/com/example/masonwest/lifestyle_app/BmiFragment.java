@@ -39,10 +39,13 @@ public class BmiFragment extends Fragment {
         mTvBMIData = (TextView) fragmentView.findViewById(R.id.tv_bmi_data);
 
         if (savedInstanceState != null) {
-            bmiData = savedInstanceState.getString("BMI_TEXT");
+            bmiValueString = savedInstanceState.getString("BMI_TEXT");
         }
         else {
             //Get the bmi double to display
+            if(getArguments() == null) {
+
+            }
             bmiValue = getArguments().getDouble("bmi_data");
             bmiValueString = Double.toString(bmiValue);
         }

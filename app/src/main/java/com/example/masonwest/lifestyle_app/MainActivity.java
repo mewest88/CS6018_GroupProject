@@ -46,6 +46,14 @@ public class MainActivity extends AppCompatActivity
             mSignUpHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "signup_header_frag");
             mAppHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "app_header_frag");
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
+            mUserAge = savedInstanceState.getInt("userAge");
+            mUserHeight = savedInstanceState.getInt("userHeight");
+            mUserWeight = savedInstanceState.getInt("userWeight");
+            mUserSex = savedInstanceState.getString("userSex");
+            mUserFirstName = savedInstanceState.getString("userFirstName");
+            mUserLastName = savedInstanceState.getString("userLastName");
+            mUserFullName = savedInstanceState.getString("userFullName");
+            mUserProfilePic = savedInstanceState.getBundle("userPic");
         }
 
         if(isEditUser) {

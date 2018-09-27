@@ -68,10 +68,11 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         calculateBMR.setOnClickListener(this);
         tvActualGoal = fragmentView.findViewById(R.id.tv_actualGoal);
         tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);
-
+        String goalText = "";
+        String calText = "";
         if(savedInstanceState != null) {
-            String goalText = savedInstanceState.getString("goalTextView");
-            String calText = savedInstanceState.getString("caloriesTextView");
+            goalText = savedInstanceState.getString("goalTextView");
+            calText = savedInstanceState.getString("caloriesTextView");
             mUserFirstName = savedInstanceState.getString("userFirstName");
             mUserLastName = savedInstanceState.getString("userLastName");
             mvUserAge = savedInstanceState.getInt("userAge");
@@ -82,12 +83,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
             mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
             mvUserPic = savedInstanceState.getParcelable("userPic");
-            if(goalText != null) {
-                tvActualGoal.setText(goalText);
-            }
-            if(calText != null) {
-                tvRecommendedCalories.setText(calText);
-            }
+
         } else {
             mUserFirstName = getArguments().getString("userFirstName");
             mUserLastName = getArguments().getString("userLastName");
@@ -96,9 +92,14 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserWeight = getArguments().getInt("userWeight");
             mvUserSex = getArguments().getString("userSex");
             mvUserPic = getArguments().getParcelable("userPic");
-
         }
 
+        if(goalText != "") {
+            tvActualGoal.setText(goalText);
+        }
+        if(calText != "") {
+            tvRecommendedCalories.setText(calText);
+        }
 //        mvUserEnteredGoal; passed from main
 //        mvUserDailyRecommendedCalorieIntake; passed from main
 //        mvUserActivityLevel = passed from main(so we can know if they've visited this page before)
