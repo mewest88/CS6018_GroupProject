@@ -34,15 +34,8 @@ public class User {
         profilePic = profilePicPassed;
     }
     //call before sending BMI to BMI fragment
-    public void calculateBMI() {
-        if(weightLBS > 0 && heightInches > 0) {
-            double w = weightLBS;
-            double h = heightInches;
-            //multiply by 703 for english system vs metric system
-            BMI = (w / (h * h)) * 703.0;
-        } else {
-            return; //if 0/null notify in fragment?
-        }
+    public static double calculateBMI(int weight, int height) {
+        return (weight / (height * height)) * 703.0;
     }
     //should be called to calculate base BMR and also desiredBMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {

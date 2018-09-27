@@ -40,11 +40,13 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         super.onAttach(context);
 
         //TODO: commented this out to make this fragment work on the tablet
-//        try{
-//            mDataPasser = (OnDataPass) context;
-//        }catch(ClassCastException e){
-//            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
-//        }
+        if(!isTablet()) {
+            try {
+                mDataPasser = (OnDataPass) context;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
+            }
+        }
     }
 
     //Callback interface
@@ -60,8 +62,16 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         //we need to check if they've already been here before
         //null checks for activity level, change goal
+        //Display
+
+        ImageButton calculateBMR = fragmentView.findViewById(R.id.button_calculateBMR);
+        calculateBMR.setOnClickListener(this);
+        tvActualGoal = fragmentView.findViewById(R.id.tv_actualGoal);
+        tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);
 
         if(savedInstanceState != null) {
+            String goalText = savedInstanceState.getString("goalTextView");
+            String calText = savedInstanceState.getString("caloriesTextView");
             mUserFirstName = savedInstanceState.getString("userFirstName");
             mUserLastName = savedInstanceState.getString("userLastName");
             mvUserAge = savedInstanceState.getInt("userAge");
@@ -72,6 +82,12 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
             mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
             mvUserPic = savedInstanceState.getParcelable("userPic");
+            if(savedInstanceState.getString("goalTextView") != null) {
+                tvActualGoal.setText(goalText);
+            }
+            if(savedInstanceState.getString("caloriesTextView") != null) {
+                tvRecommendedCalories.setText(calText);
+            }
         } else {
             mUserFirstName = getArguments().getString("userFirstName");
             mUserLastName = getArguments().getString("userLastName");
@@ -80,6 +96,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             mvUserWeight = getArguments().getInt("userWeight");
             mvUserSex = getArguments().getString("userSex");
             mvUserPic = getArguments().getParcelable("userPic");
+
         }
 
 //        mvUserEnteredGoal; passed from main
@@ -191,11 +208,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 //            }
 //        });
 
-        //Display
-        ImageButton calculateBMR = fragmentView.findViewById(R.id.button_calculateBMR);
-        calculateBMR.setOnClickListener(this);
-        tvActualGoal = fragmentView.findViewById(R.id.tv_actualGoal);
-        tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);
+
 //
 //        if(mvUserGainLossGoal == "loss") {
 //            tvGoalDescription.setText("Enter weekly loss goal: ");
@@ -213,7 +226,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        if(mvUserEnteredGoal > 2) {
+        if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
             Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
         }
 
@@ -240,15 +253,33 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
+        String goalText = tvActualGoal.getText().toString();
+        String calText = tvRecommendedCalories.getText().toString();
         outState.putInt("userAge", mvUserAge);
         outState.putInt("userHeight", mvUserHeight);
         outState.putDouble("userWeight", mvUserWeight);
         outState.putString("userSex", mvUserSex);
         outState.putDouble("userBMR", mvUserBMR);
         outState.putDouble("userEnteredGoal", mvUserEnteredGoal);
+        outState.putString("goalTextView", goalText);
+        outState.putString("caloriesTextView", calText);
         outState.putDouble("userCalories", mvUserDailyRecommendedCalorieIntake);
         outState.putParcelable("userPic", mvUserPic);
 
         super.onSaveInstanceState(outState);
+    }
+//    @Override
+//    public void onViewStateRestored(Bundle inState) {
+//        super.onViewStateRestored(inState);
+//        if(inState != null) {
+//            String goalText = inState.getString("goalTextView");
+//            String calText = inState.getString("caloriesTextView");
+//            tvActualGoal.setText(goalText);
+//            tvRecommendedCalories.setText(calText);
+//        }
+//    }
+    public boolean isTablet()
+    {
+        return getResources().getBoolean(R.bool.isTablet);
     }
 }

@@ -415,5 +415,6 @@ public class EditUserDetailsFragment extends Fragment
             }
         }
     }
+
 }
 

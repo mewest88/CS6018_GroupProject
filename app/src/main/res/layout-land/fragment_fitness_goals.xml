@@ -127,7 +127,6 @@
         android:layout_marginStart="32dp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="-16sp"
-        android:text="0.0"
         android:textAppearance="@style/dynamicHealthText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_actualGoalText" />
@@ -156,7 +155,6 @@
         android:layout_marginStart="244dp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="-16sp"
-        android:text="0.0"
         android:textAppearance="@style/dynamicHealthText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recommendedCaloriesText" />
