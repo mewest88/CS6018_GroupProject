@@ -165,6 +165,9 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
                 mvUserEnteredGoal = Double.parseDouble(finalWeightChange[position]);
+                if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
+                    Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -227,9 +230,9 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
-            Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
-        }
+//        if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
+//            Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
+//        }
 
         mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
         tvActualGoal.setText(String.valueOf(mvUserEnteredGoal));
