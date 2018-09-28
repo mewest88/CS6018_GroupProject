@@ -339,8 +339,8 @@ public class MainActivity extends AppCompatActivity
     // Call this function inside onClick of button
     public void showHideFragment(final Fragment fragment){
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
-                android.R.animator.fade_out);
+//        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
+//                android.R.animator.fade_out);
 
         if (fragment.isHidden()) {
             fragTransaction.show(fragment);
