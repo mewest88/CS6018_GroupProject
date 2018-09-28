@@ -413,12 +413,15 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fTrans = fMan.beginTransaction();
         isEditUser = true;
         if (isTablet()) {
-            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
+            super.onBackPressed();
+//            showHideFragment(mMasterListFragment);
+//            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
         } else {
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
+            fTrans.commit();
         }
         showHideFragment(mUserDetailFragment);
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
-        fTrans.commit();
+
     }
 }
