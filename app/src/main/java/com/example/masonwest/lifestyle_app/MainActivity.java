@@ -311,6 +311,7 @@ public class MainActivity extends AppCompatActivity
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_detail");
         }
         showHideFragment(mUserDetailFragment);
+        showHideFragment(mMasterListFragment);
         mSignUpHeaderFragment = new SignUpHeaderFragment();
 
         //Replace the fragment container
@@ -409,16 +410,22 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
-        FragmentManager fMan = getSupportFragmentManager();
-        FragmentTransaction fTrans = fMan.beginTransaction();
+
         isEditUser = true;
         if (isTablet()) {
-            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
+            super.onBackPressed();
+            showHideFragment(mUserDetailFragment);
+            showHideFragment(mMasterListFragment);
+//            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
         } else {
+            FragmentManager fMan = getSupportFragmentManager();
+            FragmentTransaction fTrans = fMan.beginTransaction();
             fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
+            fTrans.commit();
+            showHideFragment(mUserDetailFragment);
         }
-        showHideFragment(mUserDetailFragment);
-        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
-        fTrans.commit();
+
+
     }
 }
