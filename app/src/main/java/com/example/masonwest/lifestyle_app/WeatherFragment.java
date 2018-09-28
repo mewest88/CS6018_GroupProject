@@ -13,10 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONException;
-
 import java.net.URL;
 
 public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
@@ -54,7 +51,6 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
 
 //        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
 //        mBtSubmit.setOnClickListener(this);
-
         mLocation = getArguments().getString("location_data");
 
         //Set the text in the fragment

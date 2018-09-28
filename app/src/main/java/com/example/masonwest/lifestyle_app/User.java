@@ -2,8 +2,6 @@ package com.example.masonwest.lifestyle_app;
 
 import android.graphics.Bitmap;
 
-import java.util.ArrayList;
-
 public class User {
     private String sex;
     private String activityLevel;
@@ -39,7 +37,6 @@ public class User {
         double unconverted = weight / heightSquared;
         double converted = unconverted * 703;
         return converted;
-//        return (weight / (height * height)) * 703.0;
     }
     //should be called to calculate base BMR and also desiredBMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {
@@ -76,10 +73,6 @@ public class User {
 
     //only called if userID already exists
     public void updateUser(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, int weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed) {
-        //error checking can be done on data entry
-        //        if(userID != userIDPassed) {
-        //            return;
-        //        }
         firstName = firstNamePassed;
         lastName = lastNamePassed;
         age = agePassed;

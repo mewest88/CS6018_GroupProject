@@ -3,15 +3,11 @@ package com.example.masonwest.lifestyle_app;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,28 +18,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-
-/**
- */
 public class EditUserDetailsFragment extends Fragment
                                     implements View.OnClickListener {
 
-    // TODO: needs weight, height, sex, location added to everything!
     //Member variables
     private EditText mEtFirstName, mEtLastName ;
     private Spinner mSpinnerAge, mSpinnerWeight, mSpinnerHeight, mSpinnerCity, mSpinnerCountry, mSpinnerSex;
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
-    private String mFirstName, mLastName, mAgeString, mCity, mCountry, mSex;
+    private String mFirstName, mLastName, mCity, mCountry, mSex;
     private ImageView mIvPic;
     int mAge, mHeight, mWeight;
     Bundle thumbnailImage;
-    Bitmap mProfPic, picture;
+    Bitmap mProfPic;
 
     OnDataPass mDataPasser;
 
@@ -65,7 +54,6 @@ public class EditUserDetailsFragment extends Fragment
     }
 
     //Callback interface
-    // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
         void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage, String sex);
     }
@@ -74,7 +62,6 @@ public class EditUserDetailsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
-
 
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
@@ -90,7 +77,6 @@ public class EditUserDetailsFragment extends Fragment
         mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
-
         
         if (savedInstanceState != null) {
             mFirstName = savedInstanceState.getString("userFirstName");
@@ -106,7 +92,6 @@ public class EditUserDetailsFragment extends Fragment
             thumbnailImage = savedInstanceState.getBundle("userPic");
         }
 
-
         String[] ageOptions = new String[120];
         for(int i = 0; i < 120; i++) {
             ageOptions[i] = String.valueOf(i + 1);
@@ -115,15 +100,11 @@ public class EditUserDetailsFragment extends Fragment
         ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerAge.setAdapter(ageAdapter);
-
         mSpinnerAge.setSelection(17);
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
                 mAge = Integer.parseInt(finalAgeOptions[position]);
-//                if(mAge > 2) {
-////                    Toast.makeText(getBaseContext(), weightChange[position], Toast.LENGTH_SHORT).show();
-//                }
             }
 
             @Override
@@ -257,7 +238,6 @@ public class EditUserDetailsFragment extends Fragment
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
                 mCountry = finalCountryOptions[position];
-
             }
 
             @Override
@@ -281,7 +261,6 @@ public class EditUserDetailsFragment extends Fragment
                 mSpinnerSex.setSelection(1);
             }
         mSpinnerSex.setSelection(0);
-
         mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -305,16 +284,11 @@ public class EditUserDetailsFragment extends Fragment
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
             thumbnailImage = data.getExtras();
             mProfPic = (Bitmap) thumbnailImage.get("data");
-//            mIvPic.setImageBitmap(mProfPic);
             mBtPicture.setText("") ;
             mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
         }
     }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//    }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
@@ -335,7 +309,6 @@ public class EditUserDetailsFragment extends Fragment
                 } else if (thumbnailImage == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
-//                    Toast.makeText(getActivity(), "Good job!", Toast.LENGTH_SHORT).show();
                     //Start an activity and pass the EditText string to it.
                     mDataPasser.onDataPass(mFirstName, mLastName, mAge, mHeight, mWeight, mCity, mCountry, thumbnailImage, mSex);
                 }
@@ -351,7 +324,6 @@ public class EditUserDetailsFragment extends Fragment
         }
     }
 
-    //TODO: Lifecycle awareness is not working properly
     /**
      * Saves the state in case the app is closed or turned sideways
      * @param outState
@@ -361,7 +333,6 @@ public class EditUserDetailsFragment extends Fragment
         //Collect input data
         mFirstName = mEtFirstName.getText().toString();
         mLastName = mEtLastName.getText().toString();
-//        picture = (Bitmap) thumbnailImage.get("data"); //TODO: this is not working right
 
         //Put them in the outgoing Bundle
         outState.putString("userFirstName", mFirstName);
@@ -378,10 +349,6 @@ public class EditUserDetailsFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//    }
     /**
      * Used to restore the app in the case that the state needs to be saved
      * @param savedInstanceState

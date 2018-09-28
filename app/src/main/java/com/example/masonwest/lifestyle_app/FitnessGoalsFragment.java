@@ -155,16 +155,17 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         }
         final String[] finalWeightChange = weightChange;
         weightGoal = fragmentView.findViewById(R.id.tv_weightGoal);
-       // weightGoal.setText("Please select your weekly weight change goal:");
         weightChangeDropdown = fragmentView.findViewById(R.id.spin_weightChangeDropdown);
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightChange);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightChangeDropdown.setAdapter(goalAdapter);
-//        if(mvUserEnteredGoal)
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
                 mvUserEnteredGoal = Double.parseDouble(finalWeightChange[position]);
+                if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
+                    Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -181,45 +182,6 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             }
         });
 
-
-//        RadioButton lossButton = new RadioButton(getContext());
-//        lossButton.setText("Loss");
-//        RadioButton gainButton = new RadioButton(getContext());
-//        gainButton.setText("Gain");
-//        RadioButton maintainButton = new RadioButton(getContext());
-//        maintainButton.setText("Maintain");
-//        maintainButton.setChecked(true);
-//
-//        RadioGroup radioButtons = fragmentView.findViewById(R.id.rg_radioButtons);
-//        radioButtons.addView(gainButton);
-//        radioButtons.addView(maintainButton);
-//        radioButtons.addView(lossButton);
-//
-//        radioButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-//        {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                if(checkedId == 0) {
-//                    mvUserGainLossGoal = "loss";
-//                } else if(checkedId == 1){
-//                    mvUserGainLossGoal = "maintain";
-//                } else {
-//                    mvUserGainLossGoal = "gain";
-//                }
-//            }
-//        });
-
-
-//
-//        if(mvUserGainLossGoal == "loss") {
-//            tvGoalDescription.setText("Enter weekly loss goal: ");
-//            goalEntry = fragmentView.findViewById(R.id.et_goalEntry);
-//            mvUserEnteredGoal = Float.valueOf(goalEntry.getText().toString());
-//        } else if(mvUserGainLossGoal == "gain") {
-//            tvGoalDescription.setText("Enter weekly gain goal:");
-//            goalEntry = fragmentView.findViewById(R.id.et_goalEntry);
-//            mvUserEnteredGoal = Float.valueOf(goalEntry.getText().toString());
-//        }
         return fragmentView;
     }
 
@@ -227,23 +189,10 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
-            Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
-        }
-
         mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
         tvActualGoal.setText(String.valueOf(mvUserEnteredGoal));
-//        if(mvUserEnteredGoal < 0) {
-//            tvActualGoal.setText("" + -mvUserEnteredGoal);
-//        } else if(mvUserEnteredGoal == 0) {
-//            tvActualGoal.setText("0.0");
-//        } else {
-//            tvActualGoal.setText("" + mvUserEnteredGoal);
-//        }
-
         mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
         int calories = (int) mvUserDailyRecommendedCalorieIntake ;
-
         int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
         if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
@@ -272,16 +221,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         super.onSaveInstanceState(outState);
     }
-//    @Override
-//    public void onViewStateRestored(Bundle inState) {
-//        super.onViewStateRestored(inState);
-//        if(inState != null) {
-//            String goalText = inState.getString("goalTextView");
-//            String calText = inState.getString("caloriesTextView");
-//            tvActualGoal.setText(goalText);
-//            tvRecommendedCalories.setText(calText);
-//        }
-//    }
+
     public boolean isTablet()
     {
         return getResources().getBoolean(R.bool.isTablet);
