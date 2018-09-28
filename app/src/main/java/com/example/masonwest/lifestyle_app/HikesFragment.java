@@ -16,13 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.nio.DoubleBuffer;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 // this video helped me a lot -> https://www.youtube.com/watch?v=XQJiiuk8Feo
@@ -32,7 +28,7 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
 
     private Button mSearchButton;
     private FusedLocationProviderClient locationClient;
-    private String mLocation, mLatLongString;
+    private String mLatLongString;
     private String mSearchTerm = "Hikes";
 
     public HikesFragment() {
@@ -53,7 +49,6 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
         requestPermission();
         locationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-//        mSearchButton = (Button) fragmentView.findViewById(R.id.b_SearchButton);
         mSearchButton = (Button) fragmentView.findViewById(R.id.button_submit);
         mSearchButton.setOnClickListener(this);
 
@@ -76,23 +71,18 @@ public class HikesFragment extends Fragment implements View.OnClickListener {
 
                 if (location!=null) {
                     TextView textView = view.findViewById(R.id.tv_Hikes_Information);
-//                    textView.setText("" + location.toString());
-                    //will comment out above once working
 
                     // Convert the Fused location to just latitude and longitude
                     double lat = location.getLatitude();
                     double lon = location.getLongitude();
                     String latString = Double.toString(lat);
                     String lonString = Double.toString(lon);
-//                    mLocation = location.toString(); //needs parsing and splitting
-
                     mLatLongString = latString + "," + lonString;
                     // example lat and long = 40.763056, -111.858674
 
                     Toast.makeText(getActivity(),"Searching Google maps around " + mLatLongString, Toast.LENGTH_SHORT).show();
 
                     //We have to grab the search term and construct a URI object from it to search on maps
-                    //We'll hardcode WEB's location here
                     Uri searchUri = Uri.parse("geo:" + mLatLongString + "?q=" + mSearchTerm);
 
                     //Create the implicit intent

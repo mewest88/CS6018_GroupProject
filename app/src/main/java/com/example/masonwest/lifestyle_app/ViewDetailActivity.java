@@ -1,16 +1,9 @@
 package com.example.masonwest.lifestyle_app;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Switch;
-
-import static java.lang.Double.NaN;
 
 public class ViewDetailActivity extends AppCompatActivity implements FitnessGoalsFragment.OnDataPass {
 
@@ -30,15 +23,6 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         mBMR = BMR;
         mDailyCalories = dailyCalories;
         mGoal = goal;
-//        Intent toMain = new Intent(this, MainActivity.class);
-//        Intent toMain = new Intent("updateFitnessGoals");
-//        toMain.putExtra("activityLevel", mActivityLevel);
-//        toMain.putExtra("BMR", mBMR);
-//        toMain.putExtra("dailyCalories", mDailyCalories);
-//        toMain.putExtra("goal", mGoal);
-//
-//        Log.d("sender", "Broadcasting message");
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(toMain);
     }
 
     @Override
@@ -93,7 +77,6 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                     mBmiFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_BMIdetail");
                     mBMIValue = savedInstanceState.getDouble("userBMI");
                 }
-
                     //No need to check if we're on a tablet. This activity only gets created on phones.
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
@@ -130,14 +113,6 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 break;
             }
         }
-
-//        //Create the fragment
-//        mItemDetailFragment = new ItemViewDetailFragment();
-//
-//        //No need to check if we're on a tablet. This activity only gets created on phones.
-//        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-//        fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mItemDetailFragment, "frag_itemdetail");
-//        fTrans.commit();
     }
     @Override
     public void onSaveInstanceState(Bundle savedState) {

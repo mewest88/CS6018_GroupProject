@@ -13,9 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-/**
- */
 public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     // Member Variables
@@ -44,6 +41,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     public interface HeaderDataPass {
         void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +54,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         mIvPicture = (ImageView) view.findViewById(R.id.iv_pic);
         mButtonSettings = view.findViewById(R.id.settingsButton);
         mButtonSettings.setOnClickListener(this);
+
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
         //Get the data that was sent in via HeaderDataPass
         mFirstName = getArguments().getString("userFirstName");
@@ -74,10 +73,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         if(mFirstName != null) {
             mTvFirstName.setText("" + mFullName);
         }
-//        if(mLastName != null) {
-//            mTvLastName.setText("" + mLastName);
-//        }
-        //if statement to handle the bitmap image
+
         mIvPicture.setImageBitmap(thumbNail);
 
         return view;
@@ -85,18 +81,6 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-
-//        Fragment mUserDetailFragment = new EditUserDetailsFragment();
-        //Replace the fragment container
-//        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-//        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "submit_frag"); //.getTag()???
-//        fTrans.commit();
-
-//        Fragment mSignUpHeaderFragment = new SignUpHeaderFragment();
-
-        //Replace the fragment container
-//        fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "header_frag"); //.getTag()???
         mDataPasser.HeaderDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
-//        fTrans.commit();
     }
 }
