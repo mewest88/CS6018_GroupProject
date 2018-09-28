@@ -32,6 +32,7 @@
         android:textAppearance="@style/weatherInfoText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,19 +43,10 @@
         android:layout_marginTop="8dp"
         android:text="City, Country"
         android:textAppearance="@style/weatherInfoText"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/button_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="SUBMIT"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
     <TextView
         android:id="@+id/tv_temp"
@@ -63,10 +55,9 @@
         android:layout_marginTop="48dp"
         android:textAppearance="@style/dynamicHealthText"
         android:textSize="25sp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_submit" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
     <TextView
         android:id="@+id/tv_pressure"

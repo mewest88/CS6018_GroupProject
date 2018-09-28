@@ -16,7 +16,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import java.net.URL;
 
-public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, View.OnClickListener { //extend AppCompatActivity???
+public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
 
     private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
     private String mLocation;
@@ -49,33 +49,35 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
         mTvPress = (TextView) fragmentView.findViewById(R.id.tv_pressure);
         mTvHum = (TextView) fragmentView.findViewById(R.id.tv_humidity);
 
-        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
-        mBtSubmit.setOnClickListener(this);
-
-        //Get the bmi double to display
+//        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
+//        mBtSubmit.setOnClickListener(this);
         mLocation = getArguments().getString("location_data");
 
         //Set the text in the fragment
         mTvLocation.setText("" + mLocation);
+//        String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
+        String searchLocation = mLocation.replace(' ','&');
+        loadWeatherData(searchLocation);
+
 
         getActivity().getSupportLoaderManager().initLoader(SEARCH_LOADER, null, this);
 
         return fragmentView;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.button_submit:{
-                //Get the string from the edit text and sanitize the input
-                String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
-                loadWeatherData(inputFromEt);
-                mBtSubmit.setVisibility(View.INVISIBLE) ;
-//                Toast.makeText(getActivity(), "click worked", Toast.LENGTH_SHORT).show();
-            }
-            break;
-        }
-    }
+    //Leaving the button for now in case Mason wants to add more ways to search for weather
+//    @Override
+//    public void onClick(View view) {
+//        switch(view.getId()){
+//            case R.id.button_submit:{
+//                //Get the string from the edit text and sanitize the input
+//                String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
+//                loadWeatherData(inputFromEt);
+//                mBtSubmit.setVisibility(View.INVISIBLE) ;
+//            }
+//            break;
+//        }
+//    }
 
     private void loadWeatherData(String location){
         Bundle searchQueryBundle = new Bundle();
