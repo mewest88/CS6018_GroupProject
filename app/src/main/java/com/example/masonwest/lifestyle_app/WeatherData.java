@@ -9,7 +9,6 @@ public class WeatherData {
     private Snow mSnow = new Snow();
     private Clouds mClouds = new Clouds();
 
-
     public  class CurrentCondition {
         private long mWeatherId;
         private String mCondition;
@@ -81,7 +80,6 @@ public class WeatherData {
         public void setMaxTemp(double maxTemp) {
             mMaxTemp = maxTemp;
         }
-
     }
 
     public class Wind {

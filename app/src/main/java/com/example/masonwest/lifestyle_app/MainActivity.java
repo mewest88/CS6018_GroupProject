@@ -3,10 +3,7 @@ package com.example.masonwest.lifestyle_app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
-import android.net.ConnectivityManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +20,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<User> allUsers = new ArrayList<>();
     private Boolean isEditUser = false;
 
-    String mUserActivityLevel, mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
-    double mUserBMR, mUserEnteredGoal, mUserDailyRecommendedCalorieIntake;
+    String mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
     int mUserHeight, mUserAge, mUserWeight;
     Bundle mUserProfilePic;
 
@@ -38,8 +34,6 @@ public class MainActivity extends AppCompatActivity
             mUserDetailFragment = new EditUserDetailsFragment();
             isEditUser = true;
         } else {
-//            mUserFirstName = savedInstanceState.getString("userFirstName");
-//            mUserLastName = savedInstanceState.getString("userLastName");
             mUserSex= savedInstanceState.getString("userSex");
             mMasterListFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_masterlist");
             mUserDetailFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_detail");
@@ -96,7 +90,6 @@ public class MainActivity extends AppCompatActivity
     public void passData(int position) {
         Bundle positionBundle = new Bundle();
         positionBundle.putInt("click_position", position);
-        //isEditUser should be false??
 
         //Uses switch statement to tell the passData which fragment to open based on position
         switch(position) {
@@ -112,6 +105,7 @@ public class MainActivity extends AppCompatActivity
                     fitnessData.putInt("userHeight", mUserHeight);
                     fitnessData.putString("userSex", mUserSex);
                     fitnessFragment.setArguments(fitnessData);
+
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, fitnessFragment, "frag_fitness_tablet");
@@ -140,6 +134,7 @@ public class MainActivity extends AppCompatActivity
                     Bundle bmiData = new Bundle();
                     bmiData.putDouble("bmi_data", bmiValue);
                     bmiFragment.setArguments(bmiData);
+
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, bmiFragment, "frag_BMI_tablet");
@@ -162,6 +157,7 @@ public class MainActivity extends AppCompatActivity
                     Bundle locationData = new Bundle();
                     locationData.putString("location_data",location);
                     weatherFragment.setArguments(locationData);
+
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, weatherFragment, "frag_weather_tablet");
@@ -180,6 +176,7 @@ public class MainActivity extends AppCompatActivity
                 if (isTablet()) {
                     //Create a new detail fragment
                     HikesFragment hikesFragment = new HikesFragment();
+
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes_tablet");
@@ -214,7 +211,6 @@ public class MainActivity extends AppCompatActivity
         mUserCountry = country;
         mUserSex = sex;
         mUserProfilePic = thumbnailImage;
-
         isEditUser = false;
         
         // Hide EditUserData fragment
@@ -222,8 +218,7 @@ public class MainActivity extends AppCompatActivity
 
         // Pull the bitmap image from the bundle
         Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
-        // Create a new user
-//        User(int userIDPassed, String firstNamePassed, String lastNamePassed, int agePassed, int heightPassed, float weightPassed, String cityPassed, String countryPassed, Bitmap profilePicPassed, String sexPassed)
+        // Create a new user (to be parcelable in the future)
         newUser = new User(1, firstName, lastName, age, height, weight, city, country, thumbnail, sex);
         allUsers.add(newUser);
 
@@ -298,7 +293,6 @@ public class MainActivity extends AppCompatActivity
         mUserCountry = country;
         mUserSex = sex;
         mUserProfilePic = pic;
-
         isEditUser = true;
 
         //Replace the fragment container
@@ -359,7 +353,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fMan = getSupportFragmentManager();
         FragmentTransaction fTrans = fMan.beginTransaction();
 
-
         if(isEditUser) {
             if(isTablet()) {
                 fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment);
@@ -416,7 +409,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
             showHideFragment(mUserDetailFragment);
             showHideFragment(mMasterListFragment);
-//            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mUserDetailFragment);
         } else {
             FragmentManager fMan = getSupportFragmentManager();
             FragmentTransaction fTrans = fMan.beginTransaction();
@@ -425,7 +417,5 @@ public class MainActivity extends AppCompatActivity
             fTrans.commit();
             showHideFragment(mUserDetailFragment);
         }
-
-
     }
 }
