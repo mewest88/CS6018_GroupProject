@@ -4,8 +4,18 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
+@Entity(tableName = "user_table")
 public class User implements Parcelable {
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "user_ID")
+
     private String firstName;
     private String lastName;
     private String fullName;
@@ -58,8 +68,8 @@ public class User implements Parcelable {
 
         profilePic = in.readParcelable(null);
     }
-    public User() {
-
+    public User(int userIDPassed) {
+        userID = userIDPassed;
     }
 
     //call before sending BMI to BMI fragment
@@ -215,9 +225,9 @@ public class User implements Parcelable {
     public int getUserID() {
         return userID;
     }
-    public static User getUser(int id) {
+    public User getUser() {
         //something to check user id and return the right user?
-        return new User();
+        return this;
     }
 
     @Override
