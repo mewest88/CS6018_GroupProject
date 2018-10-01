@@ -13,8 +13,7 @@ import android.widget.TextView;
 public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
-    private Double bmiValue;
-    private String mStringBMIData, bmiValueString;
+    private User currentUser;
 
     public BmiFragment() {
         // Required empty public constructor
@@ -33,20 +32,19 @@ public class BmiFragment extends Fragment {
         //Get the views
         mTvBMIData = fragmentView.findViewById(R.id.tv_bmi_data);
 
+        String bmiValueString;
         if (savedInstanceState != null) {
-            bmiValueString = savedInstanceState.getString("BMI_TEXT");
+            currentUser = savedInstanceState.getParcelable("user");
         }
         else {
-            //Get the bmi double to display
-            if(getArguments() == null) {
-
-            }
-            bmiValue = getArguments().getDouble("bmi_data");
-            bmiValueString = Double.toString(bmiValue);
+            currentUser = getArguments().getParcelable("user");
         }
 
+        double bmiValue = currentUser.getBMI();
+        bmiValueString = Double.toString(bmiValue);
+
         //Set the text in the fragment
-        mTvBMIData.setText("" + bmiValueString);
+        mTvBMIData.setText(bmiValueString);
 
         return fragmentView;
     }
@@ -57,11 +55,8 @@ public class BmiFragment extends Fragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //Get the strings
-        mStringBMIData = mTvBMIData.getText().toString();
-
         //Put them in the outgoing Bundle
-        outState.putString("BMI_TEXT",mStringBMIData);
+        outState.putParcelable("user", currentUser);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);

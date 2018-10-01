@@ -45,7 +45,7 @@ public class MasterListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         //Get data from main activity
-        ArrayList<String> mItemList = getArguments().getStringArrayList("item_list");
+        ArrayList<String> mItemList = getArguments().getStringArrayList("itemList");
 
         //Set the adapter
         mAdapter = new MyRVAdapter(mItemList);

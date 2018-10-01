@@ -16,14 +16,16 @@ import android.widget.TextView;
 public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     // Member Variables
-    private String mFirstName, mLastName, mFullName, mCity, mCountry, mSex;
-    private int mWeight, mHeight, mAge;
-    private TextView mTvFirstName, mTvLastName, mTvAge;
+//    private String mFirstName, mLastName, mFullName, mCity, mCountry, mSex;
+//    private int mWeight, mHeight, mAge;
+    private TextView mTvFullName, mTvLastName, mTvAge;
     private ImageView mIvPicture;
-    private Bundle pictureBundle;
-    private Bitmap thumbNail;
+//    private Bundle pictureBundle;
+//    private Bitmap thumbNail;
     private ImageButton mButtonSettings;
-    HeaderDataPass mDataPasser;
+    private HeaderDataPass mDataPasser;
+    private Bundle userData;
+    private User currentUser;
 
     public AppHeaderFragment() {
 
@@ -39,7 +41,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         }
     }
     public interface HeaderDataPass {
-        void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pictureBundle);
+        void HeaderDataPass(User currentUser);
     }
 
     @Nullable
@@ -49,7 +51,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_app_header, container, false);
 
         //Get the text views and image view
-        mTvFirstName = (TextView) view.findViewById(R.id.tv_fn_data);
+        mTvFullName = (TextView) view.findViewById(R.id.tv_fn_data);
 //        mTvLastName = (TextView) view.findViewById(R.id.tv_ln_data);
         mIvPicture = (ImageView) view.findViewById(R.id.iv_pic);
         mButtonSettings = view.findViewById(R.id.settingsButton);
@@ -57,30 +59,33 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
         //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
         //Get the data that was sent in via HeaderDataPass
-        mFirstName = getArguments().getString("userFirstName");
-        mLastName = getArguments().getString("userLastName");
-        mFullName = getArguments().getString("userFullName");
-        mAge = getArguments().getInt("userAge");
-        mHeight = getArguments().getInt("userHeight");
-        mWeight = getArguments().getInt("userWeight");
-        mCity = getArguments().getString("userCity");
-        mCountry = getArguments().getString("userCountry");
-        mSex = getArguments().getString("userSex");
-        pictureBundle = getArguments().getBundle("userPic");
-        thumbNail = (Bitmap) pictureBundle.get("data");
-
-        //Set the data
-        if(mFirstName != null) {
-            mTvFirstName.setText("" + mFullName);
+        if(savedInstanceState != null) {
+            currentUser = savedInstanceState.getParcelable("user");
+        } else {
+            currentUser = getArguments().getParcelable("user");
         }
 
-        mIvPicture.setImageBitmap(thumbNail);
+//        mFirstName = getArguments().getString("userFirstName");
+//        mLastName = getArguments().getString("userLastName");
+//        mFullName = getArguments().getString("userFullName");
+//        mAge = getArguments().getInt("userAge");
+//        mHeight = getArguments().getInt("userHeight");
+//        mWeight = getArguments().getInt("userWeight");
+//        mCity = getArguments().getString("userCity");
+//        mCountry = getArguments().getString("userCountry");
+//        mSex = getArguments().getString("userSex");
+//        pictureBundle = getArguments().getBundle("userPic");
+//        thumbNail = (Bitmap) pictureBundle.get("data");
+
+        //Set the data
+        mTvFullName.setText(currentUser.getFullName());
+        mIvPicture.setImageBitmap(currentUser.getProfilePic());
 
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        mDataPasser.HeaderDataPass(mFirstName, mLastName, mCity, mCountry, mSex, mAge, mWeight, mHeight, pictureBundle);
+        mDataPasser.HeaderDataPass(currentUser);
     }
 }

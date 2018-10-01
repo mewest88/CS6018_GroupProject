@@ -25,11 +25,12 @@ import android.widget.Toast;
 public class FitnessGoalsFragment extends Fragment implements View.OnClickListener {
 
     OnDataPass mDataPasser;
-    String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
+    User currentUser;
+//    String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
     Spinner activityLevelDropdown, weightChangeDropdown;
-    double mvUserBMR, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
-    int mvUserHeight, mvUserAge, mvUserWeight;
-    Bitmap mvUserPic;
+//    double mvUserBMR, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
+//    int mvUserHeight, mvUserAge, mvUserWeight;
+//    Bitmap mvUserPic;
     TextView activityLevel, weightGoal, tvActualGoal, tvRecommendedCalories;
     public FitnessGoalsFragment() {
 
@@ -52,7 +53,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     //Callback interface
     // TODO: needs weight, height, sex, location added
     public interface OnDataPass{
-        void onDataPass(String activityLevel, double BMR, double dailyCalories, double goal);
+        void onDataPass(User currentUser);
     }
 
     @Nullable
@@ -71,27 +72,28 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         String goalText = "";
         String calText = "";
         if(savedInstanceState != null) {
+            currentUser = savedInstanceState.getParcelable("user");
             goalText = savedInstanceState.getString("goalTextView");
             calText = savedInstanceState.getString("caloriesTextView");
-            mUserFirstName = savedInstanceState.getString("userFirstName");
-            mUserLastName = savedInstanceState.getString("userLastName");
-            mvUserAge = savedInstanceState.getInt("userAge");
-            mvUserHeight = savedInstanceState.getInt("userHeight");
-            mvUserWeight = savedInstanceState.getInt("userWeight");
-            mvUserSex = savedInstanceState.getString("userSex");
-            mvUserBMR = savedInstanceState.getDouble("userBMR");
-            mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
-            mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
-            mvUserPic = savedInstanceState.getParcelable("userPic");
-
+//            mUserFirstName = savedInstanceState.getString("userFirstName");
+//            mUserLastName = savedInstanceState.getString("userLastName");
+//            mvUserAge = savedInstanceState.getInt("userAge");
+//            mvUserHeight = savedInstanceState.getInt("userHeight");
+//            mvUserWeight = savedInstanceState.getInt("userWeight");
+//            mvUserSex = savedInstanceState.getString("userSex");
+//            mvUserBMR = savedInstanceState.getDouble("userBMR");
+//            mvUserEnteredGoal = savedInstanceState.getDouble("userEnteredGoal");
+//            mvUserDailyRecommendedCalorieIntake = savedInstanceState.getDouble("userCalories");
+//            mvUserPic = savedInstanceState.getParcelable("userPic");
         } else {
-            mUserFirstName = getArguments().getString("userFirstName");
-            mUserLastName = getArguments().getString("userLastName");
-            mvUserAge = getArguments().getInt("userAge");
-            mvUserHeight = getArguments().getInt("userHeight");
-            mvUserWeight = getArguments().getInt("userWeight");
-            mvUserSex = getArguments().getString("userSex");
-            mvUserPic = getArguments().getParcelable("userPic");
+            currentUser = getArguments().getParcelable("user");
+//            mUserFirstName = getArguments().getString("userFirstName");
+//            mUserLastName = getArguments().getString("userLastName");
+//            mvUserAge = getArguments().getInt("userAge");
+//            mvUserHeight = getArguments().getInt("userHeight");
+//            mvUserWeight = getArguments().getInt("userWeight");
+//            mvUserSex = getArguments().getString("userSex");
+//            mvUserPic = getArguments().getParcelable("userPic");
         }
 
         if(goalText != "") {
@@ -128,16 +130,16 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                mvUserActivityLevel = finalOptions[position];
+                currentUser.setActivityLevel(finalOptions[position]);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                if(mvUserActivityLevel.equals("")) {
+                if(currentUser.getActivityLevel().equals("")) {
                     activityLevelDropdown.setSelection(2);
                 } else {
                     for(int i = 0; i < finalOptions.length; i++) {
-                        if(mvUserActivityLevel.equals(finalOptions[i])) {
+                        if(currentUser.getActivityLevel().equals(finalOptions[i])) {
                             activityLevelDropdown.setSelection(i);
                             break;
                         }
@@ -162,19 +164,19 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mvUserEnteredGoal = Double.parseDouble(finalWeightChange[position]);
-                if(mvUserEnteredGoal > 2 || mvUserEnteredGoal < -2) {
+                currentUser.setWeightChangeGoal(Double.parseDouble(finalWeightChange[position]));
+                if(currentUser.getWeightChangeGoal() > 2 || currentUser.getWeightChangeGoal() < -2) {
                     Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                if(mvUserEnteredGoal == 0) {
+                if(currentUser.getWeightChangeGoal() == 0) {
                     weightChangeDropdown.setSelection(6);
                 }
                 for(int i = 0; i < finalWeightChange.length; i++) {
-                    if(mvUserEnteredGoal == Double.parseDouble(finalWeightChange[i])) {
+                    if(currentUser.getWeightChangeGoal() == Double.parseDouble(finalWeightChange[i])) {
                         weightChangeDropdown.setSelection(i);
                         break;
                     }
@@ -189,18 +191,26 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        mvUserBMR = User.calculateBMR(mvUserWeight, mvUserHeight, mvUserAge, mvUserSex);
-        tvActualGoal.setText(String.valueOf(mvUserEnteredGoal));
-        mvUserDailyRecommendedCalorieIntake = User.calculateDailyRecommendedCalorieIntake(mvUserBMR, mvUserActivityLevel, mvUserEnteredGoal);
-        int calories = (int) mvUserDailyRecommendedCalorieIntake ;
-        int calorieLimit = mvUserSex.equals("Male") ? 1200 : 1000;
-        if(mvUserDailyRecommendedCalorieIntake < calorieLimit) {
+        int weight = currentUser.getWeight();
+        int height = currentUser.getHeight();
+        int age = currentUser.getAge();
+        String sex = currentUser.getSex();
+        currentUser.setBMR(User.calculateBMR(weight, height, age, sex));
+        tvActualGoal.setText(String.valueOf(currentUser.getWeightChangeGoal()));
+
+        double bmr = currentUser.getBMR();
+        String activityLevel = currentUser.getActivityLevel();
+        double goal = currentUser.getWeightChangeGoal();
+        currentUser.setDailyRecommendedCalorieIntake(User.calculateDailyRecommendedCalorieIntake(bmr, activityLevel, goal));
+        int calories = (int) currentUser.getDailyRecommendedCalorieIntake();
+        int calorieLimit = currentUser.getSex().equals("Male") ? 1200 : 1000;
+        if(calories < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }
 
         tvRecommendedCalories.setText(calories + " cal");
         if (!isTablet()) {
-            mDataPasser.onDataPass(mvUserActivityLevel, mvUserBMR, mvUserDailyRecommendedCalorieIntake, mvUserEnteredGoal);
+            mDataPasser.onDataPass(currentUser);
         }
     }
     @Override
@@ -208,16 +218,16 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         String goalText = tvActualGoal.getText().toString();
         String calText = tvRecommendedCalories.getText().toString();
-        outState.putInt("userAge", mvUserAge);
-        outState.putInt("userHeight", mvUserHeight);
-        outState.putDouble("userWeight", mvUserWeight);
-        outState.putString("userSex", mvUserSex);
-        outState.putDouble("userBMR", mvUserBMR);
-        outState.putDouble("userEnteredGoal", mvUserEnteredGoal);
+//        outState.putInt("userAge", mvUserAge);
+//        outState.putInt("userHeight", mvUserHeight);
+//        outState.putDouble("userWeight", mvUserWeight);
+//        outState.putString("userSex", mvUserSex);
+//        outState.putDouble("userBMR", mvUserBMR);
+//        outState.putDouble("userEnteredGoal", mvUserEnteredGoal);
         outState.putString("goalTextView", goalText);
         outState.putString("caloriesTextView", calText);
-        outState.putDouble("userCalories", mvUserDailyRecommendedCalorieIntake);
-        outState.putParcelable("userPic", mvUserPic);
+//        outState.putDouble("userCalories", mvUserDailyRecommendedCalorieIntake);
+        outState.putParcelable("user", currentUser);
 
         super.onSaveInstanceState(outState);
     }

@@ -21,7 +21,7 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
     private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
     private String mLocation;
     private WeatherData mWeatherData;
-    private Button mBtSubmit;
+//    private Button mBtSubmit;
 
     //Uniquely identify loader
     private static final int SEARCH_LOADER = 11;

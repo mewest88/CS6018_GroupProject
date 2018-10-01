@@ -16,40 +16,38 @@ public class MainActivity extends AppCompatActivity
 
     private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private ArrayList<String> mItemList;
-    private User newUser;
+    private User currentUser;
     private ArrayList<User> allUsers = new ArrayList<>();
     private Boolean isEditUser = false;
 
-    String mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
-    int mUserHeight, mUserAge, mUserWeight;
-    Bundle mUserProfilePic;
+//    Bundle userData;
+//    String mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
+//    int mUserHeight, mUserAge, mUserWeight;
+//    Bitmap mUserProfilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Create the list of headers
+        mItemList = new ArrayList<>();
+        mItemList.add("Fitness Goals >");
+        mItemList.add("BMI >");
+        mItemList.add("Weather >");
+        mItemList.add("Hikes >");
+
         if(savedInstanceState == null) {
             //CREATE THE VIEW TO ENTER USER INFORMATION
             mUserDetailFragment = new EditUserDetailsFragment();
             isEditUser = true;
         } else {
-            mUserSex= savedInstanceState.getString("userSex");
+//            mUserSex= savedInstanceState.getString("userSex");
             mMasterListFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_masterlist");
             mUserDetailFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_detail");
             mSignUpHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "signup_header_frag");
             mAppHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "app_header_frag");
-            isEditUser = savedInstanceState.getBoolean("editUserBoolean");
-            mUserAge = savedInstanceState.getInt("userAge");
-            mUserHeight = savedInstanceState.getInt("userHeight");
-            mUserWeight = savedInstanceState.getInt("userWeight");
-            mUserSex = savedInstanceState.getString("userSex");
-            mUserFirstName = savedInstanceState.getString("userFirstName");
-            mUserLastName = savedInstanceState.getString("userLastName");
-            mUserFullName = savedInstanceState.getString("userFullName");
-            mUserCity = savedInstanceState.getString("userCity");
-            mUserCountry = savedInstanceState.getString("userCountry");
-            mUserProfilePic = savedInstanceState.getBundle("userPic");
+            currentUser = savedInstanceState.getParcelable("user");
         }
 
         if(isEditUser) {
@@ -74,15 +72,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             fTrans.commit();
-
-            //Create the list of headers
-            mItemList = new ArrayList<>();
-            mItemList.add("Fitness Goals >");
-            mItemList.add("BMI >");
-            mItemList.add("Weather >");
-            mItemList.add("Hikes >");
         }
-
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -90,6 +80,8 @@ public class MainActivity extends AppCompatActivity
     public void passData(int position) {
         Bundle positionBundle = new Bundle();
         positionBundle.putInt("click_position", position);
+//        positionBundle.putBundle("userData", userData);
+        positionBundle.putParcelable("user", currentUser);
 
         //Uses switch statement to tell the passData which fragment to open based on position
         switch(position) {
@@ -98,13 +90,7 @@ public class MainActivity extends AppCompatActivity
                 if (isTablet()) {
                     //Create a new detail fragment
                     FitnessGoalsFragment fitnessFragment = new FitnessGoalsFragment();
-                    Bundle fitnessData = new Bundle();
-                    fitnessData.putString("userFullName", mUserFullName);
-                    fitnessData.putInt("userAge", mUserAge);
-                    fitnessData.putInt("userWeight", mUserWeight);
-                    fitnessData.putInt("userHeight", mUserHeight);
-                    fitnessData.putString("userSex", mUserSex);
-                    fitnessFragment.setArguments(fitnessData);
+                    fitnessFragment.setArguments(positionBundle);
 
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -113,13 +99,7 @@ public class MainActivity extends AppCompatActivity
                     fTrans.commit();
                     break;
                 } else { //On a phone
-                    //Start ItemDetailActivity, pass the string along
-                    positionBundle.putString("userFullName", mUserFullName);
-                    positionBundle.putInt("userAge", mUserAge);
-                    positionBundle.putInt("userWeight", mUserWeight);
-                    positionBundle.putInt("userHeight", mUserHeight);
-                    positionBundle.putString("userSex", mUserSex);
-
+                    //Start ItemDetailActivity, pass the bundle
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
@@ -127,13 +107,10 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             case 1: { //BMI Page
-                double bmiValue = User.calculateBMI(mUserWeight, mUserHeight);
                 if (isTablet()) {
                     //Create a new detail fragment
                     BmiFragment bmiFragment = new BmiFragment();
-                    Bundle bmiData = new Bundle();
-                    bmiData.putDouble("bmi_data", bmiValue);
-                    bmiFragment.setArguments(bmiData);
+                    bmiFragment.setArguments(positionBundle);
 
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -143,20 +120,16 @@ public class MainActivity extends AppCompatActivity
                     break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-                    positionBundle.putDouble("bmi_data",bmiValue);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
                 }
             }
             case 2: { //Weather Page
-                String location = mUserCity + "," + mUserCountry;
                 if (isTablet()) {
                     //Create a new detail fragment
                     WeatherFragment weatherFragment = new WeatherFragment();
-                    Bundle locationData = new Bundle();
-                    locationData.putString("location_data",location);
-                    weatherFragment.setArguments(locationData);
+                    weatherFragment.setArguments(positionBundle);
 
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -166,7 +139,6 @@ public class MainActivity extends AppCompatActivity
                     break;
                 } else {
                     Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-                    positionBundle.putString("location_data", location);
                     sendIntent.putExtras(positionBundle);
                     startActivity(sendIntent);
                     break;
@@ -176,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                 if (isTablet()) {
                     //Create a new detail fragment
                     HikesFragment hikesFragment = new HikesFragment();
+                    hikesFragment.setArguments(positionBundle);
 
                     //Replace the detail fragment container
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -200,27 +173,15 @@ public class MainActivity extends AppCompatActivity
 
     //from EditUserFragment
     @Override
-    public void onDataPass(String firstName, String lastName, int age, int height, int weight, String city, String country, Bundle thumbnailImage, String sex) {
-        mUserFirstName = firstName;
-        mUserLastName = lastName;
-        mUserFullName = firstName + " " + lastName;
-        mUserAge = age;
-        mUserHeight = height;
-        mUserWeight = weight;
-        mUserCity = city;
-        mUserCountry = country;
-        mUserSex = sex;
-        mUserProfilePic = thumbnailImage;
-        isEditUser = false;
-        
+    public void onDataPass(User existingUser) {
+        currentUser = existingUser;
+
         // Hide EditUserData fragment
         showHideFragment(mUserDetailFragment);
 
-        // Pull the bitmap image from the bundle
-        Bitmap thumbnail = (Bitmap) thumbnailImage.get("data");
-        // Create a new user (to be parcelable in the future)
-        newUser = new User(1, firstName, lastName, age, height, weight, city, country, thumbnail, sex);
-        allUsers.add(newUser);
+        // Create a new user
+        // Should we always create a new user?
+        allUsers.add(currentUser);
 
         //MASTER LIST WORK
         //Get the Master List fragment
@@ -228,7 +189,9 @@ public class MainActivity extends AppCompatActivity
 
         //Send data to it
         Bundle masterListDataBundle = new Bundle();
-        masterListDataBundle.putStringArrayList("item_list",mItemList);
+        masterListDataBundle.putStringArrayList("itemList", mItemList);
+        masterListDataBundle.putParcelable("user", currentUser);
+
         //Pass data to the fragment
         mMasterListFragment.setArguments(masterListDataBundle);
 
@@ -248,24 +211,8 @@ public class MainActivity extends AppCompatActivity
         //HEADER WORK
         mAppHeaderFragment = new AppHeaderFragment();
 
-        //Get full name
-        String fullName = newUser.getName();
-
-        //Send data to it
-        Bundle headerBundle = new Bundle();
-        headerBundle.putString("userFirstName",firstName);
-        headerBundle.putString("userLastName",lastName);
-        headerBundle.putString("userFullName",fullName);
-        headerBundle.putInt("userAge", age);
-        headerBundle.putInt("userWeight", weight);
-        headerBundle.putInt("userHeight", height);
-        headerBundle.putString("userCity", city);
-        headerBundle.putString("userCountry", country);
-        headerBundle.putString("userSex", sex);
-        headerBundle.putBundle("userPic", thumbnailImage);
-
         //Pass data to the fragment
-        mAppHeaderFragment.setArguments(headerBundle);
+        mAppHeaderFragment.setArguments(masterListDataBundle);
 
         if(isTablet()){
             //Pane 1: Master list
@@ -282,18 +229,12 @@ public class MainActivity extends AppCompatActivity
     //from App Header
     @Override
 
-    public void HeaderDataPass(String firstName, String lastName, String city, String country, String sex, int age, int weight, int height, Bundle pic) {
-        mUserFirstName = firstName;
-        mUserLastName = lastName;
-        mUserFullName = firstName + " " + lastName;
-        mUserAge = age;
-        mUserHeight = height;
-        mUserWeight = weight;
-        mUserCity = city;
-        mUserCountry = country;
-        mUserSex = sex;
-        mUserProfilePic = pic;
+    public void HeaderDataPass(User existingUser) {
+//        userData = headerData;
+        Bundle headerBundle = new Bundle();
+        currentUser = existingUser;
         isEditUser = true;
+        headerBundle.putParcelable("user", currentUser);
 
         //Replace the fragment container
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
@@ -316,17 +257,7 @@ public class MainActivity extends AppCompatActivity
             fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
         }
 
-        Bundle settingsBundle = new Bundle();
-        settingsBundle.putString("userFirstName", firstName);
-        settingsBundle.putString("userLastName", lastName);
-        settingsBundle.putInt("userAge", age);
-        settingsBundle.putInt("userWeight", weight);
-        settingsBundle.putInt("userHeight", height);
-        settingsBundle.putString("userCity", city);
-        settingsBundle.putString("userCountry", country);
-        settingsBundle.putString("userSex", sex);
-        settingsBundle.putBundle("userPic", pic);
-        mUserDetailFragment.setArguments(settingsBundle);
+        mUserDetailFragment.setArguments(headerBundle);
         fTrans.commit();
     }
 
@@ -343,13 +274,15 @@ public class MainActivity extends AppCompatActivity
             fragTransaction.hide(fragment);
             Log.d("Shown","Hide");
         }
-
         fragTransaction.commit();
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+//        userData = savedInstanceState.getBundle("userData");
+        currentUser = savedInstanceState.getParcelable("user");
+        isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         FragmentManager fMan = getSupportFragmentManager();
         FragmentTransaction fTrans = fMan.beginTransaction();
 
@@ -374,18 +307,10 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("editUserBoolean", isEditUser);
         super.onSaveInstanceState(outState);
-        outState.putInt("userAge", mUserAge);
-        outState.putInt("userHeight", mUserHeight);
-        outState.putInt("userWeight", mUserWeight);
-        outState.putString("userSex", mUserSex);
-        outState.putString("userFirstName", mUserFirstName);
-        outState.putString("userLastName", mUserLastName);
-        outState.putString("userFullName", mUserFullName);
-        outState.putString("userCity", mUserCity);
-        outState.putString("userCountry", mUserCountry);
-        outState.putBundle("userPic", mUserProfilePic);
+        outState.putBoolean("editUserBoolean", isEditUser);
+//        outState.putBundle("userData", userData);
+        outState.putParcelable("user", currentUser);
 
         if(mMasterListFragment != null && mMasterListFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "frag_masterlist", mMasterListFragment);
