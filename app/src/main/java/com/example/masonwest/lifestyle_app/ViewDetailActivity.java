@@ -12,17 +12,17 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
     private Fragment mBmiFragment;
     private WeatherFragment mWeatherFragment;
     private HikesFragment mHikesFragment;
-    private String mActivityLevel;
-    private double mBMR;
-    private double mDailyCalories;
-    private double mGoal;
-    private double mBMIValue;
+    private Bundle extras;
+//    private String mActivityLevel;
+//    private double mBMR;
+//    private double mDailyCalories;
+//    private double mGoal;
+//    private double mBMIValue;
+    private User currentUser;
+
     @Override
-    public void onDataPass(String activityLevel, double BMR, double dailyCalories, double goal) {
-        mActivityLevel = activityLevel;
-        mBMR = BMR;
-        mDailyCalories = dailyCalories;
-        mGoal = goal;
+    public void onDataPass(User currentUserPassed) {
+        currentUser = currentUserPassed;
     }
 
     @Override
@@ -30,8 +30,14 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_detail);
 
-        //Pass data to the fragment
-        Bundle extras = getIntent().getExtras();
+        if(savedInstanceState != null) {
+            currentUser = savedInstanceState.getParcelable("user");
+            extras = savedInstanceState.getBundle("extras");
+        } else {
+            extras = getIntent().getExtras();
+            currentUser = extras.getParcelable("user");
+            extras.putParcelable("user", currentUser);
+        }
 
         int position = extras.getInt("click_position");
 
@@ -40,27 +46,26 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 //Create the fragment
                 if(savedInstanceState == null) {
                     mFitnessFragment = new FitnessGoalsFragment();
-
-                    String firstName = extras.getString("userFirstName");
-                    String lastName = extras.getString("userLastName");
-                    String activityLevel = extras.getString("userActivityLevel");
-                    String sex = extras.getString("userSex");
-                    int age = extras.getInt("userAge");
-                    int weight = extras.getInt("userWeight");
-                    int height = extras.getInt("userHeight");
-                    double weightGoal = extras.getDouble("userGoal");
-
-                    Bundle fitnessBundle = new Bundle();
-                    fitnessBundle.putString("userFirstName", firstName);
-                    fitnessBundle.putString("userLastName", lastName);
-                    fitnessBundle.putString("userActivityLevel", activityLevel);
-                    fitnessBundle.putString("userSex", sex);
-                    fitnessBundle.putInt("userAge", age);
-                    fitnessBundle.putInt("userWeight", weight);
-                    fitnessBundle.putInt("userHeight", height);
-                    fitnessBundle.putDouble("userGoal", weightGoal);
+//                    String firstName = extras.getString("userFirstName");
+//                    String lastName = extras.getString("userLastName");
+//                    String activityLevel = extras.getString("userActivityLevel");
+//                    String sex = extras.getString("userSex");
+//                    int age = extras.getInt("userAge");
+//                    int weight = extras.getInt("userWeight");
+//                    int height = extras.getInt("userHeight");
+//                    double weightGoal = extras.getDouble("userGoal");
+//
+//                    Bundle fitnessBundle = new Bundle();
+//                    fitnessBundle.putString("userFirstName", firstName);
+//                    fitnessBundle.putString("userLastName", lastName);
+//                    fitnessBundle.putString("userActivityLevel", activityLevel);
+//                    fitnessBundle.putString("userSex", sex);
+//                    fitnessBundle.putInt("userAge", age);
+//                    fitnessBundle.putInt("userWeight", weight);
+//                    fitnessBundle.putInt("userHeight", height);
+//                    fitnessBundle.putDouble("userGoal", weightGoal);
                     //No need to check if we're on a tablet. This activity only gets created on phones.
-                    mFitnessFragment.setArguments(fitnessBundle);
+                    mFitnessFragment.setArguments(extras);
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
                     fTrans.commit();
@@ -72,18 +77,19 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 if (savedInstanceState == null) {
                     //Create the fragment
                     mBmiFragment = new BmiFragment();
-                    mBMIValue = extras.getDouble("bmi_data");
+//                    mBMIValue = extras.getDouble("bmi_data");
                 } else {
                     mBmiFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_BMIdetail");
-                    mBMIValue = savedInstanceState.getDouble("userBMI");
+//                    mBMIValue = savedInstanceState.getDouble("userBMI");
                 }
                     //No need to check if we're on a tablet. This activity only gets created on phones.
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                     fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
                     // Make bundle to send to bmi fragment
-                    Bundle bmiData = new Bundle();
-                    bmiData.putDouble("bmi_data", mBMIValue);
-                    mBmiFragment.setArguments(bmiData);
+//                    Bundle userData = new Bundle();
+//                    bmiData.putDouble("bmi_data", mBMIValue);
+
+                    mBmiFragment.setArguments(extras);
                     fTrans.commit();
 
                 break;
@@ -94,9 +100,9 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
                 // Get Location from MainActivity
                 String location = extras.getString("location_data");
                 // Make bundle to send to weather fragment
-                Bundle locationData = new Bundle();
-                locationData.putString("location_data",location);
-                mWeatherFragment.setArguments(locationData);
+//                Bundle locationData = new Bundle();
+                extras.putString("location_data",location);
+                mWeatherFragment.setArguments(extras);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment, "frag_weatherdetail");
@@ -120,6 +126,7 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         if(mBmiFragment != null) {
             getSupportFragmentManager().putFragment(savedState, "frag_BMIdetail", mBmiFragment);
         }
-        savedState.putDouble("userBMI", mBMIValue);
+        savedState.putParcelable("user", currentUser);
+        savedState.putBundle("extras", extras);
     }
 }
