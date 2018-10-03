@@ -1,6 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
 import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
@@ -16,6 +17,10 @@ public abstract class UserDatabase extends RoomDatabase {
             synchronized (UserDatabase.class) {
                 if (INSTANCE == null) {
                     // Create database here
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            UserDatabase.class, "word_database")
+                            .fallbackToDestructiveMigration() // Wipes and rebuilds instead of migrating if no Migration object.
+                            .build();
                 }
             }
         }
