@@ -1,5 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -16,7 +18,8 @@ public interface UserDao {
     @Query("DELETE from user_table")
     void deleteAll() ;
 
-    @Query("SELECT * from user_table")
-    List<User> getAllUsers() ;
+    @Query("SELECT * from user_table ORDER BY user_ID ASC")
+    MutableLiveData<List<User>> getAllUsers() ;
 
 }
+

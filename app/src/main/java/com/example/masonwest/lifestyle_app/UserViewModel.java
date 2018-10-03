@@ -16,9 +16,10 @@ public class UserViewModel extends AndroidViewModel {
         mUserRepository = new UserRepository(application);
         mAllUsers = mUserRepository.getAllUsers();
     }
+
+    public void insert(User user) { mUserRepository.insert(user); }
+
     MutableLiveData<List<User>> getAllUsers() { return mAllUsers; }
-    public LiveData<User> getData() {
-        return this.user;
-    }
+
 
 }
