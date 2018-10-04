@@ -1,5 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,11 +18,12 @@ import android.widget.TextView;
 import org.json.JSONException;
 import java.net.URL;
 
-public class WeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
+public class WeatherFragment extends Fragment {
 
     private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
     private String mLocation;
-    private WeatherData mWeatherData;
+//    private WeatherData mWeatherData;
+    private WeatherViewModel mWeatherViewModel;
 //    private Button mBtSubmit;
 
     //Uniquely identify loader
@@ -51,126 +54,44 @@ public class WeatherFragment extends Fragment implements LoaderManager.LoaderCal
 
 //        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
 //        mBtSubmit.setOnClickListener(this);
-        mLocation = getArguments().getString("location_data");
-
+//        mLocation = getArguments().getString("location_data");
+        mLocation = "Dallas,US";
         //Set the text in the fragment
         mTvLocation.setText("" + mLocation);
 //        String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
         String searchLocation = mLocation.replace(' ','&');
+
+
+        //Create the view model
+        mWeatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+
+        //Set the observer
+        mWeatherViewModel.getData().observe(this,nameObserver);
+
+
         loadWeatherData(searchLocation);
 
-
-        getActivity().getSupportLoaderManager().initLoader(SEARCH_LOADER, null, this);
+//        getActivity().getSupportLoaderManager().initLoader(SEARCH_LOADER, null, this);
 
         return fragmentView;
     }
 
-    //Leaving the button for now in case Mason wants to add more ways to search for weather
-//    @Override
-//    public void onClick(View view) {
-//        switch(view.getId()){
-//            case R.id.button_submit:{
-//                //Get the string from the edit text and sanitize the input
-//                String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
-//                loadWeatherData(inputFromEt);
-//                mBtSubmit.setVisibility(View.INVISIBLE) ;
-//            }
-//            break;
-//        }
-//    }
-
-    private void loadWeatherData(String location){
-        Bundle searchQueryBundle = new Bundle();
-        searchQueryBundle.putString(URL_STRING,location);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        Loader<String> searchLoader = loaderManager.getLoader(SEARCH_LOADER);
-        if(searchLoader==null){
-            loaderManager.initLoader(SEARCH_LOADER,searchQueryBundle,this);
-        }
-        else{
-            loaderManager.restartLoader(SEARCH_LOADER,searchQueryBundle,this);
-        }
+    void loadWeatherData(String location){
+        //pass the location in to the view model
+        mWeatherViewModel.setLocation(location);
     }
 
-    @NonNull
-    @Override
-    public Loader<String> onCreateLoader(int i, @Nullable final Bundle bundle) {
-        return new AsyncTaskLoader<String>(getActivity()) {
-            private String mLoaderData;
-
-            @Override
-            protected void onStartLoading() {
-                if(bundle==null){
-                    return;
-                }
-                if(mLoaderData!=null){
-                    //Cache data for onPause instead of loading all over again
-                    //Other config changes are handled automatically
-                    deliverResult(mLoaderData);
-                }
-                else {
-                    forceLoad();
-                }
-            }
-
-            @Override
-            public String loadInBackground() {
-                String location = bundle.getString(URL_STRING);
-                URL weatherDataURL = NetworkUtils.buildURLFromString(location);
-                String jsonWeatherData = null;
-                try{
-                    jsonWeatherData = NetworkUtils.getDataFromURL(weatherDataURL);
-                    return jsonWeatherData;
-                }catch(Exception e){
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            public void deliverResult(String data) {
-                mLoaderData = data;
-                super.deliverResult(data);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String jsonWeatherData) {
-        if (jsonWeatherData!=null){
-            try {
-                mWeatherData = JSONWeatherUtils.getWeatherData(jsonWeatherData);
-            }
-            catch(JSONException e){
-                e.printStackTrace();
-            }
-            if(mWeatherData!=null) {
-//                mTvTemp.setText("" + Math.round(mWeatherData.getTemperature().getTemp() - 273.15) + " C"); //Celcius conversion
-                mTvTemp.setText("" + Math.round(mWeatherData.getTemperature().getTemp() * 9/5 - 459.67) + " F"); //Farenheit conversion * (9/5) - 459.67
-                mTvHum.setText("" + mWeatherData.getCurrentCondition().getHumidity() + "%");
-                mTvPress.setText("" + mWeatherData.getCurrentCondition().getPressure() + " hPa");
+    //create an observer that watches the LiveData<WeatherData> object
+    final Observer<WeatherData> nameObserver  = new Observer<WeatherData>() {
+        @Override
+        public void onChanged(@Nullable final WeatherData weatherData) {
+            // Update the UI if this data variable changes
+            if(weatherData!=null) {
+//                mTvTemp.setText("" + Math.round(weatherData.getTemperature().getTemp() - 273.15) + " C");
+                mTvTemp.setText("" + Math.round(weatherData.getTemperature().getTemp() * 9/5 - 459.67) + " F"); //Farenheit conversion * (9/5) - 459.67
+                mTvHum.setText("" + weatherData.getCurrentCondition().getHumidity() + "%");
+                mTvPress.setText("" + weatherData.getCurrentCondition().getPressure() + " hPa");
             }
         }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
-
-    }
-
-    /**
-     * Allows the page to be lifecycle aware
-     * @param outState
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //Get the strings
-        mLocation = mTvLocation.getText().toString();
-
-        //Put them in the outgoing Bundle
-        outState.putString("BMI_TEXT",mLocation);
-
-        //Save the view hierarchy
-        super.onSaveInstanceState(outState);
-    }
+    };
 }
