@@ -97,7 +97,7 @@ public class EditUserDetailsFragment extends Fragment
 //            mWeight = savedInstanceState.getInt("userWeight");
 //            thumbnailImage = savedInstanceState.getBundle("userPic");
         } else {
-            currentUser = new User();
+            currentUser = new User(1); //TODO: I HARDCODED A VALUE HERE
         }
 
         String[] ageOptions = new String[120];
