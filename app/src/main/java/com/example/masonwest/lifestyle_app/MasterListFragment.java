@@ -18,6 +18,7 @@ public class MasterListFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private static Bundle mBundleRecyclerViewState;
+    private ArrayList<String> mItemList;
     private final String KEY_RECYCLER_STATE = "recycler_state";
 
     public MasterListFragment() {
@@ -34,6 +35,13 @@ public class MasterListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_master_list, container, false);
 
+        //Create the list of headers
+        mItemList = new ArrayList<>();
+        mItemList.add("Fitness Goals >");
+        mItemList.add("BMI >");
+        mItemList.add("Weather >");
+        mItemList.add("Hikes >");
+
         //Get the recycler view
         mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.rv_Master);
 
@@ -43,9 +51,6 @@ public class MasterListFragment extends Fragment {
         //Set the layout manager
         layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-
-        //Get data from main activity
-        ArrayList<String> mItemList = getArguments().getStringArrayList("itemList");
 
         //Set the adapter
         mAdapter = new MyRVAdapter(mItemList);
