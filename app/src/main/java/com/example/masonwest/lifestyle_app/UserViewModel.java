@@ -11,17 +11,14 @@ import java.util.List;
 public class UserViewModel extends AndroidViewModel {
 //    private MutableLiveData<List<User>> mAllUsers;
     private MutableLiveData<User> mUser;
-    private UserRepository mUserRepository;
+    private static UserRepository mUserRepository;
 
     public UserViewModel(Application application) {
         super(application);
-        mUserRepository = new UserRepository(application);
-//        mAllUsers = mUserRepository.getAllUsers();
+        if(mUserRepository == null) {
+            mUserRepository = new UserRepository(application);
+        }
         mUser = mUserRepository.getUser();
-    }
-
-    public void newUser(User user) {
-        mUserRepository.newUser(user);
     }
     public String getFirstName() {
         return mUserRepository.getFirstName();
@@ -120,6 +117,9 @@ public class UserViewModel extends AndroidViewModel {
 
     public MutableLiveData<User> getUser() {
         return mUser;
+    }
+    public void setUser(User user) {
+        mUserRepository.setUser(user);
     }
 
 //    MutableLiveData<List<User>> getAllUsers() {

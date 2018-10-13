@@ -14,13 +14,16 @@ import java.util.List;
 
 public class UserRepository {
     private MutableLiveData<User> mUser = new MutableLiveData<>();
+    private User temp = new User(-1);
 //    private MutableLiveData<List<User>> mAllUsers;
 //    private UserDao mUserDao ;
 
-    UserRepository(Application application) {
+    public UserRepository(Application application) {
 //        UserDatabase db = UserDatabase.getDatabase(application);
 //        mUserDao = db.userDao();
 //        mAllUsers = mUserDao.getAllUsers();
+        mUser.setValue(temp);
+        updateUser();
         loadData();
     }
 
@@ -31,10 +34,14 @@ public class UserRepository {
     MutableLiveData<User> getUser() {
         return mUser;
     }
-    public void newUser(User user) {
-        mUser.setValue(user);
-        mUser.getValue().setAge(99);
+    public void setUser(User user) {
+        temp = user;
+        updateUser();
     }
+//    public void newUser(User user) {
+//        temp = user;
+//        updateUser();
+//    }
     public String getFirstName() {
         if(mUser.getValue() != null) {
             return mUser.getValue().getFirstName();
@@ -59,6 +66,8 @@ public class UserRepository {
         return first + " " + last;
     }
     public int getAge() {
+        User tempUser = temp;
+        User testUser = mUser.getValue();
         return mUser.getValue().getAge();
     }
     public void setAge(int age) {
@@ -136,6 +145,28 @@ public class UserRepository {
 //    MutableLiveData<List<User>> getAllUsers() {
 //        return mAllUsers;
 //    }
+
+    private void updateUser() {
+        new AsyncTask<User, Void, User>() {
+            @Override
+            protected User doInBackground(User... user) {
+                User tempUser = null;
+                if(user[0] != null) {
+                    tempUser = user[0];
+                }
+//                temp.setFirstName("Christopher");
+//                temp.setLastName("bitch");
+                return tempUser;
+            }
+
+            @Override
+            protected void onPostExecute(User user) {
+                if(user != null) {
+                    mUser.setValue(user);
+                }
+            }
+        }.execute(temp);
+    }
 
     // AsyncTask class
 //    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {

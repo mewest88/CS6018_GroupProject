@@ -48,7 +48,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
         //Set the data
         mTvFullName.setText(mUserViewModel.getFullName());
-        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+//        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
 
         return view;
     }
@@ -59,7 +59,9 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                //what to do if user changes?
+                mUserViewModel.setUser(user);
+                mTvFullName.setText(mUserViewModel.getFullName());
+                mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
             }
         }
     };
