@@ -24,6 +24,8 @@ public class UserRepository {
 
     MutableLiveData<List<User>> getAllUsers() { return mAllUsers; }
 
+
+
     // AsyncTask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 

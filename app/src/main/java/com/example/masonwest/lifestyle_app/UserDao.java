@@ -21,5 +21,6 @@ public interface UserDao {
     @Query("SELECT * from user_table ORDER BY user_ID ASC")
     MutableLiveData<List<User>> getAllUsers() ;
 
+
 }
 
