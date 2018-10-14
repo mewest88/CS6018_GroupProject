@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ViewDetailActivity extends AppCompatActivity implements FitnessGoalsFragment.OnDataPass {
+public class ViewDetailActivity extends AppCompatActivity {
 
     // Fragment member variables
     private FitnessGoalsFragment mFitnessFragment;
@@ -18,12 +18,12 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
 //    private double mDailyCalories;
 //    private double mGoal;
 //    private double mBMIValue;
-    private User currentUser;
+//    private User currentUser;
 
-    @Override
-    public void onDataPass(User currentUserPassed) {
-        currentUser = currentUserPassed;
-    }
+//    @Override
+//    public void onDataPass(User currentUserPassed) {
+//        currentUser = currentUserPassed;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         setContentView(R.layout.activity_view_detail);
 
         if(savedInstanceState != null) {
-            currentUser = savedInstanceState.getParcelable("user");
+//            currentUser = savedInstanceState.getParcelable("user");
             extras = savedInstanceState.getBundle("extras");
         } else {
             extras = getIntent().getExtras();
-            currentUser = extras.getParcelable("user");
-            extras.putParcelable("user", currentUser);
+//            currentUser = extras.getParcelable("user");
+//            extras.putParcelable("user", currentUser);
         }
 
         int position = extras.getInt("click_position");
@@ -126,7 +126,7 @@ public class ViewDetailActivity extends AppCompatActivity implements FitnessGoal
         if(mBmiFragment != null) {
             getSupportFragmentManager().putFragment(savedState, "frag_BMIdetail", mBmiFragment);
         }
-        savedState.putParcelable("user", currentUser);
+//        savedState.putParcelable("user", currentUser);
         savedState.putBundle("extras", extras);
     }
 }

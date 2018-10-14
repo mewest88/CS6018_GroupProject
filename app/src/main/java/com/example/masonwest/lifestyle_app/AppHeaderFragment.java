@@ -1,11 +1,14 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,32 +19,15 @@ import android.widget.TextView;
 public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     // Member Variables
-//    private String mFirstName, mLastName, mFullName, mCity, mCountry, mSex;
-//    private int mWeight, mHeight, mAge;
-    private TextView mTvFullName, mTvLastName, mTvAge;
+
+    private TextView mTvFullName;
     private ImageView mIvPicture;
-//    private Bundle pictureBundle;
-//    private Bitmap thumbNail;
     private ImageButton mButtonSettings;
-    private HeaderDataPass mDataPasser;
-    private Bundle userData;
-    private User currentUser;
+    private UserViewModel mUserViewModel;
+    private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
 
     public AppHeaderFragment() {
 
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try{
-            mDataPasser = (HeaderDataPass) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
-        }
-    }
-    public interface HeaderDataPass {
-        void HeaderDataPass(User currentUser);
     }
 
     @Nullable
@@ -50,42 +36,64 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_app_header, container, false);
 
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        mUserViewModel.getUser().observe(this, userObserver);
+
         //Get the text views and image view
         mTvFullName = (TextView) view.findViewById(R.id.tv_fn_data);
-//        mTvLastName = (TextView) view.findViewById(R.id.tv_ln_data);
         mIvPicture = (ImageView) view.findViewById(R.id.iv_pic);
         mButtonSettings = view.findViewById(R.id.settingsButton);
         mButtonSettings.setOnClickListener(this);
 
-        //FOR LIFECYCLE AWARENESS LOOK AT HW2 PART1 DATASUMMARY.JAVA
-        //Get the data that was sent in via HeaderDataPass
-        if(savedInstanceState != null) {
-            currentUser = savedInstanceState.getParcelable("user");
-        } else {
-            currentUser = getArguments().getParcelable("user");
-        }
-
-//        mFirstName = getArguments().getString("userFirstName");
-//        mLastName = getArguments().getString("userLastName");
-//        mFullName = getArguments().getString("userFullName");
-//        mAge = getArguments().getInt("userAge");
-//        mHeight = getArguments().getInt("userHeight");
-//        mWeight = getArguments().getInt("userWeight");
-//        mCity = getArguments().getString("userCity");
-//        mCountry = getArguments().getString("userCountry");
-//        mSex = getArguments().getString("userSex");
-//        pictureBundle = getArguments().getBundle("userPic");
-//        thumbNail = (Bitmap) pictureBundle.get("data");
-
         //Set the data
-        mTvFullName.setText(currentUser.getFullName());
-        mIvPicture.setImageBitmap(currentUser.getProfilePic());
+        mTvFullName.setText(mUserViewModel.getFullName());
+//        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
 
         return view;
     }
 
+    //create an observer that watches the MutableLiveData<User> object
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                mUserViewModel.setUser(user);
+                mTvFullName.setText(mUserViewModel.getFullName());
+                mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+            }
+        }
+    };
+
     @Override
     public void onClick(View view) {
-        mDataPasser.HeaderDataPass(currentUser);
+
+        //Replace the fragment container
+        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
+
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "frag_detail");
+        }
+        else {
+            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_detail");
+        }
+//        showHideFragment(mUserDetailFragment);
+//        showHideFragment(mMasterListFragment);
+        mSignUpHeaderFragment = new SignUpHeaderFragment();
+
+        //Replace the fragment container
+        if (isTablet()) {
+            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "frag_signupheader_tablet"); //.getTag()???
+        }
+        else {
+            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
+        }
+
+        fTrans.commit();
+    }
+    public boolean isTablet()
+    {
+        return getResources().getBoolean(R.bool.isTablet);
     }
 }

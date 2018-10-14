@@ -1,7 +1,10 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,42 +15,28 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
+        implements MyRVAdapter.DataPasser {//, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
 
     private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
-    private ArrayList<String> mItemList;
-    private User currentUser;
-    private ArrayList<User> allUsers = new ArrayList<>();
+    private UserViewModel mUserViewModel;
     private Boolean isEditUser = false;
-
-//    Bundle userData;
-//    String mUserSex, mUserFirstName, mUserLastName, mUserFullName, mUserCity, mUserCountry;
-//    int mUserHeight, mUserAge, mUserWeight;
-//    Bitmap mUserProfilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Create the list of headers
-        mItemList = new ArrayList<>();
-        mItemList.add("Fitness Goals >");
-        mItemList.add("BMI >");
-        mItemList.add("Weather >");
-        mItemList.add("Hikes >");
-
         if(savedInstanceState == null) {
             //CREATE THE VIEW TO ENTER USER INFORMATION
             mUserDetailFragment = new EditUserDetailsFragment();
             isEditUser = true;
+//            User newUser = new User(13);
+//            mUserViewModel.newUser(newUser);
         } else {
-//            mUserSex= savedInstanceState.getString("userSex");
             mMasterListFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_masterlist");
             mUserDetailFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_detail");
             mSignUpHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "signup_header_frag");
             mAppHeaderFragment = getSupportFragmentManager().getFragment(savedInstanceState, "app_header_frag");
-            currentUser = savedInstanceState.getParcelable("user");
         }
 
         if(isEditUser) {
@@ -80,8 +69,6 @@ public class MainActivity extends AppCompatActivity
     public void passData(int position) {
         Bundle positionBundle = new Bundle();
         positionBundle.putInt("click_position", position);
-//        positionBundle.putBundle("userData", userData);
-        positionBundle.putParcelable("user", currentUser);
 
         //Uses switch statement to tell the passData which fragment to open based on position
         switch(position) {
@@ -171,96 +158,6 @@ public class MainActivity extends AppCompatActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
-    //from EditUserFragment
-    @Override
-    public void onDataPass(User existingUser) {
-        currentUser = existingUser;
-
-        // Hide EditUserData fragment
-        showHideFragment(mUserDetailFragment);
-
-        // Create a new user
-        // Should we always create a new user?
-        allUsers.add(currentUser);
-
-        //MASTER LIST WORK
-        //Get the Master List fragment
-        mMasterListFragment = new MasterListFragment();
-
-        //Send data to it
-        Bundle masterListDataBundle = new Bundle();
-        masterListDataBundle.putStringArrayList("itemList", mItemList);
-        masterListDataBundle.putParcelable("user", currentUser);
-
-        //Pass data to the fragment
-        mMasterListFragment.setArguments(masterListDataBundle);
-
-        //Replace the fragment container
-        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-
-        // If we're on a tablet, the master fragment appears on the left pane. If we're on a phone,
-        // it takes over the whole screen
-        if(isTablet()){
-            //Pane 1: Master list
-            fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment,"frag_masterlist_tablet");
-        }
-        else{
-            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist_phone");
-        }
-
-        //HEADER WORK
-        mAppHeaderFragment = new AppHeaderFragment();
-
-        //Pass data to the fragment
-        mAppHeaderFragment.setArguments(masterListDataBundle);
-
-        if(isTablet()){
-            //Pane 1: Master list
-            fTrans.replace(R.id.fl_header_tablet, mAppHeaderFragment, "app_header_frag");
-        }
-        else{
-            fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
-        }
-
-        fTrans.addToBackStack(null);
-        fTrans.commit();
-    }
-
-    //from App Header
-    @Override
-
-    public void HeaderDataPass(User existingUser) {
-//        userData = headerData;
-        Bundle headerBundle = new Bundle();
-        currentUser = existingUser;
-        isEditUser = true;
-        headerBundle.putParcelable("user", currentUser);
-
-        //Replace the fragment container
-        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-
-        if (isTablet()) {
-            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "frag_detail");
-        }
-        else {
-            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_detail");
-        }
-        showHideFragment(mUserDetailFragment);
-        showHideFragment(mMasterListFragment);
-        mSignUpHeaderFragment = new SignUpHeaderFragment();
-
-        //Replace the fragment container
-        if (isTablet()) {
-            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "frag_signupheader_tablet"); //.getTag()???
-        }
-        else {
-            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
-        }
-
-        mUserDetailFragment.setArguments(headerBundle);
-        fTrans.commit();
-    }
-
     // Call this function inside onClick of button
     public void showHideFragment(final Fragment fragment){
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
@@ -280,8 +177,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-//        userData = savedInstanceState.getBundle("userData");
-        currentUser = savedInstanceState.getParcelable("user");
         isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         FragmentManager fMan = getSupportFragmentManager();
         FragmentTransaction fTrans = fMan.beginTransaction();
@@ -309,8 +204,6 @@ public class MainActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("editUserBoolean", isEditUser);
-//        outState.putBundle("userData", userData);
-        outState.putParcelable("user", currentUser);
 
         if(mMasterListFragment != null && mMasterListFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "frag_masterlist", mMasterListFragment);

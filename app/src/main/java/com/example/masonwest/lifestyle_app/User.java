@@ -70,6 +70,7 @@ public class User implements Parcelable {
     }
     public User(int userIDPassed) {
         userID = userIDPassed;
+        age = 14;
     }
 
     //call before sending BMI to BMI fragment
