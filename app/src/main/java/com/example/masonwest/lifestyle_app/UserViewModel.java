@@ -11,6 +11,7 @@ import java.util.List;
 public class UserViewModel extends AndroidViewModel {
 //    private MutableLiveData<List<User>> mAllUsers;
     private MutableLiveData<User> mUser;
+    private MutableLiveData<WeatherData> jsonData;
     private static UserRepository mUserRepository;
 
     public UserViewModel(Application application) {
@@ -19,7 +20,17 @@ public class UserViewModel extends AndroidViewModel {
             mUserRepository = new UserRepository(application);
         }
         mUser = mUserRepository.getUser();
+        jsonData = mUserRepository.getData();
     }
+
+    // WEATHERDATA Tools
+    public void setLocation(String location){
+        mUserRepository.setLocation(location);
+    }
+    public LiveData<WeatherData> getData(){
+        return jsonData;
+    }
+
     public String getFirstName() {
         return mUserRepository.getFirstName();
     }
