@@ -46,6 +46,7 @@ public class UserViewModel extends AndroidViewModel {
     public String getFullName() {
         return mUserRepository.getFullName();
     }
+    public void setFullName(String fName, String lName) { mUserRepository.setFullName(fName, lName); }
     public int getAge() {
         return mUserRepository.getAge();
     }

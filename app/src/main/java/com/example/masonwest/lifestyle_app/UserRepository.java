@@ -1,7 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -10,7 +9,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class UserRepository {
     private MutableLiveData<User> mUser = new MutableLiveData<>();
@@ -65,6 +63,7 @@ public class UserRepository {
         String last = this.getLastName();
         return first + " " + last;
     }
+    public void setFullName(String fName, String lName) { mUser.getValue().setFullName(fName, lName); }
     public int getAge() {
         User tempUser = temp;
         User testUser = mUser.getValue();
@@ -80,16 +79,16 @@ public class UserRepository {
         mUser.getValue().setSex(sex);
     }
     public int getHeight() {
-        return mUser.getValue().getHeight();
+        return mUser.getValue().getHeightInches();
     }
     public void setHeight(int height) {
-        mUser.getValue().setHeight(height);
+        mUser.getValue().setHeightInches(height);
     }
     public int getWeight() {
-        return mUser.getValue().getWeight();
+        return mUser.getValue().getWeightLBS();
     }
     public void setWeight(int weight) {
-        mUser.getValue().setWeight(weight);
+        mUser.getValue().setWeightLBS(weight);
     }
     public double getBMI() {
         return mUser.getValue().getBMI();
@@ -110,10 +109,10 @@ public class UserRepository {
         mUser.getValue().setActivityLevel(activityLevel);
     }
     public double getDailyRecommendedCalorieIntake() {
-        return mUser.getValue().getDailyRecommendedCalorieIntake();
+        return mUser.getValue().getRecommendedDailyCalorieIntake();
     }
     public void setDailyRecommendedCalorieIntake(double calorieIntake) {
-        mUser.getValue().setDailyRecommendedCalorieIntake(calorieIntake);
+        mUser.getValue().setRecommendedDailyCalorieIntake(calorieIntake);
     }
     public String getCity() {
         return mUser.getValue().getCity();
