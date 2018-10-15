@@ -1,5 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,10 +16,22 @@ public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
     private User currentUser;
+    private UserViewModel mUserViewModel;
 
     public BmiFragment() {
         // Required empty public constructor
     }
+
+    //create an observer that watches the MutableLiveData<User> object
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                //what to do if user changes?
+            }
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -33,14 +47,18 @@ public class BmiFragment extends Fragment {
         mTvBMIData = fragmentView.findViewById(R.id.tv_bmi_data);
 
         String bmiValueString;
-        if (savedInstanceState != null) {
-            currentUser = savedInstanceState.getParcelable("user");
-        }
-        else {
-            currentUser = getArguments().getParcelable("user");
-        }
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-        double bmiValue = currentUser.getBMI();
+        mUserViewModel.getUser().observe(this, userObserver);
+
+//        if (savedInstanceState != null) {
+//            currentUser = savedInstanceState.getParcelable("user");
+//        }
+//        else {
+//            currentUser = getArguments().getParcelable("user");
+//        }
+
+        double bmiValue = mUserViewModel.getBMI();
         bmiValueString = Double.toString(bmiValue);
 
         //Set the text in the fragment
