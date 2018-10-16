@@ -27,17 +27,19 @@ public class UserRepository {
         loadData();
     }
 
-        public void insert(User user) {
+    public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user) ;
     }
 
     MutableLiveData<User> getUser() {
         return mUser;
     }
+
     public void setUser(User user) {
         temp = user;
         updateUser();
     }
+
 //    public void newUser(User user) {
 //        temp = user;
 //        updateUser();
@@ -143,9 +145,10 @@ public class UserRepository {
     public void setProfilePic(Bitmap profilePic) {
         mUser.getValue().setProfilePic(profilePic);
     }
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+
+    LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
     private void updateUser() {
         new AsyncTask<User, Void, User>() {
@@ -169,7 +172,14 @@ public class UserRepository {
         }.execute(temp);
     }
 
+    // AsyncTask class
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
 
     // AsyncTask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {

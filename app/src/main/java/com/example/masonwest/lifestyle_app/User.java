@@ -20,8 +20,9 @@ import java.io.IOException;
 public class User implements Parcelable {
 
     @PrimaryKey
-    @NonNull
-    private int userID;
+        @NonNull
+        @ColumnInfo(name = "user_ID")
+        public int userID ;
 
     private String firstName;
     private String lastName;
@@ -79,8 +80,13 @@ public class User implements Parcelable {
         profilePic = in.readParcelable(null);
         setProfileImageData(profilePic);
     }
+
+    public User() {
+
+    }
+
     public User(int userIDPassed) {
-        userID = userIDPassed;
+        this.userID = userIDPassed;
         age = 14;
     }
 
@@ -97,6 +103,7 @@ public class User implements Parcelable {
         double converted = unconverted * 703;
         return converted;
     }
+
     //should be called to calculate base BMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {
         double weightMetric = currentWeightPassed / 2.2;
@@ -186,6 +193,7 @@ public class User implements Parcelable {
     public int getWeightLBS() {
         return weightLBS;
     }
+
     public void setWeightLBS(int weightPassed) { weightLBS = weightPassed; }
     public int getHeightInches() {
         return heightInches;
@@ -199,7 +207,9 @@ public class User implements Parcelable {
     public void setActivityLevel(String activityLevelPassed) {
         activityLevel = activityLevelPassed;
     }
+
     public double getRecommendedDailyCalorieIntake() { return recommendedDailyCalorieIntake; }
+
     public void setRecommendedDailyCalorieIntake(double calorieIntake) {
         recommendedDailyCalorieIntake = calorieIntake;
     }
@@ -210,6 +220,7 @@ public class User implements Parcelable {
         return fullName;
     }
     public void setFullName(String firstNamePassed, String lastNamePassed) { fullName = firstNamePassed + " " + lastNamePassed; }
+
     public double getBMI() {
         return BMI;
     }

@@ -59,10 +59,10 @@ public class UserViewModel extends AndroidViewModel {
     public void setSex(String sex) {
         mUserRepository.setSex(sex);
     }
-    public int getHeight() {
+    public int getHeightInches() {
         return mUserRepository.getHeight();
     }
-    public void setHeight(int height) {
+    public void setHeightInches(int height) {
         mUserRepository.setHeight(height);
     }
     public int getWeight() {
@@ -123,8 +123,12 @@ public class UserViewModel extends AndroidViewModel {
         mUserRepository.setProfilePic(profilePic);
     }
 
-    public void delete(User user) {
+//    public void delete(User user) {
 //        mUserRepository.delete(user);
+//    }
+
+    public void insert(User user) {
+        mUserRepository.insert(user) ;
     }
 
     public void insert(User user) { mUserRepository.insert(user); }
@@ -137,6 +141,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     LiveData<List<User>> getAllUsers() {
+
         return mAllUsers;
     }
 

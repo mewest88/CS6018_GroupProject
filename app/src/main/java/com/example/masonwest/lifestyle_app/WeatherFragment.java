@@ -24,6 +24,7 @@ public class WeatherFragment extends Fragment {
     private String mCity, mCountry, mLocation;
 //    private WeatherData mWeatherData;
     private UserViewModel mUserViewModel;
+
 //    private Button mBtSubmit;
 
     //Uniquely identify loader
