@@ -183,7 +183,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
 
         int weight = mUserViewModel.getWeight();
-        int height = mUserViewModel.getHeightInches();
+        int height = mUserViewModel.getHeight();
         int age = mUserViewModel.getAge();
         String sex = mUserViewModel.getSex();
         mUserViewModel.setBMR(User.calculateBMR(weight, height, age, sex));

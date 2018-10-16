@@ -157,8 +157,8 @@ public class EditUserDetailsFragment extends Fragment
                 mSpinnerWeight.setSelection(99);
             }
 
-            if(mUserViewModel.getHeightInches() > 1) {
-                mSpinnerHeight.setSelection(mUserViewModel.getHeightInches() - 1);
+            if(mUserViewModel.getHeight() > 1) {
+                mSpinnerHeight.setSelection(mUserViewModel.getHeight() - 1);
             } else {
                 mSpinnerHeight.setSelection(65);
             }
@@ -228,7 +228,7 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setHeightInches(Integer.parseInt(finalHeightOptions[position]));
+                mUserViewModel.setHeight(Integer.parseInt(finalHeightOptions[position]));
             }
 
             @Override
@@ -312,7 +312,7 @@ public class EditUserDetailsFragment extends Fragment
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
                     //Start an activity and pass the EditText string to it.
-                    double bmi = User.calculateBMI(mUserViewModel.getWeight(), mUserViewModel.getHeightInches());
+                    double bmi = User.calculateBMI(mUserViewModel.getWeight(), mUserViewModel.getHeight());
                     mUserViewModel.setBMI(bmi);
                     mUserViewModel.setFirstName(mFirstName);
                     mUserViewModel.setLastName(mLastName);
@@ -350,7 +350,6 @@ public class EditUserDetailsFragment extends Fragment
                     mUserViewModel.insert(tempUser);
                     fTrans.addToBackStack(null);
                     fTrans.commit();
-
                 }
                 break;
             }
