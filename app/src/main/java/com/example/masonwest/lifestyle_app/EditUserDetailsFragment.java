@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -344,6 +345,9 @@ public class EditUserDetailsFragment extends Fragment
                         fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
                     }
 
+                    MutableLiveData<User> tempUserList = mUserViewModel.getUser();
+                    User tempUser = tempUserList.getValue();
+                    mUserViewModel.insert(tempUser);
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 }

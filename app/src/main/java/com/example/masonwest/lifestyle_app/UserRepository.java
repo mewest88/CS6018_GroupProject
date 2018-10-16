@@ -1,6 +1,7 @@
 package com.example.masonwest.lifestyle_app;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -9,25 +10,26 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class UserRepository {
     private MutableLiveData<User> mUser = new MutableLiveData<>();
     private User temp = new User(-1);
-//    private MutableLiveData<List<User>> mAllUsers;
-//    private UserDao mUserDao ;
+    private LiveData<List<User>> mAllUsers;
+    private UserDao mUserDao ;
 
     public UserRepository(Application application) {
-//        UserDatabase db = UserDatabase.getDatabase(application);
-//        mUserDao = db.userDao();
-//        mAllUsers = mUserDao.getAllUsers();
+        UserDatabase db = UserDatabase.getDatabase(application);
+        mUserDao = db.userDao();
+        mAllUsers = mUserDao.getAllUsers();
         mUser.setValue(temp);
         updateUser();
         loadData();
     }
 
-    //    public void insert(User user) {
-//        new insertAsyncTask(mUserDao).execute(user) ;
-//    }
+        public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user) ;
+    }
 
     MutableLiveData<User> getUser() {
         return mUser;
@@ -170,20 +172,20 @@ public class UserRepository {
 
 
     // AsyncTask class
-//    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
-//
-//        private UserDao mAsyncTaskDao;
-//
-//        insertAsyncTask(UserDao dao) {
-//            mAsyncTaskDao = dao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(final User... params) {
-//            mAsyncTaskDao.insert(params[0]);
-//            return null;
-//        }
-//    }
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
 
     /*
     BEGINNING OF USED FOR WEATHER TOOLS ---------------------------------------------------------
