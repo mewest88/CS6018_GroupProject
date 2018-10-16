@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(User user) ;
+    void insert(User user);
 
     @Query("DELETE from user_table WHERE user_ID = :userID")
     void delete(int userID) ;
@@ -27,8 +27,8 @@ public interface UserDao {
     @Query("SELECT * from user_table WHERE user_ID = :userID")
     LiveData<List<User>> getUser(int userID) ;
 
-
-
+    @Query("SELECT * from user_table ORDER BY userID ASC")
+    LiveData<List<User>> getAllUsers();
 }
 
 

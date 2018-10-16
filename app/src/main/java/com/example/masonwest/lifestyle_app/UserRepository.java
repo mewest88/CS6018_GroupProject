@@ -31,10 +31,6 @@ public class UserRepository {
         new insertAsyncTask(mUserDao).execute(user) ;
     }
 
-//    public void delete(int userID) {
-//
-//    }
-
     MutableLiveData<User> getUser() {
         return mUser;
     }
@@ -71,6 +67,7 @@ public class UserRepository {
         String last = this.getLastName();
         return first + " " + last;
     }
+    public void setFullName(String fName, String lName) { mUser.getValue().setFullName(fName, lName); }
     public int getAge() {
         User tempUser = temp;
         User testUser = mUser.getValue();
@@ -174,6 +171,15 @@ public class UserRepository {
             }
         }.execute(temp);
     }
+
+    // AsyncTask class
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
 
     // AsyncTask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {

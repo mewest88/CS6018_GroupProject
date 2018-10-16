@@ -21,9 +21,10 @@ import java.net.URL;
 public class WeatherFragment extends Fragment {
 
     private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
-    private String mLocation;
+    private String mCity, mCountry, mLocation;
 //    private WeatherData mWeatherData;
-   private WeatherViewModel mWeatherViewModel;
+    private UserViewModel mUserViewModel;
+
 //    private Button mBtSubmit;
 
     //Uniquely identify loader
@@ -55,19 +56,29 @@ public class WeatherFragment extends Fragment {
 //        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
 //        mBtSubmit.setOnClickListener(this);
 //        mLocation = getArguments().getString("location_data");
-        mLocation = "Dallas,US";
+//        mLocation = "Dallas,US";
         //Set the text in the fragment
+
+
+//        //Create the view model
+//        mWeatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+//
+//        //Set the observer
+//        mWeatherViewModel.getData().observe(this,nameObserver);
+
+        //Create the view model
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        //Set the observer
+        mUserViewModel.getData().observe(this,nameObserver);
+
+        mCity = mUserViewModel.getCity();
+        mCountry = mUserViewModel.getCountry();
+        mLocation = mCity + "," + mCountry;
+
         mTvLocation.setText("" + mLocation);
 //        String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
         String searchLocation = mLocation.replace(' ','&');
-
-
-        //Create the view model
-        mWeatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-
-        //Set the observer
-        mWeatherViewModel.getData().observe(this,nameObserver);
-
 
         loadWeatherData(searchLocation);
 
@@ -78,8 +89,19 @@ public class WeatherFragment extends Fragment {
 
     void loadWeatherData(String location){
         //pass the location in to the view model
-        mWeatherViewModel.setLocation(location);
+        mUserViewModel.setLocation(location);
     }
+
+    //create an observer that watches the MutableLiveData<User> object
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                //what to do if user changes?
+            }
+        }
+    };
 
     //create an observer that watches the LiveData<WeatherData> object
     final Observer<WeatherData> nameObserver  = new Observer<WeatherData>() {

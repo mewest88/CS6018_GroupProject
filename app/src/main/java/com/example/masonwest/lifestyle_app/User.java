@@ -2,17 +2,23 @@ package com.example.masonwest.lifestyle_app;
 
 import android.arch.persistence.room.Ignore;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 @Entity(tableName = "user_table")
 public class User implements Parcelable {
+
     @PrimaryKey
         @NonNull
         @ColumnInfo(name = "user_ID")
@@ -20,6 +26,7 @@ public class User implements Parcelable {
 
     private String firstName;
     private String lastName;
+    //@Ignore //This @Ignore might cause issues because it means that the full name is not being stored in a column in DB - it's a workaround right now
     private String fullName;
     private String sex;
     private String activityLevel;
@@ -32,9 +39,10 @@ public class User implements Parcelable {
     private double BMI;
     private double weightChangeGoal; //positive or negative based on fitness goal
     private double recommendedDailyCalorieIntake;
-
     @Ignore
-    private Bitmap profilePic;
+    private Bitmap profilePic; //Saving an bitmap as blob https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    private byte[] profileImageData;
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
@@ -70,6 +78,7 @@ public class User implements Parcelable {
         recommendedDailyCalorieIntake = in.readDouble();
 
         profilePic = in.readParcelable(null);
+        setProfileImageData(profilePic);
     }
 
     public User() {
@@ -79,6 +88,12 @@ public class User implements Parcelable {
     public User(int userIDPassed) {
         this.userID = userIDPassed;
         age = 14;
+    }
+
+    //Constuctor needed for Dao
+    public User(int userID, String firstName, String lastName, String fullName, String sex, String city, String country
+            , String activityLevel, int age, int heightInches, int weightLBS, double BMR, double BMI
+            , double weightChangeGoal, double recommendedDailyCalorieIntake, byte[] profileImageData) {
     }
 
     //call before sending BMI to BMI fragment
@@ -165,9 +180,7 @@ public class User implements Parcelable {
     public void setFirstName(String firstNamePassed) {
         firstName = firstNamePassed;
     }
-    public String getLastName() {
-        return lastName;
-    }
+    public String getLastName() { return lastName; }
     public void setLastName(String lastNamePassed) {
         lastName = lastNamePassed;
     }
@@ -180,9 +193,8 @@ public class User implements Parcelable {
     public int getWeightLBS() {
         return weightLBS;
     }
-    public void setWeightLBS(int weightPassed) {
-        weightLBS = weightPassed;
-    }
+
+    public void setWeightLBS(int weightPassed) { weightLBS = weightPassed; }
     public int getHeightInches() {
         return heightInches;
     }
@@ -195,9 +207,9 @@ public class User implements Parcelable {
     public void setActivityLevel(String activityLevelPassed) {
         activityLevel = activityLevelPassed;
     }
-    public double getRecommendedDailyCalorieIntake() {
-        return recommendedDailyCalorieIntake;
-    }
+
+    public double getRecommendedDailyCalorieIntake() { return recommendedDailyCalorieIntake; }
+
     public void setRecommendedDailyCalorieIntake(double calorieIntake) {
         recommendedDailyCalorieIntake = calorieIntake;
     }
@@ -207,7 +219,8 @@ public class User implements Parcelable {
     public String getFullName() {
         return fullName;
     }
-    public void setFullName(String fullNamePassed) { fullName = fullNamePassed ; }
+    public void setFullName(String firstNamePassed, String lastNamePassed) { fullName = firstNamePassed + " " + lastNamePassed; }
+
     public double getBMI() {
         return BMI;
     }
@@ -236,9 +249,52 @@ public class User implements Parcelable {
     public int getUserID() {
         return userID;
     }
+    public void setUserID(int id) { userID = id; }
     public User getUser() {
         //something to check user id and return the right user?
         return this;
+    }
+
+    //Helper method to save bitmap as byte[]
+//    private byte[] profileImageData = null;
+
+    // Bitmap to byte[] to profileImageData
+    public void setProfileImageData(Bitmap image) {
+        if (image != null) {
+            //bitmap to byte[]
+            profileImageData = bitmapToByte(image);
+        } else {
+            profileImageData = null;
+        }
+    }
+
+    // Bitmap to byte[]
+    public byte[] bitmapToByte(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            //bitmap to byte[] stream
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] x = stream.toByteArray();
+            //close stream to save memory
+            stream.close();
+            return x;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Convert profileImageData directly to bitmap
+    public Bitmap getProfileImageDataInBitmap() {
+        if (profileImageData != null) {
+            //turn byte[] to bitmap
+            return BitmapFactory.decodeByteArray(profileImageData, 0, profileImageData.length);
+        }
+        return null;
+    }
+
+    public byte[] getProfileImageData() {
+        return profileImageData;
     }
 
     @Override
