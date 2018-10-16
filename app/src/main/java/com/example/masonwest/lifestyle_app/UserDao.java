@@ -13,15 +13,13 @@ import java.util.List;
 public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(User user) ;
+    void insert(User user);
 
     @Query("DELETE from user_table")
-    void deleteAll() ;
+    void deleteAll();
 
-    @Query("SELECT * from user_table ORDER BY user_ID ASC")
-    MutableLiveData<List<User>> getAllUsers() ;
-
-
+    @Query("SELECT * from user_table ORDER BY userID ASC")
+    LiveData<List<User>> getAllUsers();
 }
 
 

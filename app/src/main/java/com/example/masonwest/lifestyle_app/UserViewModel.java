@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
 import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
-//    private MutableLiveData<List<User>> mAllUsers;
+    private MutableLiveData<List<User>> mAllUsers;
     private MutableLiveData<User> mUser;
     private MutableLiveData<WeatherData> jsonData;
     private static UserRepository mUserRepository;
@@ -46,6 +46,7 @@ public class UserViewModel extends AndroidViewModel {
     public String getFullName() {
         return mUserRepository.getFullName();
     }
+    public void setFullName(String fName, String lName) { mUserRepository.setFullName(fName, lName); }
     public int getAge() {
         return mUserRepository.getAge();
     }
@@ -126,6 +127,8 @@ public class UserViewModel extends AndroidViewModel {
 //        mUserRepository.delete(user);
     }
 
+    public void insert(User user) { mUserRepository.insert(user); }
+
     public MutableLiveData<User> getUser() {
         return mUser;
     }
@@ -133,8 +136,8 @@ public class UserViewModel extends AndroidViewModel {
         mUserRepository.setUser(user);
     }
 
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+    LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
 }
