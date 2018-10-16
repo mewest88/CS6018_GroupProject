@@ -15,29 +15,35 @@ import java.util.List;
 public class UserRepository {
     private MutableLiveData<User> mUser = new MutableLiveData<>();
     private User temp = new User(-1);
-//    private MutableLiveData<List<User>> mAllUsers;
-//    private UserDao mUserDao ;
+    private LiveData<List<User>> mAllUsers;
+    private UserDao mUserDao ;
 
     public UserRepository(Application application) {
-//        UserDatabase db = UserDatabase.getDatabase(application);
-//        mUserDao = db.userDao();
-//        mAllUsers = mUserDao.getAllUsers();
+        UserDatabase db = UserDatabase.getDatabase(application);
+        mUserDao = db.userDao();
+        mAllUsers = mUserDao.getAllUsers();
         mUser.setValue(temp);
         updateUser();
         loadData();
     }
 
-    //    public void insert(User user) {
-//        new insertAsyncTask(mUserDao).execute(user) ;
+    public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user) ;
+    }
+
+//    public void delete(int userID) {
+//
 //    }
 
     MutableLiveData<User> getUser() {
         return mUser;
     }
+
     public void setUser(User user) {
         temp = user;
         updateUser();
     }
+
 //    public void newUser(User user) {
 //        temp = user;
 //        updateUser();
@@ -80,16 +86,16 @@ public class UserRepository {
         mUser.getValue().setSex(sex);
     }
     public int getHeight() {
-        return mUser.getValue().getHeight();
+        return mUser.getValue().getHeightInches();
     }
     public void setHeight(int height) {
-        mUser.getValue().setHeight(height);
+        mUser.getValue().setHeightInches(height);
     }
     public int getWeight() {
-        return mUser.getValue().getWeight();
+        return mUser.getValue().getWeightLBS();
     }
     public void setWeight(int weight) {
-        mUser.getValue().setWeight(weight);
+        mUser.getValue().setWeightLBS(weight);
     }
     public double getBMI() {
         return mUser.getValue().getBMI();
@@ -110,10 +116,10 @@ public class UserRepository {
         mUser.getValue().setActivityLevel(activityLevel);
     }
     public double getDailyRecommendedCalorieIntake() {
-        return mUser.getValue().getDailyRecommendedCalorieIntake();
+        return mUser.getValue().getRecommendedDailyCalorieIntake();
     }
     public void setDailyRecommendedCalorieIntake(double calorieIntake) {
-        mUser.getValue().setDailyRecommendedCalorieIntake(calorieIntake);
+        mUser.getValue().setRecommendedDailyCalorieIntake(calorieIntake);
     }
     public String getCity() {
         return mUser.getValue().getCity();
@@ -142,9 +148,10 @@ public class UserRepository {
     public void setProfilePic(Bitmap profilePic) {
         mUser.getValue().setProfilePic(profilePic);
     }
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+
+    LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
     private void updateUser() {
         new AsyncTask<User, Void, User>() {
@@ -168,23 +175,21 @@ public class UserRepository {
         }.execute(temp);
     }
 
-
-
     // AsyncTask class
-//    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
-//
-//        private UserDao mAsyncTaskDao;
-//
-//        insertAsyncTask(UserDao dao) {
-//            mAsyncTaskDao = dao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(final User... params) {
-//            mAsyncTaskDao.insert(params[0]);
-//            return null;
-//        }
-//    }
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
 
     /*
     BEGINNING OF USED FOR WEATHER TOOLS ---------------------------------------------------------

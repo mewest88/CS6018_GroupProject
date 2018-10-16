@@ -195,4 +195,5 @@ public class WeatherData {
     public Clouds getClouds(){
         return mClouds;
     }
+
 }

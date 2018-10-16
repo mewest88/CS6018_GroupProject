@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
 import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
-//    private MutableLiveData<List<User>> mAllUsers;
+    private MutableLiveData<List<User>> mAllUsers;
     private MutableLiveData<User> mUser;
     private static UserRepository mUserRepository;
 
@@ -20,6 +20,7 @@ public class UserViewModel extends AndroidViewModel {
         }
         mUser = mUserRepository.getUser();
     }
+
     public String getFirstName() {
         return mUserRepository.getFirstName();
     }
@@ -47,10 +48,10 @@ public class UserViewModel extends AndroidViewModel {
     public void setSex(String sex) {
         mUserRepository.setSex(sex);
     }
-    public int getHeight() {
+    public int getHeightInches() {
         return mUserRepository.getHeight();
     }
-    public void setHeight(int height) {
+    public void setHeightInches(int height) {
         mUserRepository.setHeight(height);
     }
     public int getWeight() {
@@ -111,8 +112,12 @@ public class UserViewModel extends AndroidViewModel {
         mUserRepository.setProfilePic(profilePic);
     }
 
-    public void delete(User user) {
+//    public void delete(User user) {
 //        mUserRepository.delete(user);
+//    }
+
+    public void insert(User user) {
+        mUserRepository.insert(user) ;
     }
 
     public MutableLiveData<User> getUser() {
@@ -122,8 +127,8 @@ public class UserViewModel extends AndroidViewModel {
         mUserRepository.setUser(user);
     }
 
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+    MutableLiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
 }

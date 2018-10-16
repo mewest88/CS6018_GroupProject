@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.persistence.room.Ignore;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -13,8 +14,9 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "user_table")
 public class User implements Parcelable {
     @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "user_ID")
+        @NonNull
+        @ColumnInfo(name = "user_ID")
+        public int userID ;
 
     private String firstName;
     private String lastName;
@@ -23,7 +25,6 @@ public class User implements Parcelable {
     private String activityLevel;
     private String city;
     private String country;
-    private int userID;
     private int age;
     private int heightInches;
     private int weightLBS;
@@ -31,6 +32,8 @@ public class User implements Parcelable {
     private double BMI;
     private double weightChangeGoal; //positive or negative based on fitness goal
     private double recommendedDailyCalorieIntake;
+
+    @Ignore
     private Bitmap profilePic;
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -68,8 +71,13 @@ public class User implements Parcelable {
 
         profilePic = in.readParcelable(null);
     }
+
+    public User() {
+
+    }
+
     public User(int userIDPassed) {
-        userID = userIDPassed;
+        this.userID = userIDPassed;
         age = 14;
     }
 
@@ -80,6 +88,7 @@ public class User implements Parcelable {
         double converted = unconverted * 703;
         return converted;
     }
+
     //should be called to calculate base BMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {
         double weightMetric = currentWeightPassed / 2.2;
@@ -168,16 +177,16 @@ public class User implements Parcelable {
     public void setAge(int agePassed) {
         age = agePassed;
     }
-    public int getWeight() {
+    public int getWeightLBS() {
         return weightLBS;
     }
-    public void setWeight(int weightPassed) {
+    public void setWeightLBS(int weightPassed) {
         weightLBS = weightPassed;
     }
-    public int getHeight() {
+    public int getHeightInches() {
         return heightInches;
     }
-    public void setHeight(int heightPassed) {
+    public void setHeightInches(int heightPassed) {
         heightInches = heightPassed;
     }
     public String getActivityLevel() {
@@ -186,10 +195,10 @@ public class User implements Parcelable {
     public void setActivityLevel(String activityLevelPassed) {
         activityLevel = activityLevelPassed;
     }
-    public double getDailyRecommendedCalorieIntake() {
+    public double getRecommendedDailyCalorieIntake() {
         return recommendedDailyCalorieIntake;
     }
-    public void setDailyRecommendedCalorieIntake(double calorieIntake) {
+    public void setRecommendedDailyCalorieIntake(double calorieIntake) {
         recommendedDailyCalorieIntake = calorieIntake;
     }
     public Bitmap getProfilePic() {
@@ -198,6 +207,7 @@ public class User implements Parcelable {
     public String getFullName() {
         return fullName;
     }
+    public void setFullName(String fullNamePassed) { fullName = fullNamePassed ; }
     public double getBMI() {
         return BMI;
     }

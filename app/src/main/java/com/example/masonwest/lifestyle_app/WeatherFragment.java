@@ -23,7 +23,7 @@ public class WeatherFragment extends Fragment {
     private TextView mTvLocation, mTvTemp, mTvPress, mTvHum;
     private String mLocation;
 //    private WeatherData mWeatherData;
-    private WeatherViewModel mWeatherViewModel;
+   private WeatherViewModel mWeatherViewModel;
 //    private Button mBtSubmit;
 
     //Uniquely identify loader
