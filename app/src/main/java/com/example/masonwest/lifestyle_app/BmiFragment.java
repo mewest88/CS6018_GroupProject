@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
-    private User currentUser;
+//    private User currentUser;
     private UserViewModel mUserViewModel;
 
     public BmiFragment() {
@@ -74,7 +74,7 @@ public class BmiFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //Put them in the outgoing Bundle
-        outState.putParcelable("user", currentUser);
+//        outState.putParcelable("user", currentUser);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);

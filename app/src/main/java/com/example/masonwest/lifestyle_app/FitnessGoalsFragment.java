@@ -79,8 +79,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         mUserViewModel.getUser().observe(this, userObserver);
 
         if(savedInstanceState != null) {
-            goalText = savedInstanceState.getString("goalTextView");
-            calText = savedInstanceState.getString("caloriesTextView");
+            goalText = String.valueOf(mUserViewModel.getWeightChangeGoal());
+            calText = String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake());
         }
 
         if(goalText != "") {
@@ -105,6 +105,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         activityLevelDropdown.setAdapter(adapter);
+        activityLevelDropdown.setSelection(2);
         activityLevelDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -114,16 +115,16 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                if(mUserViewModel.getActivityLevel().equals("")) {
-                    activityLevelDropdown.setSelection(2);
-                } else {
-                    for(int i = 0; i < finalOptions.length; i++) {
-                        if(mUserViewModel.getActivityLevel().equals(finalOptions[i])) {
-                            activityLevelDropdown.setSelection(i);
-                            break;
-                        }
-                    }
-                }
+//                if(mUserViewModel.getActivityLevel().equals("")) {
+//                    activityLevelDropdown.setSelection(2);
+//                } else {
+//                    for(int i = 0; i < finalOptions.length; i++) {
+//                        if(mUserViewModel.getActivityLevel().equals(finalOptions[i])) {
+//                            activityLevelDropdown.setSelection(i);
+//                            break;
+//                        }
+//                    }
+//                }
             }
         });
 
@@ -140,6 +141,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightChange);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightChangeDropdown.setAdapter(goalAdapter);
+        weightChangeDropdown.setSelection(6);
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
@@ -151,15 +153,15 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                if(mUserViewModel.getWeightChangeGoal() == 0) {
-                    weightChangeDropdown.setSelection(6);
-                }
-                for(int i = 0; i < finalWeightChange.length; i++) {
-                    if(mUserViewModel.getWeightChangeGoal() == Double.parseDouble(finalWeightChange[i])) {
-                        weightChangeDropdown.setSelection(i);
-                        break;
-                    }
-                }
+//                if(mUserViewModel.getWeightChangeGoal() == 0) {
+//                    weightChangeDropdown.setSelection(6);
+//                }
+//                for(int i = 0; i < finalWeightChange.length; i++) {
+//                    if(mUserViewModel.getWeightChangeGoal() == Double.parseDouble(finalWeightChange[i])) {
+//                        weightChangeDropdown.setSelection(i);
+//                        break;
+//                    }
+//                }
             }
         });
 
@@ -171,7 +173,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                mUserViewModel.setUser(user);
+//                mUserViewModel.setUser(user);
                 tvActualGoal.setText(String.valueOf(mUserViewModel.getWeightChangeGoal()));
                 tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
             }
@@ -192,30 +194,30 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         String activityLevel = mUserViewModel.getActivityLevel();
         double goal = mUserViewModel.getWeightChangeGoal();
         mUserViewModel.setDailyRecommendedCalorieIntake(User.calculateDailyRecommendedCalorieIntake(bmr, activityLevel, goal));
-        int calories = (int) mUserViewModel.getDailyRecommendedCalorieIntake();
+        int calories = (int)mUserViewModel.getDailyRecommendedCalorieIntake();
         int calorieLimit = mUserViewModel.getSex().equals("Male") ? 1200 : 1000;
         if(calories < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }
 
-        tvRecommendedCalories.setText(calories + " cal");
+        tvRecommendedCalories.setText(String.valueOf(calories));
 //        if (!isTablet()) {
 //            mDataPasser.onDataPass(currentUser);
 //        }
     }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//
+//        String goalText = tvActualGoal.getText().toString();
+//        String calText = tvRecommendedCalories.getText().toString();
+//        outState.putString("goalTextView", goalText);
+//        outState.putString("caloriesTextView", calText);
+//
+//        super.onSaveInstanceState(outState);
+//    }
 
-        String goalText = tvActualGoal.getText().toString();
-        String calText = tvRecommendedCalories.getText().toString();
-        outState.putString("goalTextView", goalText);
-        outState.putString("caloriesTextView", calText);
-
-        super.onSaveInstanceState(outState);
-    }
-
-    public boolean isTablet()
-    {
-        return getResources().getBoolean(R.bool.isTablet);
-    }
+//    public boolean isTablet()
+//    {
+//        return getResources().getBoolean(R.bool.isTablet);
+//    }
 }
