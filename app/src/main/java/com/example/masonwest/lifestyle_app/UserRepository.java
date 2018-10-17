@@ -13,31 +13,52 @@ import java.net.URL;
 import java.util.List;
 
 public class UserRepository {
-    private MutableLiveData<User> mUser = new MutableLiveData<>();
+    private UserDao mUserDao;
+    private LiveData<User> mUser;
     private User temp = new User(-1);
-    private LiveData<List<User>> mAllUsers;
-    private UserDao mUserDao ;
+//    private LiveData<List<User>> mAllUsers;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mAllUsers = mUserDao.getAllUsers();
-        mUser.setValue(temp);
-        updateUser();
+        mUser = mUserDao.getUser(); // could be called somewhere else?
+//        mAllUsers = mUserDao.getAllUsers();
+//        mUser.setValue(temp); //?????
+//        updateUser();
         loadData();
     }
 
-        public void insert(User user) {
+    LiveData<User> getUser() {
+        return mUser;
+    }
+    //    LiveData<List<User>> getAllUsers() {
+    //        return mAllUsers;
+    //    }
+
+//    public void setUser(User user) {
+//        mUser.setValue(user);
+//    }
+
+    public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user) ;
     }
 
-    MutableLiveData<User> getUser() {
-        return mUser;
+    // AsyncTask class - This is needed for the Repo to talk to the DB and DAO
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
     }
-    public void setUser(User user) {
-        temp = user;
-        updateUser();
-    }
+
 //    public void newUser(User user) {
 //        temp = user;
 //        updateUser();
@@ -147,45 +168,27 @@ public class UserRepository {
 //        return mAllUsers;
 //    }
 
-    private void updateUser() {
-        new AsyncTask<User, Void, User>() {
-            @Override
-            protected User doInBackground(User... user) {
-                User tempUser = null;
-                if(user[0] != null) {
-                    tempUser = user[0];
-                }
-//                temp.setFirstName("Christopher");
-//                temp.setLastName("bitch");
-                return tempUser;
-            }
-
-            @Override
-            protected void onPostExecute(User user) {
-                if(user != null) {
-                    mUser.setValue(user);
-                }
-            }
-        }.execute(temp);
-    }
-
-
-
-    // AsyncTask class
-    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
-
-        private UserDao mAsyncTaskDao;
-
-        insertAsyncTask(UserDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final User... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
+//    private void updateUser() {
+//        new AsyncTask<User, Void, User>() {
+//            @Override
+//            protected User doInBackground(User... user) {
+//                User tempUser = null;
+//                if(user[0] != null) {
+//                    tempUser = user[0];
+//                }
+////                temp.setFirstName("Christopher");
+////                temp.setLastName("bitch");
+//                return tempUser;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(User user) {
+//                if(user != null) {
+//                    mUser.setValue(user);
+//                }
+//            }
+//        }.execute(temp);
+//    }
 
     /*
     BEGINNING OF USED FOR WEATHER TOOLS ---------------------------------------------------------

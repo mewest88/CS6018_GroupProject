@@ -59,7 +59,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                mUserViewModel.setUser(user);
+//                mUserViewModel.setUser(user);
                 mTvFullName.setText(mUserViewModel.getFullName());
                 mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
             }

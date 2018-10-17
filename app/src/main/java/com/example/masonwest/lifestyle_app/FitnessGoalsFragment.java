@@ -171,7 +171,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                mUserViewModel.setUser(user);
+//                mUserViewModel.setUser(user);
                 tvActualGoal.setText(String.valueOf(mUserViewModel.getWeightChangeGoal()));
                 tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
             }

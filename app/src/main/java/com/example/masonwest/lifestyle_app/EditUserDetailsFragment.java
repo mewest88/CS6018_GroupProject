@@ -31,7 +31,7 @@ public class EditUserDetailsFragment extends Fragment
     private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private EditText mEtFirstName, mEtLastName ;
     private Spinner mSpinnerAge, mSpinnerWeight, mSpinnerHeight, mSpinnerCity, mSpinnerCountry, mSpinnerSex;
-    private ImageButton mBtSubmit ;
+    private ImageButton mBtSubmit;
     private Button mBtPicture;
     private String mFirstName, mLastName;
     private ImageView mIvPic;
@@ -60,7 +60,8 @@ public class EditUserDetailsFragment extends Fragment
 
         mUserViewModel.getUser().observe(this, userObserver);
         User newUser = new User(13);
-        mUserViewModel.setUser(newUser);
+        mUserViewModel.insert(newUser);
+//        mUserViewModel.setUser(newUser);
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
@@ -345,9 +346,9 @@ public class EditUserDetailsFragment extends Fragment
                         fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
                     }
 
-                    MutableLiveData<User> tempUserList = mUserViewModel.getUser();
-                    User tempUser = tempUserList.getValue();
-                    mUserViewModel.insert(tempUser);
+//                    MutableLiveData<User> tempUserList = mUserViewModel.getUser();
+//                    User tempUser = tempUserList.getValue();
+//                    mUserViewModel.insert(tempUser);
                     fTrans.addToBackStack(null);
                     fTrans.commit();
                 }

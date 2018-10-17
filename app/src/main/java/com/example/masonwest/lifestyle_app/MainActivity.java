@@ -15,7 +15,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements MyRVAdapter.DataPasser {//, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
+    implements MyRVAdapter.DataPasser {//, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.HeaderDataPass {
 
     private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private UserViewModel mUserViewModel;
