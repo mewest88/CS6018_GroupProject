@@ -9,8 +9,8 @@ import android.graphics.Bitmap;
 import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
-//    private LiveData<List<User>> mAllUsers;
-    private LiveData<User> mUser;
+    private MutableLiveData<List<User>> mAllUsers;
+    private MutableLiveData<User> mUser;
     private MutableLiveData<WeatherData> jsonData;
     private static UserRepository mUserRepository;
 
@@ -19,7 +19,6 @@ public class UserViewModel extends AndroidViewModel {
         if(mUserRepository == null) {
             mUserRepository = new UserRepository(application);
         }
-//        mAllUsers = mUserRepository.getAllUsers();
         mUser = mUserRepository.getUser();
         jsonData = mUserRepository.getData();
     }
@@ -127,16 +126,15 @@ public class UserViewModel extends AndroidViewModel {
 //        mUserRepository.delete(user);
     }
     public void insert(User user) { mUserRepository.insert(user); }
-
-    public LiveData<User> getUser() {
+    public MutableLiveData<User> getUser() {
         return mUser;
     }
 
-//    public void setUser(User user) {
-//        mUserRepository.setUser(user);
-//    }
-//    public LiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+    public void setUser(User user) {
+        mUserRepository.setUser(user);
+    }
+    public LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
 }

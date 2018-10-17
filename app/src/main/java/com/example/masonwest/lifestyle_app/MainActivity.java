@@ -15,7 +15,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-    implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
+        implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private Boolean isEditUser = false;
     private int container;

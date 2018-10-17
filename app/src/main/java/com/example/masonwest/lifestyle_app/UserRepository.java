@@ -13,19 +13,19 @@ import java.net.URL;
 import java.util.List;
 
 public class UserRepository {
+
+    private MutableLiveData<User> mUser = new MutableLiveData<>();
+    private User temp;
+    private LiveData<List<User>> mAllUsers;
     private UserDao mUserDao;
-    private LiveData<User> mUser; //made this not a mutablelivedata for Room purposes
-//    private LiveData<List<User>> mAllUsers;
-//    private User temp;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mUser = mUserDao.getUser(); // could be called somewhere else?
-        User test = mUser.getValue();
-//        temp = new User(-1);
-//        setUser(temp);
-        loadData();  //Used to load the weather data
+        mAllUsers = mUserDao.getAllUsers();
+        temp = new User(-1);
+        setUser(temp);
+        loadData();
     }
 
     public void updateUser() {
@@ -51,12 +51,13 @@ public class UserRepository {
         }
     }
 
-    public LiveData<User> getUser() {
+    public MutableLiveData<User> getUser() {
         return mUser;
     }
-//    public void setUser(User user) {
-//        mUser.setValue(user);
-//    }
+
+    public void setUser(User user) {
+        mUser.setValue(user);
+    }
 
     public String getFirstName() {
         if(mUser.getValue() != null) {
