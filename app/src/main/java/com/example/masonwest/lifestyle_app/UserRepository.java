@@ -22,21 +22,20 @@ public class UserRepository {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAllUsers();
-        mUser.setValue(temp);
-        updateUser();
+
+        setUser(temp);
         loadData();
     }
 
-        public void insert(User user) {
-        new insertAsyncTask(mUserDao).execute(user) ;
+    public void insert(User user) {
+//        new insertAsyncTask(mUserDao).execute(user) ;
     }
 
     MutableLiveData<User> getUser() {
         return mUser;
     }
     public void setUser(User user) {
-        temp = user;
-        updateUser();
+        mUser.setValue(user);
     }
 //    public void newUser(User user) {
 //        temp = user;
@@ -147,27 +146,27 @@ public class UserRepository {
 //        return mAllUsers;
 //    }
 
-    private void updateUser() {
-        new AsyncTask<User, Void, User>() {
-            @Override
-            protected User doInBackground(User... user) {
-                User tempUser = null;
-                if(user[0] != null) {
-                    tempUser = user[0];
-                }
-//                temp.setFirstName("Christopher");
-//                temp.setLastName("bitch");
-                return tempUser;
-            }
-
-            @Override
-            protected void onPostExecute(User user) {
-                if(user != null) {
-                    mUser.setValue(user);
-                }
-            }
-        }.execute(temp);
-    }
+//    private void updateUser() {
+//        new AsyncTask<User, Void, User>() {
+//            @Override
+//            protected User doInBackground(User... user) {
+//                User tempUser = null;
+//                if(user[0] != null) {
+//                    tempUser = user[0];
+//                }
+////                temp.setFirstName("Christopher");
+////                temp.setLastName("bitch");
+//                return tempUser;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(User user) {
+//                if(user != null) {
+//                    mUser.setValue(user);
+//                }
+//            }
+//        }.execute(temp);
+//    }
 
 
 

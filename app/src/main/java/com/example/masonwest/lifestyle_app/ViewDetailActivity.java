@@ -8,17 +8,17 @@ import android.os.Bundle;
 public class ViewDetailActivity extends AppCompatActivity {
 
     // Fragment member variables
-    private FitnessGoalsFragment mFitnessFragment;
-    private Fragment mBmiFragment;
-    private WeatherFragment mWeatherFragment;
-    private HikesFragment mHikesFragment;
-    private Bundle extras;
+//    private FitnessGoalsFragment mFitnessFragment;
+//    private Fragment mBmiFragment;
+//    private WeatherFragment mWeatherFragment;
+//    private HikesFragment mHikesFragment;
 //    private String mActivityLevel;
 //    private double mBMR;
 //    private double mDailyCalories;
 //    private double mGoal;
 //    private double mBMIValue;
 //    private User currentUser;
+    private Bundle extras;
 
 //    @Override
 //    public void onDataPass(User currentUserPassed) {
@@ -44,8 +44,8 @@ public class ViewDetailActivity extends AppCompatActivity {
         switch(position) {
             case 0: {
                 //Create the fragment
-                if(savedInstanceState == null) {
-                    mFitnessFragment = new FitnessGoalsFragment();
+//                if(savedInstanceState == null) {
+//                    mFitnessFragment = new FitnessGoalsFragment();
 //                    String firstName = extras.getString("userFirstName");
 //                    String lastName = extras.getString("userLastName");
 //                    String activityLevel = extras.getString("userActivityLevel");
@@ -65,38 +65,39 @@ public class ViewDetailActivity extends AppCompatActivity {
 //                    fitnessBundle.putInt("userHeight", height);
 //                    fitnessBundle.putDouble("userGoal", weightGoal);
                     //No need to check if we're on a tablet. This activity only gets created on phones.
-                    mFitnessFragment.setArguments(extras);
+//                    mFitnessFragment.setArguments(extras);
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mFitnessFragment, "frag_fitnessdetail");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new FitnessGoalsFragment());
                     fTrans.commit();
-                }
+//                }
                 break;
             }
             case 1: {
 
-                if (savedInstanceState == null) {
-                    //Create the fragment
-                    mBmiFragment = new BmiFragment();
-//                    mBMIValue = extras.getDouble("bmi_data");
-                } else {
-                    mBmiFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_BMIdetail");
-//                    mBMIValue = savedInstanceState.getDouble("userBMI");
-                }
+//                if (savedInstanceState == null) {
+//                    //Create the fragment
+//                    mBmiFragment = new BmiFragment();
+////                    mBMIValue = extras.getDouble("bmi_data");
+//                } else {
+//                    mBmiFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_BMIdetail");
+////                    mBMIValue = savedInstanceState.getDouble("userBMI");
+//                }
                     //No need to check if we're on a tablet. This activity only gets created on phones.
                     FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mBmiFragment, "frag_BMIdetail");
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new BmiFragment());
                     // Make bundle to send to bmi fragment
 //                    Bundle userData = new Bundle();
 //                    bmiData.putDouble("bmi_data", mBMIValue);
 
-                    mBmiFragment.setArguments(extras);
+//                    mBmiFragment.setArguments(extras);
+//                    fTrans.addToBackStack(null);
                     fTrans.commit();
 
                 break;
             }
             case 2: {
                 //Create the fragment
-                mWeatherFragment = new WeatherFragment();
+                Fragment mWeatherFragment = new WeatherFragment();
                 // Get Location from MainActivity
                 String location = extras.getString("location_data");
                 // Make bundle to send to weather fragment
@@ -111,10 +112,10 @@ public class ViewDetailActivity extends AppCompatActivity {
             }
             case 3: {
                 //Create the fragment
-                mHikesFragment = new HikesFragment();
+//                mHikesFragment = new HikesFragment();
                 //No need to check if we're on a tablet. This activity only gets created on phones.
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mHikesFragment, "frag_hikesdetail");
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new HikesFragment(), "frag_hikesdetail");
                 fTrans.commit();
                 break;
             }
@@ -123,9 +124,9 @@ public class ViewDetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        if(mBmiFragment != null) {
-            getSupportFragmentManager().putFragment(savedState, "frag_BMIdetail", mBmiFragment);
-        }
+//        if(mBmiFragment != null) {
+//            getSupportFragmentManager().putFragment(savedState, "frag_BMIdetail", mBmiFragment);
+//        }
 //        savedState.putParcelable("user", currentUser);
         savedState.putBundle("extras", extras);
     }

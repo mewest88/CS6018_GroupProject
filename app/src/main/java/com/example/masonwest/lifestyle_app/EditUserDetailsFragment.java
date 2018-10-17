@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,6 @@ public class EditUserDetailsFragment extends Fragment
                                     implements View.OnClickListener {
 
     //Member variables
-    private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
     private EditText mEtFirstName, mEtLastName ;
     private Spinner mSpinnerAge, mSpinnerWeight, mSpinnerHeight, mSpinnerCity, mSpinnerCountry, mSpinnerSex;
     private ImageButton mBtSubmit ;
@@ -36,11 +37,22 @@ public class EditUserDetailsFragment extends Fragment
     private String mFirstName, mLastName;
     private ImageView mIvPic;
     private UserViewModel mUserViewModel;
+    private OnDataPass dataPasser;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        dataPasser = (OnDataPass) context;
+    }
+    public void passData() {
+        dataPasser.onEditUserSubmit();
+    }
 
     //Define a request code for the camera
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     //create an observer that watches the MutableLiveData<User> object
+    //possibly not necessary here?
     final Observer<User> userObserver  = new Observer<User>() {
         @Override
         public void onChanged(@Nullable final User user) {
@@ -51,6 +63,10 @@ public class EditUserDetailsFragment extends Fragment
         }
     };
 
+    public interface OnDataPass {
+        void onEditUserSubmit();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,11 +75,17 @@ public class EditUserDetailsFragment extends Fragment
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         mUserViewModel.getUser().observe(this, userObserver);
-        User newUser = new User(13);
-        mUserViewModel.setUser(newUser);
+
+        if(mUserViewModel.getUser() == null) {
+            User newUser = new User(13);
+            mUserViewModel.setUser(newUser);
+        }
+
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
+        mEtFirstName.setText(mUserViewModel.getFirstName());
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
+        mEtLastName.setText(mUserViewModel.getLastName());
         mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
         mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
@@ -316,40 +338,7 @@ public class EditUserDetailsFragment extends Fragment
                     mUserViewModel.setBMI(bmi);
                     mUserViewModel.setFirstName(mFirstName);
                     mUserViewModel.setLastName(mLastName);
-
-                    //MASTER LIST WORK
-                    //Get the Master List fragment
-                    mMasterListFragment = new MasterListFragment();
-
-                    //Replace the fragment container
-                    FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-
-                    // If we're on a tablet, the master fragment appears on the left pane. If we're on a phone,
-                    // it takes over the whole screen
-                    if(isTablet()){
-                        //Pane 1: Master list
-                        fTrans.replace(R.id.fl_frag_masterlist_container_tablet, mMasterListFragment,"frag_masterlist_tablet");
-                    }
-                    else{
-                        fTrans.replace(R.id.fl_frag_masterlist_container_phone, mMasterListFragment, "frag_masterlist_phone");
-                    }
-
-                    //HEADER WORK
-                    mAppHeaderFragment = new AppHeaderFragment();
-
-                    if(isTablet()){
-                        //Pane 1: Master list
-                        fTrans.replace(R.id.fl_header_tablet, mAppHeaderFragment, "app_header_frag");
-                    }
-                    else{
-                        fTrans.replace(R.id.fl_header_phone, mAppHeaderFragment, "app_header_frag");
-                    }
-
-                    MutableLiveData<User> tempUserList = mUserViewModel.getUser();
-                    User tempUser = tempUserList.getValue();
-                    mUserViewModel.insert(tempUser);
-                    fTrans.addToBackStack(null);
-                    fTrans.commit();
+                    passData();
                 }
                 break;
             }
