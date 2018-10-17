@@ -13,10 +13,10 @@ import java.net.URL;
 import java.util.List;
 
 public class UserRepository {
-    private MutableLiveData<User> mUser = new MutableLiveData<>();
-    private User temp;
-    private LiveData<List<User>> mAllUsers;
     private UserDao mUserDao;
+    private LiveData<User> mUser; //made this not a mutablelivedata for Room purposes
+//    private LiveData<List<User>> mAllUsers;
+    private User temp;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
@@ -25,6 +25,7 @@ public class UserRepository {
         temp = new User(-1);
         setUser(temp);
         loadData();
+        //mUser = mUserDao.getUser(); // could be called somewhere else?
     }
 
     public void updateUser() {
@@ -39,6 +40,7 @@ public class UserRepository {
     public void setUser(User user) {
         mUser.setValue(user);
     }
+
     public String getFirstName() {
         if(mUser.getValue() != null) {
             return mUser.getValue().getFirstName();

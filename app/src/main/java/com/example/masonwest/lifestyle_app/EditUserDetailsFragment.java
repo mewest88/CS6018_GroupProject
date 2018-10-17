@@ -32,7 +32,7 @@ public class EditUserDetailsFragment extends Fragment
     //Member variables
     private EditText mEtFirstName, mEtLastName ;
     private Spinner mSpinnerAge, mSpinnerWeight, mSpinnerHeight, mSpinnerCity, mSpinnerCountry, mSpinnerSex;
-    private ImageButton mBtSubmit ;
+    private ImageButton mBtSubmit;
     private Button mBtPicture;
     private String mFirstName, mLastName;
     private ImageView mIvPic;
@@ -79,8 +79,9 @@ public class EditUserDetailsFragment extends Fragment
         if(mUserViewModel.getUser() == null) {
             User newUser = new User(13);
             mUserViewModel.setUser(newUser);
+            //mUserViewModel.insert(newUser);
         }
-
+        
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
         mEtFirstName.setText(mUserViewModel.getFirstName());
