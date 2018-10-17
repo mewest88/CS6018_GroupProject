@@ -78,8 +78,8 @@ public class EditUserDetailsFragment extends Fragment
 
         if(mUserViewModel.getUser() == null) {
             User newUser = new User(13);
-            mUserViewModel.setUser(newUser);
-            //mUserViewModel.insert(newUser);
+//            mUserViewModel.setUser(newUser);
+            mUserViewModel.insert(newUser);
         }
         
         //Get the views

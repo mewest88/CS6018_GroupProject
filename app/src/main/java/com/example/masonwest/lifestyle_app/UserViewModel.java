@@ -132,11 +132,11 @@ public class UserViewModel extends AndroidViewModel {
         return mUser;
     }
 
-    public void setUser(User user) {
-        mUserRepository.setUser(user);
-    }
-    public LiveData<List<User>> getAllUsers() {
-        return mAllUsers;
-    }
+//    public void setUser(User user) {
+//        mUserRepository.setUser(user);
+//    }
+//    public LiveData<List<User>> getAllUsers() {
+//        return mAllUsers;
+//    }
 
 }

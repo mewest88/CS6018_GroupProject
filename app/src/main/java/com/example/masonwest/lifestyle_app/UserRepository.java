@@ -16,16 +16,16 @@ public class UserRepository {
     private UserDao mUserDao;
     private LiveData<User> mUser; //made this not a mutablelivedata for Room purposes
 //    private LiveData<List<User>> mAllUsers;
-    private User temp;
+//    private User temp;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mAllUsers = mUserDao.getAllUsers();
-        temp = new User(-1);
-        setUser(temp);
-        loadData();
-        //mUser = mUserDao.getUser(); // could be called somewhere else?
+        mUser = mUserDao.getUser(); // could be called somewhere else?
+        User test = mUser.getValue();
+//        temp = new User(-1);
+//        setUser(temp);
+        loadData();  //Used to load the weather data
     }
 
     public void updateUser() {
@@ -34,12 +34,29 @@ public class UserRepository {
     public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user);
     }
-    public MutableLiveData<User> getUser() {
+
+    // AsyncTask class
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    public LiveData<User> getUser() {
         return mUser;
     }
-    public void setUser(User user) {
-        mUser.setValue(user);
-    }
+//    public void setUser(User user) {
+//        mUser.setValue(user);
+//    }
 
     public String getFirstName() {
         if(mUser.getValue() != null) {
@@ -66,7 +83,7 @@ public class UserRepository {
     }
     public void setFullName(String fName, String lName) { mUser.getValue().setFullName(fName, lName); }
     public int getAge() {
-        User tempUser = temp;
+//        User tempUser = temp;
         User testUser = mUser.getValue();
         return mUser.getValue().getAge();
     }
@@ -141,22 +158,6 @@ public class UserRepository {
     }
     public void setProfilePic(Bitmap profilePic) {
         mUser.getValue().setProfilePic(profilePic);
-    }
-
-    // AsyncTask class
-    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
-
-        private UserDao mAsyncTaskDao;
-
-        insertAsyncTask(UserDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final User... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
     }
 
     /*
