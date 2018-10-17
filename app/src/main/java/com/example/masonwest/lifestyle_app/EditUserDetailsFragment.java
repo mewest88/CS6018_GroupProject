@@ -167,6 +167,8 @@ public class EditUserDetailsFragment extends Fragment
 
         if(mUserViewModel != null && mUserViewModel.getUser() != null) {
 
+//            User temp = mUserViewModel.getUser().getValue();
+//            if(temp.getAge() > 1) {
             if(mUserViewModel.getAge() > 1) {
                 mSpinnerAge.setSelection(mUserViewModel.getAge() - 1);
             } else {

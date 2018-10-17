@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
+
     public abstract UserDao userDao();
 
     private static volatile UserDatabase INSTANCE;
@@ -51,10 +52,10 @@ public abstract class UserDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            mDao.deleteAll();
-//            User tempUser = new User(100, "mason", "west", "Male", "London", "GB", "Sedentary", 30, 72, 160, 24.0, 24.0, );
-            User tempUser = new User(100);
-            mDao.insert(tempUser);
+//            mDao.deleteAll();
+////            User tempUser = new User(100, "mason", "west", "Male", "London", "GB", "Sedentary", 30, 72, 160, 24.0, 24.0, );
+//            User tempUser = new User(100);
+//            mDao.insert(tempUser);
             return null;
         }
     }
