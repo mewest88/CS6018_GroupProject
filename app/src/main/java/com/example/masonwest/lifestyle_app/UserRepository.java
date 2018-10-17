@@ -14,33 +14,31 @@ import java.util.List;
 
 public class UserRepository {
     private MutableLiveData<User> mUser = new MutableLiveData<>();
-    private User temp = new User(-1);
+    private User temp;
     private LiveData<List<User>> mAllUsers;
-    private UserDao mUserDao ;
+    private UserDao mUserDao;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAllUsers();
-
+        temp = new User(-1);
         setUser(temp);
         loadData();
     }
 
-    public void insert(User user) {
-//        new insertAsyncTask(mUserDao).execute(user) ;
-    }
+    public void updateUser() {
 
-    MutableLiveData<User> getUser() {
+    }
+    public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user);
+    }
+    public MutableLiveData<User> getUser() {
         return mUser;
     }
     public void setUser(User user) {
         mUser.setValue(user);
     }
-//    public void newUser(User user) {
-//        temp = user;
-//        updateUser();
-//    }
     public String getFirstName() {
         if(mUser.getValue() != null) {
             return mUser.getValue().getFirstName();
@@ -142,33 +140,6 @@ public class UserRepository {
     public void setProfilePic(Bitmap profilePic) {
         mUser.getValue().setProfilePic(profilePic);
     }
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
-
-//    private void updateUser() {
-//        new AsyncTask<User, Void, User>() {
-//            @Override
-//            protected User doInBackground(User... user) {
-//                User tempUser = null;
-//                if(user[0] != null) {
-//                    tempUser = user[0];
-//                }
-////                temp.setFirstName("Christopher");
-////                temp.setLastName("bitch");
-//                return tempUser;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(User user) {
-//                if(user != null) {
-//                    mUser.setValue(user);
-//                }
-//            }
-//        }.execute(temp);
-//    }
-
-
 
     // AsyncTask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
@@ -191,10 +162,6 @@ public class UserRepository {
     */
     private final MutableLiveData<WeatherData> jsonData = new MutableLiveData<WeatherData>();
     private String mLocation;
-
-//    WeatherRepository(Application application){ //redone in the UserRepository constuctor above
-//        loadData();
-//    }
 
     public void setLocation(String location){
         mLocation = location;
