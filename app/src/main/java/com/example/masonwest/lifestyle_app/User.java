@@ -38,8 +38,8 @@ public class User implements Parcelable {
     private double BMI;
     private double weightChangeGoal; //positive or negative based on fitness goal
     private double recommendedDailyCalorieIntake;
-    @Ignore
-    private Bitmap profilePic; //Saving an bitmap as blob https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
+//    @Ignore
+//    private Bitmap profilePic; //Saving an bitmap as blob https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] profileImageData;
 
@@ -76,7 +76,7 @@ public class User implements Parcelable {
         weightChangeGoal = in.readDouble();
         recommendedDailyCalorieIntake = in.readDouble();
 
-        profilePic = in.readParcelable(null);
+        Bitmap profilePic = in.readParcelable(null);
         setProfileImageData(profilePic);
     }
     public User(int userIDPassed) {
@@ -132,7 +132,8 @@ public class User implements Parcelable {
 
     //only called if userID already exists
     public void updateUser(Bundle userData) {
-        profilePic = userData.getParcelable("userProfilePic");
+        Bitmap profilePic = userData.getParcelable("userProfilePic"); //reads in bitmap image
+        setProfileImageData(profilePic); //converts bitmap image to byte[]
         firstName = userData.getString("userFirstName");
         lastName = userData.getString("userLastName");
         fullName = firstName + " " + lastName;
@@ -166,7 +167,10 @@ public class User implements Parcelable {
         sex = sexPassed;
     }
     public void setProfilePic(Bitmap profilePicPassed) {
-        profilePic = profilePicPassed;
+        setProfileImageData(profilePicPassed);
+    }
+    public Bitmap getProfilePic() {
+        return getProfileImageDataInBitmap();
     }
     public String getFirstName() {
         return firstName;
@@ -203,9 +207,6 @@ public class User implements Parcelable {
     public double getRecommendedDailyCalorieIntake() { return recommendedDailyCalorieIntake; }
     public void setRecommendedDailyCalorieIntake(double calorieIntake) {
         recommendedDailyCalorieIntake = calorieIntake;
-    }
-    public Bitmap getProfilePic() {
-        return profilePic;
     }
     public String getFullName() {
         return fullName;
@@ -311,6 +312,7 @@ public class User implements Parcelable {
         dest.writeDouble(weightChangeGoal);
         dest.writeDouble(recommendedDailyCalorieIntake);
 
+        Bitmap profilePic = getProfileImageDataInBitmap();
         dest.writeParcelable(profilePic, flags);
     }
 }

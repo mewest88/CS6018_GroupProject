@@ -14,15 +14,15 @@ import java.util.List;
 
 public class UserRepository {
 
-    private MutableLiveData<User> mUser = new MutableLiveData<>();
     private User temp;
-    private LiveData<List<User>> mAllUsers;
+    private MutableLiveData<User> mUser = new MutableLiveData<>();
+//    private LiveData<User> mUser;
     private UserDao mUserDao;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mAllUsers = mUserDao.getAllUsers();
+//        mUser = mUserDao.getUser();
         temp = new User(-1);
         setUser(temp);
         loadData();
@@ -31,6 +31,7 @@ public class UserRepository {
     public void updateUser() {
 
     }
+
     public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user);
     }
@@ -209,4 +210,36 @@ public class UserRepository {
     /*
     END OF WEATHER TOOLS - - - - - - - - - - - ----------------------------------------------
     */
+
+    // Gets the number of rows in the table
+    public VoidAsyncTask getNumberOfProfilesInDatabase(){
+        rowsInDatabaseTask task = new rowsInDatabaseTask(mUserDao);
+        return task;
+    }
+
+    // For getting the number of rows/entries in the database
+    private static class rowsInDatabaseTask extends VoidAsyncTask<Integer> {
+
+        private UserDao mAsyncTaskDao;
+        private int result;
+
+        rowsInDatabaseTask(UserDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            result =  mAsyncTaskDao.getNumberOfUserInDatabase();
+            return result;
+        }
+
+        protected int onPostExecute(int result) {
+            return result;
+        }
+
+        public int getResult(){
+            return result;
+        }
+
+    }
 }

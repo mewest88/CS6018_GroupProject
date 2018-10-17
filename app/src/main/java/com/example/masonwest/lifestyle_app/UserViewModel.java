@@ -23,6 +23,8 @@ public class UserViewModel extends AndroidViewModel {
         jsonData = mUserRepository.getData();
     }
 
+    public VoidAsyncTask getNumberOfUserInDatabase(){ return mUserRepository.getNumberOfProfilesInDatabase(); }
+
     // WEATHERDATA Tools
     public void setLocation(String location){
         mUserRepository.setLocation(location);
@@ -133,8 +135,4 @@ public class UserViewModel extends AndroidViewModel {
     public void setUser(User user) {
         mUserRepository.setUser(user);
     }
-    public LiveData<List<User>> getAllUsers() {
-        return mAllUsers;
-    }
-
 }
