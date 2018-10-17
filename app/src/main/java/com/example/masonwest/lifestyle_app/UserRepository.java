@@ -14,55 +14,33 @@ import java.util.List;
 
 public class UserRepository {
     private UserDao mUserDao;
-    private LiveData<User> mUser;
-    private User temp = new User(-1);
+    private LiveData<User> mUser; //made this not a mutablelivedata for Room purposes
 //    private LiveData<List<User>> mAllUsers;
+    private User temp;
 
     public UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mUser = mUserDao.getUser(); // could be called somewhere else?
-//        mAllUsers = mUserDao.getAllUsers();
-//        mUser.setValue(temp); //?????
-//        updateUser();
+        mAllUsers = mUserDao.getAllUsers();
+        temp = new User(-1);
+        setUser(temp);
         loadData();
+        //mUser = mUserDao.getUser(); // could be called somewhere else?
     }
 
-    LiveData<User> getUser() {
+    public void updateUser() {
+
+    }
+    public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user);
+    }
+    public MutableLiveData<User> getUser() {
         return mUser;
     }
-    //    LiveData<List<User>> getAllUsers() {
-    //        return mAllUsers;
-    //    }
-
-//    public void setUser(User user) {
-//        mUser.setValue(user);
-//    }
-
-    public void insert(User user) {
-        new insertAsyncTask(mUserDao).execute(user) ;
+    public void setUser(User user) {
+        mUser.setValue(user);
     }
 
-    // AsyncTask class - This is needed for the Repo to talk to the DB and DAO
-    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
-
-        private UserDao mAsyncTaskDao;
-
-        insertAsyncTask(UserDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final User... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
-
-//    public void newUser(User user) {
-//        temp = user;
-//        updateUser();
-//    }
     public String getFirstName() {
         if(mUser.getValue() != null) {
             return mUser.getValue().getFirstName();
@@ -164,41 +142,28 @@ public class UserRepository {
     public void setProfilePic(Bitmap profilePic) {
         mUser.getValue().setProfilePic(profilePic);
     }
-//    MutableLiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
 
-//    private void updateUser() {
-//        new AsyncTask<User, Void, User>() {
-//            @Override
-//            protected User doInBackground(User... user) {
-//                User tempUser = null;
-//                if(user[0] != null) {
-//                    tempUser = user[0];
-//                }
-////                temp.setFirstName("Christopher");
-////                temp.setLastName("bitch");
-//                return tempUser;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(User user) {
-//                if(user != null) {
-//                    mUser.setValue(user);
-//                }
-//            }
-//        }.execute(temp);
-//    }
+    // AsyncTask class
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
 
     /*
     BEGINNING OF USED FOR WEATHER TOOLS ---------------------------------------------------------
     */
     private final MutableLiveData<WeatherData> jsonData = new MutableLiveData<WeatherData>();
     private String mLocation;
-
-//    WeatherRepository(Application application){ //redone in the UserRepository constuctor above
-//        loadData();
-//    }
 
     public void setLocation(String location){
         mLocation = location;

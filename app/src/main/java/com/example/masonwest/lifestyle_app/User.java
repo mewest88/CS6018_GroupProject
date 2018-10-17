@@ -85,9 +85,9 @@ public class User implements Parcelable {
     }
 
     //Constuctor needed for Dao
-    public User(int userID, String firstName, String lastName, String fullName, String sex, String city, String country
-            , String activityLevel, int age, int heightInches, int weightLBS, double BMR, double BMI
-            , double weightChangeGoal, double recommendedDailyCalorieIntake, byte[] profileImageData) {
+    public User(int userID, String firstName, String lastName, String fullName, String sex, String city, String country,
+                String activityLevel, int age, int heightInches, int weightLBS, double BMR, double BMI,
+                double weightChangeGoal, double recommendedDailyCalorieIntake, byte[] profileImageData) {
     }
 
     //call before sending BMI to BMI fragment
@@ -126,6 +126,7 @@ public class User implements Parcelable {
             case "Extra Active": recommendedCalorieIntake = BMRPassed * 1.9;
                 break;
         }
+        recommendedCalorieIntake = (int)recommendedCalorieIntake;
         return recommendedCalorieIntake + (500 * weightGoalPassed);
     }
 

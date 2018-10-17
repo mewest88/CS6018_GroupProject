@@ -123,23 +123,20 @@ public class UserViewModel extends AndroidViewModel {
     public void setProfilePic(Bitmap profilePic) {
         mUserRepository.setProfilePic(profilePic);
     }
-
     public void delete(User user) {
 //        mUserRepository.delete(user);
     }
-
     public void insert(User user) { mUserRepository.insert(user); }
 
     public LiveData<User> getUser() {
         return mUser;
     }
 
-//    public void setUser(User user) {
-//        mUserRepository.setUser(user);
-//    }
-
-//    LiveData<List<User>> getAllUsers() {
-//        return mAllUsers;
-//    }
+    public void setUser(User user) {
+        mUserRepository.setUser(user);
+    }
+    public LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
 
 }

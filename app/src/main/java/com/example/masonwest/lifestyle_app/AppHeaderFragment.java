@@ -19,15 +19,27 @@ import android.widget.TextView;
 public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     // Member Variables
-
     private TextView mTvFullName;
     private ImageView mIvPicture;
     private ImageButton mButtonSettings;
     private UserViewModel mUserViewModel;
-    private Fragment mMasterListFragment, mSignUpHeaderFragment, mAppHeaderFragment, mUserDetailFragment;
+    private OnDataPass dataPasser;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        dataPasser = (OnDataPass) context;
+    }
+    public void passData() {
+        dataPasser.onSettingsButtonClick();
+    }
 
     public AppHeaderFragment() {
 
+    }
+
+    public interface OnDataPass {
+        void onSettingsButtonClick();
     }
 
     @Nullable
@@ -48,7 +60,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
         //Set the data
         mTvFullName.setText(mUserViewModel.getFullName());
-//        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
 
         return view;
     }
@@ -59,7 +71,6 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-//                mUserViewModel.setUser(user);
                 mTvFullName.setText(mUserViewModel.getFullName());
                 mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
             }
@@ -68,32 +79,6 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-
-        //Replace the fragment container
-        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-
-        if (isTablet()) {
-            fTrans.replace(R.id.fl_frag_edituser_container_tablet, mUserDetailFragment, "frag_detail");
-        }
-        else {
-            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment, "frag_detail");
-        }
-//        showHideFragment(mUserDetailFragment);
-//        showHideFragment(mMasterListFragment);
-        mSignUpHeaderFragment = new SignUpHeaderFragment();
-
-        //Replace the fragment container
-        if (isTablet()) {
-            fTrans.replace(R.id.fl_header_tablet, mSignUpHeaderFragment, "frag_signupheader_tablet"); //.getTag()???
-        }
-        else {
-            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment, "frag_signupheader_phone"); //.getTag()???
-        }
-
-        fTrans.commit();
-    }
-    public boolean isTablet()
-    {
-        return getResources().getBoolean(R.bool.isTablet);
+        passData();
     }
 }
