@@ -81,8 +81,4 @@ public class MasterListFragment extends Fragment {
             mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
         }
     }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 }

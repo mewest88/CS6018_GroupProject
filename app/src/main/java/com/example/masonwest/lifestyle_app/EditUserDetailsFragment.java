@@ -68,20 +68,9 @@ public class EditUserDetailsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
 
-        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-
-        mUserViewModel.getUser().observe(this, userObserver);
-
-        if(mUserViewModel.getUser() == null) {
-            User newUser = new User(13);
-            mUserViewModel.setUser(newUser);
-        }
-
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
-        mEtFirstName.setText(mUserViewModel.getFirstName());
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-        mEtLastName.setText(mUserViewModel.getLastName());
         mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
         mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
@@ -91,6 +80,24 @@ public class EditUserDetailsFragment extends Fragment
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
         mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
+
+
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        mUserViewModel.getUser().observe(this, userObserver);
+
+        if(mUserViewModel.getUser() == null) {
+            User newUser = new User(13);
+            mUserViewModel.setUser(newUser);
+        } else {
+            if(mUserViewModel.getProfilePic() != null) {
+                mBtPicture.setBackgroundResource(R.drawable.ic_check);
+                mBtPicture.setText("");
+            }
+        }
+
+        mEtFirstName.setText(mUserViewModel.getFirstName());
+        mEtLastName.setText(mUserViewModel.getLastName());
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
 
@@ -306,7 +313,8 @@ public class EditUserDetailsFragment extends Fragment
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
             Bundle thumbnailImage = data.getExtras();
             mUserViewModel.setProfilePic((Bitmap)thumbnailImage.get("data"));
-            mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
+            mBtPicture.setBackgroundResource(R.drawable.ic_check);
+            mBtPicture.setText("");
         }
     }
 

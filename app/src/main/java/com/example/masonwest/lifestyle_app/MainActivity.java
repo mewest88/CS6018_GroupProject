@@ -1,35 +1,28 @@
 package com.example.masonwest.lifestyle_app;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private Boolean isEditUser = false;
-    private int containerBody;
+    private int containerEditUser;
+    private int containerMasterList;
     private int containerHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerMasterList = isTablet() ? R.id.fl_frag_masterlist_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerEditUser = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
         containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
 
         if (savedInstanceState == null) {
-            //TODO not sure if this is right
             isEditUser = true;
         } else {
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
@@ -138,10 +131,11 @@ public class MainActivity extends AppCompatActivity
     public void changeDisplay() {
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
         if (isEditUser) {
-            fTrans.replace(containerBody, new EditUserDetailsFragment());
+            fTrans.replace(containerEditUser, new EditUserDetailsFragment());
             fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
-            fTrans.replace(containerBody, new MasterListFragment());
+            fTrans.hide(getSupportFragmentManager().findFragmentById(containerEditUser));
+            fTrans.replace(containerMasterList, new MasterListFragment());
             fTrans.replace(containerHeader, new AppHeaderFragment());
         }
         fTrans.addToBackStack(null);
@@ -157,14 +151,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSettingsButtonClick() {
         isEditUser = true;
+
         changeDisplay();
         if(isTablet()) {
             FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-            Fragment f = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_tablet);
-            if (f != null) {
-                fTrans.hide(f);
+            Fragment itemDetailFragment = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_tablet);
+            Fragment masterListFragment = getSupportFragmentManager().findFragmentById(containerMasterList);
+            if (itemDetailFragment != null) {
+                fTrans.hide(itemDetailFragment);
+            }
+            if (masterListFragment != null) {
+                fTrans.hide(masterListFragment);
             }
             fTrans.commit();
         }
+    }
+    @Override
+    public void onBackPressed() {
+        if(!isEditUser) {
+           isEditUser = !isEditUser;
+        }
+        super.onBackPressed();
     }
 }
