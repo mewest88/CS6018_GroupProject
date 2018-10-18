@@ -8,15 +8,11 @@ import android.os.Bundle;
 public class ViewDetailActivity extends AppCompatActivity {
 
     private Bundle extras;
-//    private int containerBody;
-//    private int containerHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_detail);
-//        containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_itemdetail_container_phone;
-//        containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
 
         if(savedInstanceState != null) {
             extras = savedInstanceState.getBundle("extras");
@@ -30,15 +26,11 @@ public class ViewDetailActivity extends AppCompatActivity {
 
         switch(position) {
             case 0: {
-//                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new FitnessGoalsFragment());
-//                fTrans.commit();
                 break;
             }
             case 1: {
-//                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new BmiFragment());
-//                fTrans.commit();
                 break;
             }
             case 2: {
@@ -50,29 +42,21 @@ public class ViewDetailActivity extends AppCompatActivity {
                 extras.putString("location_data",location);
                 mWeatherFragment.setArguments(extras);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
-//                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment);
-//                fTrans.commit();
                 break;
             }
             case 3: {
-//                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new HikesFragment());
-//                fTrans.commit();
                 break;
             }
         }
-        if(isTablet()) {
-            fTrans.addToBackStack(null);
-        }
         fTrans.commit();
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
         savedState.putBundle("extras", extras);
     }
-    public boolean isTablet() {
-        return getResources().getBoolean(R.bool.isTablet);
-    }
+
 }
