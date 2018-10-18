@@ -18,13 +18,15 @@ public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private Boolean isEditUser = false;
-    private int container;
+    private int containerBody;
+    private int containerHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        container = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
 
         if (savedInstanceState == null) {
             //TODO not sure if this is right
@@ -170,11 +172,11 @@ public class MainActivity extends AppCompatActivity
     public void changeDisplay() {
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
         if (isEditUser) {
-            fTrans.replace(container, new EditUserDetailsFragment(), "editUserFragment");
-            fTrans.replace(R.id.fl_header_phone, new SignUpHeaderFragment(), "editUserHeaderFragment");
+            fTrans.replace(containerBody, new EditUserDetailsFragment());
+            fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
-            fTrans.replace(container, new MasterListFragment(), "test");
-            fTrans.replace(R.id.fl_header_phone, new AppHeaderFragment(), "test2");
+            fTrans.replace(containerBody, new MasterListFragment());
+            fTrans.replace(containerHeader, new AppHeaderFragment());
         }
         fTrans.addToBackStack(null);
         fTrans.commit();
@@ -190,5 +192,11 @@ public class MainActivity extends AppCompatActivity
     public void onSettingsButtonClick() {
         isEditUser = true;
         changeDisplay();
+        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+        Fragment viewDetailFragmentSelected = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_phone);
+        if(viewDetailFragmentSelected != null) {
+            fTrans.hide(viewDetailFragmentSelected);
+            fTrans.commit();
+        }
     }
 }
