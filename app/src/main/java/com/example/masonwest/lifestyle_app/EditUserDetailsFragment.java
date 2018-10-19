@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 public class EditUserDetailsFragment extends Fragment
                                     implements View.OnClickListener {
 
@@ -76,16 +78,35 @@ public class EditUserDetailsFragment extends Fragment
 
         mUserViewModel.getUser().observe(this, userObserver);
 
-        if(mUserViewModel.getUser() == null) {
-            User newUser = new User(13);
-            mUserViewModel.setUser(newUser);
+        if(mUserViewModel.getUser().getValue() == null) {
+            User newUser = new User(0);
+//            mUserViewModel.setUser(newUser);
+            mUserViewModel.insert(newUser);
         }
+
+        VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
+        task.execute();
+
+        int numUsersInDB = 0;
+
+        try {
+            numUsersInDB = (int) task.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+//        User tmp = mUserViewModel.getUser().getValue();
+//        String name = mUserViewModel.getUser().getValue().getFirstName();
+//        int temp = mUserViewModel.getUser().getValue().getUserID();
+//        int rmap = 10;
 
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
-        mEtFirstName.setText(mUserViewModel.getFirstName());
+//        mEtFirstName.setText(mUserViewModel.getFirstName());
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-        mEtLastName.setText(mUserViewModel.getLastName());
+//        mEtLastName.setText(mUserViewModel.getLastName());
         mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
         mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
@@ -165,68 +186,69 @@ public class EditUserDetailsFragment extends Fragment
         mSpinnerCountry.setAdapter(countryAdapter);
         mSpinnerSex.setAdapter(sexAdapter);
 
-        if(mUserViewModel != null && mUserViewModel.getUser() != null) {
-
+//        if(mUserViewModel != null && mUserViewModel.getUser() != null) {
+//
 //            User temp = mUserViewModel.getUser().getValue();
 //            if(temp.getAge() > 1) {
-            if(mUserViewModel.getAge() > 1) {
-                mSpinnerAge.setSelection(mUserViewModel.getAge() - 1);
-            } else {
+////            if(mUserViewModel.getAge() > 1) {
+//                mSpinnerAge.setSelection(mUserViewModel.getAge() - 1);
+//            } else {
                 mSpinnerAge.setSelection(17);
-            }
-
-            if(mUserViewModel.getWeight() > 1) {
-                mSpinnerWeight.setSelection(mUserViewModel.getWeight() - 1);
-            } else {
+//            }
+//
+//            if(mUserViewModel.getWeight() > 1) {
+//                mSpinnerWeight.setSelection(mUserViewModel.getWeight() - 1);
+//            } else {
                 mSpinnerWeight.setSelection(99);
-            }
-
-            if(mUserViewModel.getHeight() > 1) {
-                mSpinnerHeight.setSelection(mUserViewModel.getHeight() - 1);
-            } else {
+//            }
+//
+//            if(mUserViewModel.getHeight() > 1) {
+//                mSpinnerHeight.setSelection(mUserViewModel.getHeight() - 1);
+//            } else {
                 mSpinnerHeight.setSelection(65);
-            }
-
-            if(mUserViewModel.getSex() != null) {
-                if (mUserViewModel.getSex().equals("Female")) {
-                    mSpinnerSex.setSelection(1);
-                }
-            } else {
+//            }
+//
+//            if(mUserViewModel.getSex() != null) {
+//                if (mUserViewModel.getSex().equals("Female")) {
+//                    mSpinnerSex.setSelection(1);
+//                }
+//            } else {
                 mSpinnerSex.setSelection(0);
-            }
-
-            if(mUserViewModel.getCountry() != null) {
-                int index = 0;
-                for(int i = 0; i < countryOptions.length; i++) {
-                    if(countryOptions[i].equals(mUserViewModel.getCountry())) {
-                        index = i;
-                        break;
-                    }
-                }
-                mSpinnerCountry.setSelection(index);
-            } else {
+//            }
+//
+//            if(mUserViewModel.getCountry() != null) {
+//                int index = 0;
+//                for(int i = 0; i < countryOptions.length; i++) {
+//                    if(countryOptions[i].equals(mUserViewModel.getCountry())) {
+//                        index = i;
+//                        break;
+//                    }
+//                }
+//                mSpinnerCountry.setSelection(index);
+//            } else {
                 mSpinnerCountry.setSelection(0);
-            }
-
-            if(mUserViewModel.getCity() != null) {
-                int index = 0;
-                for(int i = 0; i < cityOptions.length; i++) {
-                    if(cityOptions[i].equals(mUserViewModel.getCity())) {
-                        index = i;
-                        break;
-                    }
-                    mSpinnerCity.setSelection(index);
-                }
-            } else {
+//            }
+//
+//            if(mUserViewModel.getCity() != null) {
+//                int index = 0;
+//                for(int i = 0; i < cityOptions.length; i++) {
+//                    if(cityOptions[i].equals(mUserViewModel.getCity())) {
+//                        index = i;
+//                        break;
+//                    }
+//                    mSpinnerCity.setSelection(index);
+//                }
+//            } else {
                 mSpinnerCity.setSelection(3);
-            }
-        }
+//            }
+//        }
 
         mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setAge(Integer.parseInt(finalAgeOptions[position]));
+//                mUserViewModel.setAge(Integer.parseInt(finalAgeOptions[position]));
+                mUserViewModel.getUser().getValue().setAge(Integer.parseInt(finalAgeOptions[position]));
             }
 
             @Override
@@ -239,7 +261,8 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setWeight(Integer.parseInt(finalWeightOptions[position]));
+//                mUserViewModel.setWeight(Integer.parseInt(finalWeightOptions[position]));
+                mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
             }
 
             @Override
@@ -252,7 +275,8 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setHeight(Integer.parseInt(finalHeightOptions[position]));
+//                mUserViewModel.setHeight(Integer.parseInt(finalHeightOptions[position]));
+                mUserViewModel.getUser().getValue().setHeightInches(Integer.parseInt(finalHeightOptions[position]));
             }
 
             @Override
@@ -265,7 +289,8 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setCity(finalCityOptions[position]);
+//                mUserViewModel.setCity(finalCityOptions[position]);
+                mUserViewModel.getUser().getValue().setCity(finalCityOptions[position]);
             }
 
             @Override
@@ -278,7 +303,8 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setCountry(finalCountryOptions[position]);
+//                mUserViewModel.setCountry(finalCountryOptions[position]);
+                mUserViewModel.getUser().getValue().setCountry(finalCountryOptions[position]);
             }
 
             @Override
@@ -291,8 +317,8 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mSex = finalSexOptions[position];
-                mUserViewModel.setSex(finalSexOptions[position]);
+//                mUserViewModel.setSex(finalSexOptions[position]);
+                mUserViewModel.getUser().getValue().setSex(finalSexOptions[position]);
             }
 
             @Override
@@ -310,7 +336,8 @@ public class EditUserDetailsFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
             Bundle thumbnailImage = data.getExtras();
-            mUserViewModel.setProfilePic((Bitmap)thumbnailImage.get("data"));
+//            mUserViewModel.setProfilePic((Bitmap)thumbnailImage.get("data"));
+            mUserViewModel.getUser().getValue().setProfileImageData((Bitmap)thumbnailImage.get("data"));
             mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
         }
     }
@@ -332,14 +359,20 @@ public class EditUserDetailsFragment extends Fragment
                     Toast.makeText(getActivity(), "Enter a first name please!", Toast.LENGTH_SHORT).show();
                 } else if (mLastName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a last name please!", Toast.LENGTH_SHORT).show();
-                } else if (mUserViewModel.getProfilePic() == null){
+                } else if (mUserViewModel.getUser().getValue().getProfileImageDataInBitmap() == null){
+//                } else if (mUserViewModel.getProfilePic() == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
                     //Start an activity and pass the EditText string to it.
-                    double bmi = User.calculateBMI(mUserViewModel.getWeight(), mUserViewModel.getHeight());
-                    mUserViewModel.setBMI(bmi);
-                    mUserViewModel.setFirstName(mFirstName);
-                    mUserViewModel.setLastName(mLastName);
+//                    double bmi = User.calculateBMI(mUserViewModel.getWeight(), mUserViewModel.getHeight());
+                    double bmi = User.calculateBMI(mUserViewModel.getUser().getValue().getWeightLBS(), mUserViewModel.getUser().getValue().getHeightInches());
+//                    mUserViewModel.setBMI(bmi);
+                    mUserViewModel.getUser().getValue().setBMI(bmi);
+//                    mUserViewModel.setFirstName(mFirstName);
+                    mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+//                    mUserViewModel.setLastName(mLastName);
+                    mUserViewModel.getUser().getValue().setLastName(mLastName);
+                    mUserViewModel.getUser().getValue().setFullName(mFirstName, mLastName);
                     passData();
                 }
                 break;
@@ -363,8 +396,8 @@ public class EditUserDetailsFragment extends Fragment
         //Collect input data (other data was input to the bundle through spinners)
         mFirstName = mEtFirstName.getText().toString();
         mLastName = mEtLastName.getText().toString();
-        mUserViewModel.setFirstName(mFirstName);
-        mUserViewModel.setLastName(mLastName);
+//        mUserViewModel.setFirstName(mFirstName);
+//        mUserViewModel.setLastName(mLastName);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
