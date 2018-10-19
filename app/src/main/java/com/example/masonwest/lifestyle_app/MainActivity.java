@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
 
     private Boolean isEditUser = false;
-    private int container;
+    private int containerBody;
+    private int containerHeader;
     private Boolean userExists = false;
     private UserViewModel mUserViewModel;
     private LiveData<User> mUser;
@@ -44,7 +45,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        container = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
+        containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
 
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
@@ -172,54 +174,23 @@ public class MainActivity extends AppCompatActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
-    // Call this function inside onClick of button
-//    public void showHideFragment(final Fragment fragment){
-//        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-////        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
-////                android.R.animator.fade_out);
-//
-//        if (fragment.isHidden()) {
-//            fragTransaction.show(fragment);
-//            Log.d("hidden","Show");
-//        } else {
-//            fragTransaction.hide(fragment);
-//            Log.d("Shown","Hide");
-//        }
-//        fragTransaction.commit();
-//    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("editUserBoolean", isEditUser);
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//
-//        isEditUser = true;
-//        if (isTablet()) {
-//            super.onBackPressed();
-//            showHideFragment(mUserDetailFragment);
-//            showHideFragment(mMasterListFragment);
-//        } else {
-//            FragmentManager fMan = getSupportFragmentManager();
-//            FragmentTransaction fTrans = fMan.beginTransaction();
-//            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
-//            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
-//            fTrans.commit();
-//            showHideFragment(mUserDetailFragment);
-//        }
-//    }
-
     public void changeDisplay() {
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        if (isEditUser /*&& userExists == false*/) {
-            fTrans.replace(container, new EditUserDetailsFragment(), "editUserFragment");
-            fTrans.replace(R.id.fl_header_phone, new SignUpHeaderFragment(), "editUserHeaderFragment");
+//         if (isEditUser /*&& userExists == false*/) {
+//             fTrans.replace(container, new EditUserDetailsFragment(), "editUserFragment");
+//             fTrans.replace(R.id.fl_header_phone, new SignUpHeaderFragment(), "editUserHeaderFragment");
+        if (isEditUser) {  /*&& userExists == false*/
+            fTrans.replace(containerBody, new EditUserDetailsFragment());
+            fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
-            fTrans.replace(container, new MasterListFragment(), "test");
-            fTrans.replace(R.id.fl_header_phone, new AppHeaderFragment(), "test2");
+            fTrans.replace(containerBody, new MasterListFragment());
+            fTrans.replace(containerHeader, new AppHeaderFragment());
         }
         fTrans.addToBackStack(null);
         fTrans.commit();
@@ -252,5 +223,13 @@ public class MainActivity extends AppCompatActivity
     public void onSettingsButtonClick() {
         isEditUser = true;
         changeDisplay();
+        if(isTablet()) {
+            FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_tablet);
+            if (f != null) {
+                fTrans.hide(f);
+            }
+            fTrans.commit();
+        }
     }
 }

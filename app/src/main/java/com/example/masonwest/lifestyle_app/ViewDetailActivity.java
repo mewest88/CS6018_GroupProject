@@ -22,17 +22,15 @@ public class ViewDetailActivity extends AppCompatActivity {
 
         int position = extras.getInt("click_position");
 
+        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+
         switch(position) {
             case 0: {
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new FitnessGoalsFragment());
-                fTrans.commit();
                 break;
             }
             case 1: {
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new BmiFragment());
-                fTrans.commit();
                 break;
             }
             case 2: {
@@ -44,22 +42,21 @@ public class ViewDetailActivity extends AppCompatActivity {
                 extras.putString("location_data",location);
                 mWeatherFragment.setArguments(extras);
                 //No need to check if we're on a tablet. This activity only gets created on phones.
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment, "frag_weatherdetail");
-                fTrans.commit();
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, mWeatherFragment);
                 break;
             }
             case 3: {
-                FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new HikesFragment(), "frag_hikesdetail");
-                fTrans.commit();
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new HikesFragment());
                 break;
             }
         }
+        fTrans.commit();
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
         savedState.putBundle("extras", extras);
     }
+
 }
