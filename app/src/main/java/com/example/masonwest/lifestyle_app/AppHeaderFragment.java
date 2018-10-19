@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -24,6 +25,7 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     private ImageButton mButtonSettings;
     private UserViewModel mUserViewModel;
     private OnDataPass dataPasser;
+    private LiveData<User> mUser;
 
     @Override
     public void onAttach(Context context) {
@@ -59,8 +61,10 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         mButtonSettings.setOnClickListener(this);
 
         //Set the data
-        mTvFullName.setText(mUserViewModel.getFullName());
-        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+//        mTvFullName.setText(mUserViewModel.getFullName());
+//        mTvFullName.setText(mUserViewModel.getUser().getValue().getFullName());
+//        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+//        mIvPicture.setImageBitmap(mUserViewModel.getUser().getValue().getProfileImageDataInBitmap());
 
         return view;
     }
@@ -71,8 +75,10 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                mTvFullName.setText(mUserViewModel.getFullName());
-                mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+//                mTvFullName.setText(mUserViewModel.getFullName());
+//                mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
+                mTvFullName.setText(mUserViewModel.getUser().getValue().getFullName());
+                mIvPicture.setImageBitmap(mUserViewModel.getUser().getValue().getProfileImageDataInBitmap());
             }
         }
     };

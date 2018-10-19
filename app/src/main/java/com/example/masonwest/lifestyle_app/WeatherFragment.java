@@ -52,30 +52,19 @@ public class WeatherFragment extends Fragment {
         mTvPress = (TextView) fragmentView.findViewById(R.id.tv_pressure);
         mTvHum = (TextView) fragmentView.findViewById(R.id.tv_humidity);
 
-//        mBtSubmit = (Button) fragmentView.findViewById(R.id.button_submit);
-//        mBtSubmit.setOnClickListener(this);
-//        mLocation = getArguments().getString("location_data");
-//        mLocation = "Dallas,US";
-        //Set the text in the fragment
-
-
-//        //Create the view model
-//        mWeatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-//
-//        //Set the observer
-//        mWeatherViewModel.getData().observe(this,nameObserver);
-
         //Create the view model
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         //Set the observer
         mUserViewModel.getData().observe(this,nameObserver);
 
-        mCity = mUserViewModel.getCity();
-        mCountry = mUserViewModel.getCountry();
+//        mCity = mUserViewModel.getCity();
+        mCity = mUserViewModel.getUser().getValue().getCity();
+//        mCountry = mUserViewModel.getCountry();
+        mCountry = mUserViewModel.getUser().getValue().getCountry();
         mLocation = mCity + "," + mCountry;
 
-        mTvLocation.setText("" + mLocation);
+        mTvLocation.setText("" + mCity + ", " + mCountry);
 //        String inputFromEt = mTvLocation.getText().toString().replace(' ','&');
         String searchLocation = mLocation.replace(' ','&');
 
@@ -97,7 +86,12 @@ public class WeatherFragment extends Fragment {
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
             if(user!=null) {
-                //what to do if user changes?
+                mCity = mUserViewModel.getUser().getValue().getCity();
+                mCountry = mUserViewModel.getUser().getValue().getCountry();
+                mLocation = mCity + "," + mCountry;
+                mTvLocation.setText("" + mLocation);
+                String searchLocation = mLocation.replace(' ','&');
+                loadWeatherData(searchLocation);
             }
         }
     };

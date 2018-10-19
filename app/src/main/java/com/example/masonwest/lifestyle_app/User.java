@@ -241,10 +241,10 @@ public class User implements Parcelable {
         return userID;
     }
     public void setUserID(int id) { userID = id; }
-    public User getUser() {
-        //something to check user id and return the right user?
-        return this;
-    }
+//    public User getUser() {
+//        //something to check user id and return the right user?
+//        return this;
+//    }
 
     //Helper method to save bitmap as byte[]
 //    private byte[] profileImageData = null;

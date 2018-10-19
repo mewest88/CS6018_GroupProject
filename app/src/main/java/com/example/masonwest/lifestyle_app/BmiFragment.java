@@ -58,7 +58,8 @@ public class BmiFragment extends Fragment {
 //            currentUser = getArguments().getParcelable("user");
 //        }
 
-        double bmiValue = mUserViewModel.getBMI();
+//        double bmiValue = mUserViewModel.getBMI();
+        double bmiValue = mUserViewModel.getUser().getValue().getBMI();
         bmiValueString = Double.toString(bmiValue);
 
         //Set the text in the fragment
