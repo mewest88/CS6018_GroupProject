@@ -312,6 +312,7 @@ public class EditUserDetailsFragment extends Fragment
             Bundle thumbnailImage = data.getExtras();
             mUserViewModel.setProfilePic((Bitmap)thumbnailImage.get("data"));
             mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
+            mBtPicture.setText("") ;
         }
     }
 
