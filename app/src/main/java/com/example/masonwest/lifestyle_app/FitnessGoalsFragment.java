@@ -79,8 +79,10 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         mUserViewModel.getUser().observe(this, userObserver);
 
         if(savedInstanceState != null) {
-            goalText = String.valueOf(mUserViewModel.getWeightChangeGoal());
-            calText = String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake());
+//            goalText = String.valueOf(mUserViewModel.getWeightChangeGoal());
+            goalText = String.valueOf(mUserViewModel.getUser().getValue().getWeightChangeGoal());
+//            calText = String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake());
+            calText = String.valueOf(mUserViewModel.getUser().getValue().getRecommendedDailyCalorieIntake());
         }
 
         if(goalText != "") {
@@ -110,7 +112,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                mUserViewModel.setActivityLevel(finalOptions[position]);
+//                mUserViewModel.setActivityLevel(finalOptions[position]);
+                mUserViewModel.getUser().getValue().setActivityLevel(finalOptions[position]);
             }
 
             @Override
@@ -145,8 +148,10 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         weightChangeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                mUserViewModel.setWeightChangeGoal(Double.parseDouble(finalWeightChange[position]));
-                if(mUserViewModel.getWeightChangeGoal() > 2 || mUserViewModel.getWeightChangeGoal() < -2) {
+//                mUserViewModel.setWeightChangeGoal(Double.parseDouble(finalWeightChange[position]));
+                mUserViewModel.getUser().getValue().setWeightChangeGoal(Double.parseDouble(finalWeightChange[position]));
+                if(mUserViewModel.getUser().getValue().getWeightChangeGoal() > 2 || mUserViewModel.getUser().getValue().getWeightChangeGoal() < -2) {
+//                if(mUserViewModel.getWeightChangeGoal() > 2 || mUserViewModel.getWeightChangeGoal() < -2) {
                     Toast.makeText(getActivity(), "Warning: Losing/Gaining more than 2 pounds", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -174,8 +179,9 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
             // Update the UI if this data variable changes
             if(user!=null) {
 //                mUserViewModel.setUser(user);
-                tvActualGoal.setText(String.valueOf(mUserViewModel.getWeightChangeGoal()));
-                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
+                tvActualGoal.setText(String.valueOf(mUserViewModel.getUser().getValue().getWeightChangeGoal()));
+//                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
+                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getUser().getValue().getRecommendedDailyCalorieIntake()));
             }
         }
     };
@@ -183,19 +189,31 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+//        int weight = mUserViewModel.getWeight();
+        int weight = mUserViewModel.getUser().getValue().getWeightLBS();
+//        int height = mUserViewModel.getHeight();
+        int height = mUserViewModel.getUser().getValue().getHeightInches();
+//        int age = mUserViewModel.getAge();
+        int age = mUserViewModel.getUser().getValue().getAge();
+//        String sex = mUserViewModel.getSex();
+        String sex = mUserViewModel.getUser().getValue().getSex();
+//        mUserViewModel.setBMR(User.calculateBMR(weight, height, age, sex));
+        mUserViewModel.getUser().getValue().setBMR(User.calculateBMR(weight, height, age, sex));
+//        tvActualGoal.setText(String.valueOf(mUserViewModel.getWeightChangeGoal()));
+        tvActualGoal.setText(String.valueOf(mUserViewModel.getUser().getValue().getWeightChangeGoal()));
+//        double bmr = mUserViewModel.getBMR();
+        double bmr = mUserViewModel.getUser().getValue().getBMR();
+//        String activityLevel = mUserViewModel.getActivityLevel();
+        String activityLevel = mUserViewModel.getUser().getValue().getActivityLevel();
+//        double goal = mUserViewModel.getWeightChangeGoal();
+        double goal = mUserViewModel.getUser().getValue().getWeightChangeGoal();
 
-        int weight = mUserViewModel.getWeight();
-        int height = mUserViewModel.getHeight();
-        int age = mUserViewModel.getAge();
-        String sex = mUserViewModel.getSex();
-        mUserViewModel.setBMR(User.calculateBMR(weight, height, age, sex));
-        tvActualGoal.setText(String.valueOf(mUserViewModel.getWeightChangeGoal()));
-        double bmr = mUserViewModel.getBMR();
-        String activityLevel = mUserViewModel.getActivityLevel();
-        double goal = mUserViewModel.getWeightChangeGoal();
-        mUserViewModel.setDailyRecommendedCalorieIntake(User.calculateDailyRecommendedCalorieIntake(bmr, activityLevel, goal));
-        int calories = (int)mUserViewModel.getDailyRecommendedCalorieIntake();
-        int calorieLimit = mUserViewModel.getSex().equals("Male") ? 1200 : 1000;
+//        mUserViewModel.setDailyRecommendedCalorieIntake(User.calculateDailyRecommendedCalorieIntake(bmr, activityLevel, goal));
+        mUserViewModel.getUser().getValue().setRecommendedDailyCalorieIntake(User.calculateDailyRecommendedCalorieIntake(bmr, activityLevel, goal));
+//        int calories = (int)mUserViewModel.getDailyRecommendedCalorieIntake();
+        int calories = (int)mUserViewModel.getUser().getValue().getRecommendedDailyCalorieIntake();
+//        int calorieLimit = mUserViewModel.getSex().equals("Male") ? 1200 : 1000;
+        int calorieLimit = (mUserViewModel.getUser().getValue().getSex()).equals("Male") ? 1200 : 1000;
         if(calories < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }

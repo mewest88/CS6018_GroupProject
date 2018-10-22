@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -11,8 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
         implements MyRVAdapter.DataPasser, EditUserDetailsFragment.OnDataPass, AppHeaderFragment.OnDataPass {
@@ -20,6 +23,23 @@ public class MainActivity extends AppCompatActivity
     private Boolean isEditUser = false;
     private int containerBody;
     private int containerHeader;
+    private Boolean userExists = false;
+    private UserViewModel mUserViewModel;
+    private LiveData<User> mUser;
+
+    //create an observer that watches the MutableLiveData<User> object
+    //possibly not necessary here?
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                //what to do if user changes?
+//                mUserViewModel.getUser();
+//                Toast.makeText(getActivity(),"User in db changed", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +48,34 @@ public class MainActivity extends AppCompatActivity
         containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
         containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
 
-        if (savedInstanceState == null) {
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        mUserViewModel.getUser().observe(this, userObserver);
+
+        VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
+        task.execute();
+
+        int numUsersInDB = 0;
+
+        try {
+            numUsersInDB = (int) task.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+//        User temp = mUserViewModel.getUser().getValue();
+
+        if (numUsersInDB > 0) {
+            userExists = true;
+        }
+
+        if (savedInstanceState == null /*&& userExists == false*/) {
             //TODO not sure if this is right
             isEditUser = true;
+//        } else if (savedInstanceState == null && userExists == true) {
+//            isEditUser = true;
         } else {
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
@@ -129,49 +174,18 @@ public class MainActivity extends AppCompatActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
-    // Call this function inside onClick of button
-//    public void showHideFragment(final Fragment fragment){
-//        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-////        fragTransaction.setCustomAnimations(android.R.animator.fade_in,
-////                android.R.animator.fade_out);
-//
-//        if (fragment.isHidden()) {
-//            fragTransaction.show(fragment);
-//            Log.d("hidden","Show");
-//        } else {
-//            fragTransaction.hide(fragment);
-//            Log.d("Shown","Hide");
-//        }
-//        fragTransaction.commit();
-//    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("editUserBoolean", isEditUser);
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//
-//        isEditUser = true;
-//        if (isTablet()) {
-//            super.onBackPressed();
-//            showHideFragment(mUserDetailFragment);
-//            showHideFragment(mMasterListFragment);
-//        } else {
-//            FragmentManager fMan = getSupportFragmentManager();
-//            FragmentTransaction fTrans = fMan.beginTransaction();
-//            fTrans.replace(R.id.fl_frag_masterlist_container_phone, mUserDetailFragment);
-//            fTrans.replace(R.id.fl_header_phone, mSignUpHeaderFragment);
-//            fTrans.commit();
-//            showHideFragment(mUserDetailFragment);
-//        }
-//    }
-
     public void changeDisplay() {
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        if (isEditUser) {
+//         if (isEditUser /*&& userExists == false*/) {
+//             fTrans.replace(container, new EditUserDetailsFragment(), "editUserFragment");
+//             fTrans.replace(R.id.fl_header_phone, new SignUpHeaderFragment(), "editUserHeaderFragment");
+        if (isEditUser) {  /*&& userExists == false*/
             fTrans.replace(containerBody, new EditUserDetailsFragment());
             fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
@@ -181,6 +195,23 @@ public class MainActivity extends AppCompatActivity
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
+//              if (isTablet()) {
+//        //Create a new detail fragment
+//        HikesFragment hikesFragment = new HikesFragment();
+//        hikesFragment.setArguments(positionBundle);
+//
+//        //Replace the detail fragment container
+//        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+//        fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes_tablet");
+//        fTrans.addToBackStack(null);
+//        fTrans.commit();
+//        break;
+//    } else {
+//        Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+//        sendIntent.putExtras(positionBundle);
+//        startActivity(sendIntent);
+//        break;
+//    }
 
     @Override
     public void onEditUserSubmit() {
@@ -192,10 +223,12 @@ public class MainActivity extends AppCompatActivity
     public void onSettingsButtonClick() {
         isEditUser = true;
         changeDisplay();
-        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-        Fragment viewDetailFragmentSelected = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_phone);
-        if(viewDetailFragmentSelected != null) {
-            fTrans.hide(viewDetailFragmentSelected);
+        if(isTablet()) {
+            FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_tablet);
+            if (f != null) {
+                fTrans.hide(f);
+            }
             fTrans.commit();
         }
     }

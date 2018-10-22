@@ -16,7 +16,7 @@ public abstract class UserDatabase extends RoomDatabase {
     private static volatile UserDatabase INSTANCE;
 
     // Making it a Singleton
-    static UserDatabase getDatabase(final Context context) {
+    public static UserDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (UserDatabase.class) {
                 if (INSTANCE == null) {
@@ -24,7 +24,6 @@ public abstract class UserDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             UserDatabase.class, "user_database")
 //                            .fallbackToDestructiveMigration() // Wipes and rebuilds instead of migrating if no Migration object.
-                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
