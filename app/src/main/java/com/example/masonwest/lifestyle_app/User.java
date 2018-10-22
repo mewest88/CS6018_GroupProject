@@ -42,6 +42,7 @@ public class User implements Parcelable {
 //    private Bitmap profilePic; //Saving an bitmap as blob https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] profileImageData;
+    private int steps;
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
@@ -241,6 +242,8 @@ public class User implements Parcelable {
         return userID;
     }
     public void setUserID(int id) { userID = id; }
+    public int getSteps() { return steps; }
+    public void setSteps(int step) { steps = step; }
 //    public User getUser() {
 //        //something to check user id and return the right user?
 //        return this;
