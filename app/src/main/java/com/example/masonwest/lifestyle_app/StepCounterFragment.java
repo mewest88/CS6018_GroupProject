@@ -1,40 +1,35 @@
 package com.example.masonwest.lifestyle_app;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import static android.content.Context.SENSOR_SERVICE;
-
 public class StepCounterFragment extends Fragment implements SensorEventListener, StepListener {
 
     //Step counter stuff
-    private TextView textView;
-    private StepDetector simpleStepDetector;
-    private SensorManager sensorManager;
-    private Sensor accel;
-    private static final String TEXT_NUM_STEPS = "Number of Steps: ";
-    private int numSteps;
+    private StepDetector mSimpleStepDetector;
+    private SensorManager mSensorManager;
+    private Sensor mAccelSensor;
+    private int mNumSteps;
 
+    //view model
+    private UserViewModel mUserViewModel;
 
+    //xml stuff
     private TextView mTvStepData;
     private Button mBtnStart, mBtnStop;
-    //    private User currentUser;
 
     public StepCounterFragment() {
         // Required empty public constructor
@@ -50,6 +45,10 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_step_counter, container, false);
 
+        //Get the view model
+        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+//        mUserViewModel.getUser().observe(this, userObserver);
+
         //Get the views
         mTvStepData = fragmentView.findViewById(R.id.tv_step_data);
 //        TvSteps = (TextView) findViewById(R.id.tv_steps);
@@ -57,19 +56,20 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         mBtnStop = (Button) fragmentView.findViewById(R.id.btn_stop);
 
         // Get an instance of the SensorManager
-        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        simpleStepDetector = new StepDetector();
-        simpleStepDetector.registerListener(StepCounterFragment.this);
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mAccelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSimpleStepDetector = new StepDetector();
+        mSimpleStepDetector.registerListener(StepCounterFragment.this);
 
+        //Turn on the step counter by clicking the button
         mBtnStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
-                numSteps = 0;
+                mNumSteps = 0;
                 mTvStepData.setText("0");
-                sensorManager.registerListener(StepCounterFragment.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
+                mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
             }
         });
@@ -80,7 +80,7 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
             @Override
             public void onClick(View arg0) {
 
-                sensorManager.unregisterListener(StepCounterFragment.this);
+                mSensorManager.unregisterListener(StepCounterFragment.this);
 
             }
         });
@@ -95,15 +95,16 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            simpleStepDetector.updateAccel(
+            mSimpleStepDetector.updateAccel(
                     event.timestamp, event.values[0], event.values[1], event.values[2]);
         }
     }
 
     @Override
     public void step(long timeNs) {
-        numSteps++;
-        mTvStepData.setText("" + numSteps);
+        mNumSteps++;
+        mTvStepData.setText("" + mNumSteps);
+        mUserViewModel.getUser().getValue().setSteps(mNumSteps);
     }
 
     /**

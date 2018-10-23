@@ -43,14 +43,14 @@ public class BmiFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_bmi, container, false);
 
+        String bmiValueString;
+
         //Get the views
         mTvBMIData = fragmentView.findViewById(R.id.tv_bmi_data);
 
-        String bmiValueString;
+        //get the view model
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-
         mUserViewModel.getUser().observe(this, userObserver);
-
 
 //        double bmiValue = mUserViewModel.getBMI();
         double bmiValue = mUserViewModel.getUser().getValue().getBMI();
