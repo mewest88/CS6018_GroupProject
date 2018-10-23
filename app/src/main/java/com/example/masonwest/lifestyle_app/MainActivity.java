@@ -172,6 +172,25 @@ public class MainActivity extends AppCompatActivity
                     break;
                 }
             }
+            case 4: { //Steps Page
+                if (isTablet()) {
+                    //Create a new detail fragment
+                    StepCounterFragment stepFragment = new StepCounterFragment();
+                    stepFragment.setArguments(positionBundle);
+
+                    //Replace the detail fragment container
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, stepFragment, "frag_step_tablet");
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
+                    break;
+                } else {
+                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    sendIntent.putExtras(positionBundle);
+                    startActivity(sendIntent);
+                    break;
+                }
+            }
         }
     }
 

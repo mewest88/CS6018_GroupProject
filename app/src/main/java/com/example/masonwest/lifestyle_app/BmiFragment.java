@@ -47,16 +47,10 @@ public class BmiFragment extends Fragment {
         mTvBMIData = fragmentView.findViewById(R.id.tv_bmi_data);
 
         String bmiValueString;
-        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         mUserViewModel.getUser().observe(this, userObserver);
 
-//        if (savedInstanceState != null) {
-//            currentUser = savedInstanceState.getParcelable("user");
-//        }
-//        else {
-//            currentUser = getArguments().getParcelable("user");
-//        }
 
 //        double bmiValue = mUserViewModel.getBMI();
         double bmiValue = mUserViewModel.getUser().getValue().getBMI();

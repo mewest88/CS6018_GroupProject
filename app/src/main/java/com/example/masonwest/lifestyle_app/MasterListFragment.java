@@ -43,6 +43,7 @@ public class MasterListFragment extends Fragment {
         mItemList.add("BMI >");
         mItemList.add("Weather >");
         mItemList.add("Hikes >");
+        mItemList.add("Step Counter >");
 
         //Get the recycler view
         mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.rv_Master);

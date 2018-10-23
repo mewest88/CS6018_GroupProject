@@ -81,7 +81,7 @@ public class EditUserDetailsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_edit_user_details, container, false);
 
-        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         mUserViewModel.getUser().observe(this, userObserver);
 
