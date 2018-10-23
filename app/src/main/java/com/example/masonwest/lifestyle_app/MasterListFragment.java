@@ -23,22 +23,9 @@ public class MasterListFragment extends Fragment {
     private ArrayList<String> mItemList;
     private final String KEY_RECYCLER_STATE = "recycler_state";
 
-//    private UserViewModel mUserViewModel;
-
     public MasterListFragment() {
 
     }
-
-//    //create an observer that watches the LiveData<User> object
-//    final Observer<User> userObserver  = new Observer<User>() {
-//        @Override
-//        public void onChanged(@Nullable final User user) {
-//            // Update the UI if this data variable changes
-//            if(user!=null) {
-//                //what to do if user changes?
-//            }
-//        }
-//    };
 
     @Override
     public void onAttach(Context context) {
@@ -49,10 +36,6 @@ public class MasterListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_master_list, container, false);
-
-//        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-//
-//        mUserViewModel.getUser().observe(this, userObserver);
 
         //Create the list of headers
         mItemList = new ArrayList<>();
