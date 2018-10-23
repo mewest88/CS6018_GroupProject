@@ -49,6 +49,10 @@ public class ViewDetailActivity extends AppCompatActivity {
                 fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new HikesFragment());
                 break;
             }
+            case 4: {
+                fTrans.replace(R.id.fl_frag_itemdetail_container_phone, new StepCounterFragment());
+                break;
+            }
         }
         fTrans.commit();
     }
