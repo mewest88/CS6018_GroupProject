@@ -36,6 +36,12 @@ public class EditUserDetailsFragment extends Fragment
     private ImageView mIvPic;
     private UserViewModel mUserViewModel;
     private OnDataPass dataPasser;
+    private String[] countryOptions = new String[8];
+    private String[] cityOptions = new String[8];
+    private String[] sexOptions = new String[2];
+    private String[] ageOptions = new String[120];
+    private String[] heightOptions = new String[96];
+    private String[] weightOptions = new String[400];
 
     @Override
     public void onAttach(Context context) {
@@ -49,14 +55,19 @@ public class EditUserDetailsFragment extends Fragment
     //Define a request code for the camera
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    //create an observer that watches the MutableLiveData<User> object
-    //possibly not necessary here?
     final Observer<User> userObserver  = new Observer<User>() {
         @Override
         public void onChanged(@Nullable final User user) {
             // Update the UI if this data variable changes
-            if(user!=null) {
-                //what to do if user changes?
+            if (user != null) {
+                observeUserAge();
+                observeUserWeight();
+                observeUserHeight();
+                observeUserCity();
+                observeUserCountry();
+                observeUserSex();
+                observeUserProfilePic();
+                observeUserName();
             }
         }
     };
@@ -74,12 +85,6 @@ public class EditUserDetailsFragment extends Fragment
 
         mUserViewModel.getUser().observe(this, userObserver);
 
-        if(mUserViewModel.getUser().getValue() == null) {
-            User newUser = new User(0);
-//            mUserViewModel.setUser(newUser);
-            mUserViewModel.insert(newUser);
-        }
-
         VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
         task.execute();
 
@@ -93,16 +98,9 @@ public class EditUserDetailsFragment extends Fragment
             e.printStackTrace();
         }
 
-//        User tmp = mUserViewModel.getUser().getValue();
-//        String name = mUserViewModel.getUser().getValue().getFirstName();
-//        int temp = mUserViewModel.getUser().getValue().getUserID();
-//        int rmap = 10;
-
         //Get the views
         mEtFirstName = (EditText) fragmentView.findViewById(R.id.et_firstName);
-//        mEtFirstName.setText(mUserViewModel.getFirstName());
         mEtLastName = (EditText) fragmentView.findViewById(R.id.et_lastName);
-//        mEtLastName.setText(mUserViewModel.getLastName());
         mSpinnerAge = (Spinner) fragmentView.findViewById(R.id.et_Age);
         mSpinnerCity = (Spinner) fragmentView.findViewById(R.id.et_City);
         mSpinnerCountry = (Spinner) fragmentView.findViewById(R.id.et_Country);
@@ -111,220 +109,162 @@ public class EditUserDetailsFragment extends Fragment
         mSpinnerHeight = (Spinner) fragmentView.findViewById(R.id.et_Height);
         mBtPicture = (Button) fragmentView.findViewById(R.id.button_takePicture);
         mBtSubmit = (ImageButton) fragmentView.findViewById(R.id.button_submit);
-        mIvPic = (ImageView) fragmentView.findViewById(R.id.iv_pic);
         mBtSubmit.setOnClickListener(this);
         mBtPicture.setOnClickListener(this);
 
-        String[] ageOptions = new String[120];
-        for(int i = 0; i < 120; i++) {
-            ageOptions[i] = String.valueOf(i + 1);
+        if(mUserViewModel.getUser().getValue() != null) {
+            observeUserName();
+            observeUserProfilePic();
         }
-
-        String[] heightOptions = new String[96];
-        for(int i = 0; i < 96; i++) {
-            heightOptions[i] = String.valueOf(i + 1);
-        }
-
-        String[] weightOptions = new String[400];
-        for(int i = 0; i < 400; i++) {
-            weightOptions[i] = String.valueOf(i + 1);
-        }
-
-        String[] cityOptions = new String[8];
-        cityOptions[0] = "Salt Lake City";
-        cityOptions[1] = "New York";
-        cityOptions[2] = "San Francisco";
-        cityOptions[3] = "Kamas";
-        cityOptions[4] = "Iztapalapa";
-        cityOptions[5] = "London";
-        cityOptions[6] = "San Juan";
-        cityOptions[7] = "Vancouver";
-
-        String[] countryOptions = new String[8]; //Easy to get country codes here - https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=40.3633&lon=-73.3447&zoom=7
-        countryOptions[0] = "US";
-        countryOptions[1] = "CA";
-        countryOptions[2] = "PR";
-        countryOptions[3] = "MX";
-        countryOptions[4] = "GB";
-        countryOptions[5] = "ES";
-        countryOptions[6] = "FR";
-        countryOptions[7] = "JP";
-
-        String[] sexOptions = new String[2];
-        sexOptions[0] = "Male";
-        sexOptions[1] = "Female";
-
-        final String[] finalAgeOptions = ageOptions;
-        final String[] finalHeightOptions = heightOptions;
-        final String[] finalWeightOptions = weightOptions;
-        final String[] finalCityOptions = cityOptions;
-        final String[] finalSexOptions = sexOptions;
-        final String[] finalCountryOptions = countryOptions;
-
-        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
-        ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightOptions);
-        ArrayAdapter<String> heightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalHeightOptions);
-        ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);
-        ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalSexOptions);
-
-        ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        heightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        mSpinnerAge.setAdapter(ageAdapter);
-        mSpinnerCity.setAdapter(cityAdapter);
-        mSpinnerWeight.setAdapter(weightAdapter);
-        mSpinnerHeight.setAdapter(heightAdapter);
-        mSpinnerCountry.setAdapter(countryAdapter);
-        mSpinnerSex.setAdapter(sexAdapter);
-
-//        if(mUserViewModel != null && mUserViewModel.getUser() != null) {
+        buildAgeSpinner();
+        buildWeightSpinner();
+        buildHeightSpinner();
+        buildCitySpinner();
+        buildCountrySpinner();
+        buildSexSpinner();
 //
-//            User temp = mUserViewModel.getUser().getValue();
-//            if(temp.getAge() > 1) {
-////            if(mUserViewModel.getAge() > 1) {
-//                mSpinnerAge.setSelection(mUserViewModel.getAge() - 1);
-//            } else {
-                mSpinnerAge.setSelection(17);
-//            }
-//
-//            if(mUserViewModel.getWeight() > 1) {
-//                mSpinnerWeight.setSelection(mUserViewModel.getWeight() - 1);
-//            } else {
-                mSpinnerWeight.setSelection(99);
-//            }
-//
-//            if(mUserViewModel.getHeight() > 1) {
-//                mSpinnerHeight.setSelection(mUserViewModel.getHeight() - 1);
-//            } else {
-                mSpinnerHeight.setSelection(65);
-//            }
-//
-//            if(mUserViewModel.getSex() != null) {
-//                if (mUserViewModel.getSex().equals("Female")) {
-//                    mSpinnerSex.setSelection(1);
-//                }
-//            } else {
-                mSpinnerSex.setSelection(0);
-//            }
-//
-//            if(mUserViewModel.getCountry() != null) {
-//                int index = 0;
-//                for(int i = 0; i < countryOptions.length; i++) {
-//                    if(countryOptions[i].equals(mUserViewModel.getCountry())) {
-//                        index = i;
-//                        break;
-//                    }
-//                }
-//                mSpinnerCountry.setSelection(index);
-//            } else {
-                mSpinnerCountry.setSelection(0);
-//            }
-//
-//            if(mUserViewModel.getCity() != null) {
-//                int index = 0;
-//                for(int i = 0; i < cityOptions.length; i++) {
-//                    if(cityOptions[i].equals(mUserViewModel.getCity())) {
-//                        index = i;
-//                        break;
-//                    }
-//                    mSpinnerCity.setSelection(index);
-//                }
-//            } else {
-                mSpinnerCity.setSelection(3);
-//            }
+//        for (int i = 0; i < 120; i++) {
+//            ageOptions[i] = String.valueOf(i + 1);
 //        }
+//
+//        for (int i = 0; i < 96; i++) {
+//            heightOptions[i] = String.valueOf(i + 1);
+//        }
+//
+//        for (int i = 0; i < 400; i++) {
+//            weightOptions[i] = String.valueOf(i + 1);
+//        }
+//
+//        cityOptions[0] = "Salt Lake City";
+//        cityOptions[1] = "New York";
+//        cityOptions[2] = "San Francisco";
+//        cityOptions[3] = "Kamas";
+//        cityOptions[4] = "Iztapalapa";
+//        cityOptions[5] = "London";
+//        cityOptions[6] = "San Juan";
+//        cityOptions[7] = "Vancouver";
+//
+//         //Easy to get country codes here - https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=40.3633&lon=-73.3447&zoom=7
+//        countryOptions[0] = "US";
+//        countryOptions[1] = "CA";
+//        countryOptions[2] = "PR";
+//        countryOptions[3] = "MX";
+//        countryOptions[4] = "GB";
+//        countryOptions[5] = "ES";
+//        countryOptions[6] = "FR";
+//        countryOptions[7] = "JP";
+//
+//        sexOptions[0] = "Male";
+//        sexOptions[1] = "Female";
+//
+//        final String[] finalAgeOptions = ageOptions;
+//        final String[] finalHeightOptions = heightOptions;
+//        final String[] finalWeightOptions = weightOptions;
+//        final String[] finalCityOptions = cityOptions;
+//        final String[] finalSexOptions = sexOptions;
+//        final String[] finalCountryOptions = countryOptions;
+//
+//        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
+//        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
+//        ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightOptions);
+//        ArrayAdapter<String> heightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalHeightOptions);
+//        ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);
+//        ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalSexOptions);
+//
+//        ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        heightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        mSpinnerAge.setAdapter(ageAdapter);
+//        mSpinnerCity.setAdapter(cityAdapter);
+//        mSpinnerWeight.setAdapter(weightAdapter);
+//        mSpinnerHeight.setAdapter(heightAdapter);
+//        mSpinnerCountry.setAdapter(countryAdapter);
+//        mSpinnerSex.setAdapter(sexAdapter);
 
-        mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//        mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setAge(Integer.parseInt(finalAgeOptions[position]));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerAge.setSelection(1);
+//            }
+//        });
 
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setAge(Integer.parseInt(finalAgeOptions[position]));
-                mUserViewModel.getUser().getValue().setAge(Integer.parseInt(finalAgeOptions[position]));
-            }
+//        mSpinnerWeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerWeight.setSelection(149);
+//            }
+//        });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerAge.setSelection(1);
-            }
-        });
+//        mSpinnerHeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setHeightInches(Integer.parseInt(finalHeightOptions[position]));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerCity.setSelection(65);
+//            }
+//        });
 
-        mSpinnerWeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//        mSpinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setCity(finalCityOptions[position]);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerCity.setSelection(0);
+//            }
+//        });
 
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setWeight(Integer.parseInt(finalWeightOptions[position]));
-                mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
-            }
+//        mSpinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setCountry(finalCountryOptions[position]);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerCountry.setSelection(0);
+//            }
+//        });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerWeight.setSelection(149);
-            }
-        });
-
-        mSpinnerHeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setHeight(Integer.parseInt(finalHeightOptions[position]));
-                mUserViewModel.getUser().getValue().setHeightInches(Integer.parseInt(finalHeightOptions[position]));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerCity.setSelection(65);
-            }
-        });
-
-        mSpinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setCity(finalCityOptions[position]);
-                mUserViewModel.getUser().getValue().setCity(finalCityOptions[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerCity.setSelection(0);
-            }
-        });
-
-        mSpinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setCountry(finalCountryOptions[position]);
-                mUserViewModel.getUser().getValue().setCountry(finalCountryOptions[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerCountry.setSelection(0);
-            }
-        });
-
-        mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//                mUserViewModel.setSex(finalSexOptions[position]);
-                mUserViewModel.getUser().getValue().setSex(finalSexOptions[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                mSpinnerSex.setSelection(0);
-            }
-        });
+//        mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setSex(finalSexOptions[position]);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                mSpinnerSex.setSelection(0);
+//            }
+//        });
 
         return fragmentView;
-}
+    }
     /**
      * Collect the image from the camera and save the thumbnail image to be access on the second page
      */
@@ -332,9 +272,8 @@ public class EditUserDetailsFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK){
             Bundle thumbnailImage = data.getExtras();
-//            mUserViewModel.setProfilePic((Bitmap)thumbnailImage.get("data"));
             mUserViewModel.getUser().getValue().setProfileImageData((Bitmap)thumbnailImage.get("data"));
-            mBtPicture.setBackgroundResource(R.drawable.ic_check) ;
+            mBtPicture.setBackgroundResource(R.drawable.ic_check);
         }
     }
 
@@ -355,18 +294,13 @@ public class EditUserDetailsFragment extends Fragment
                     Toast.makeText(getActivity(), "Enter a first name please!", Toast.LENGTH_SHORT).show();
                 } else if (mLastName.matches("")) {
                     Toast.makeText(getActivity(), "Enter a last name please!", Toast.LENGTH_SHORT).show();
-                } else if (mUserViewModel.getUser().getValue().getProfileImageDataInBitmap() == null){
-//                } else if (mUserViewModel.getProfilePic() == null){
+                } else if (mUserViewModel.getUser().getValue().getProfileImageData() == null){
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
                     //Start an activity and pass the EditText string to it.
-//                    double bmi = User.calculateBMI(mUserViewModel.getWeight(), mUserViewModel.getHeight());
                     double bmi = User.calculateBMI(mUserViewModel.getUser().getValue().getWeightLBS(), mUserViewModel.getUser().getValue().getHeightInches());
-//                    mUserViewModel.setBMI(bmi);
                     mUserViewModel.getUser().getValue().setBMI(bmi);
-//                    mUserViewModel.setFirstName(mFirstName);
                     mUserViewModel.getUser().getValue().setFirstName(mFirstName);
-//                    mUserViewModel.setLastName(mLastName);
                     mUserViewModel.getUser().getValue().setLastName(mLastName);
                     mUserViewModel.getUser().getValue().setFullName(mFirstName, mLastName);
                     passData();
@@ -392,8 +326,8 @@ public class EditUserDetailsFragment extends Fragment
         //Collect input data (other data was input to the bundle through spinners)
         mFirstName = mEtFirstName.getText().toString();
         mLastName = mEtLastName.getText().toString();
-//        mUserViewModel.setFirstName(mFirstName);
-//        mUserViewModel.setLastName(mLastName);
+        mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+        mUserViewModel.getUser().getValue().setLastName(mLastName);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
@@ -402,5 +336,222 @@ public class EditUserDetailsFragment extends Fragment
     {
         return getResources().getBoolean(R.bool.isTablet);
     }
+    public void observeUserAge() {
+        if (mUserViewModel.getUser().getValue().getAge() > 1) {
+            mSpinnerAge.setSelection(mUserViewModel.getUser().getValue().getAge() - 1);
+        } else {
+            mSpinnerAge.setSelection(17);
+            mUserViewModel.getUser().getValue().setAge(18);
+        }
+    }
+    public void observeUserWeight() {
+        if (mUserViewModel.getUser().getValue().getWeightLBS() > 1) {
+            mSpinnerWeight.setSelection(mUserViewModel.getUser().getValue().getWeightLBS() - 1);
+        } else {
+            mSpinnerWeight.setSelection(99);
+            mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(weightOptions[99]));
+        }
+    }
+    public void observeUserCity() {
+        if (mUserViewModel.getUser().getValue().getCity() != null) {
+            int index = 0;
+            for (int i = 0; i < cityOptions.length; i++) {
+                if (cityOptions[i].equals(mUserViewModel.getUser().getValue().getCity())) {
+                    index = i;
+                    break;
+                }
+                mSpinnerCity.setSelection(index);
+            }
+        } else {
+            mSpinnerCity.setSelection(3);
+            mUserViewModel.getUser().getValue().setCity(cityOptions[0]);
+        }
+    }
+    public void observeUserCountry() {
+        if (mUserViewModel.getUser().getValue().getCountry() != null) {
+            int index = 0;
+            for (int i = 0; i < countryOptions.length; i++) {
+                if (countryOptions[i].equals(mUserViewModel.getUser().getValue().getCountry())) {
+                    index = i;
+                    break;
+                }
+            }
+            mSpinnerCountry.setSelection(index);
+        } else {
+            mSpinnerCountry.setSelection(0);
+            mUserViewModel.getUser().getValue().setCountry(countryOptions[0]);
+        }
+    }
+    public void observeUserSex() {
+        if (mUserViewModel.getUser().getValue().getSex() != null) {
+            if (mUserViewModel.getUser().getValue().getSex().equals(sexOptions[1])) {
+                mSpinnerSex.setSelection(1);
+            }
+        } else {
+            mSpinnerSex.setSelection(0);
+            mUserViewModel.getUser().getValue().setSex(sexOptions[0]);
+        }
+    }
+    public void observeUserHeight() {
+        if (mUserViewModel.getUser().getValue().getHeightInches() > 1) {
+            mSpinnerHeight.setSelection(mUserViewModel.getUser().getValue().getHeightInches() - 1);
+        } else {
+            mSpinnerHeight.setSelection(65);
+            mUserViewModel.getUser().getValue().setHeightInches(Integer.parseInt(heightOptions[65]));
+        }
+    }
+    public void observeUserProfilePic() {
+        if(mUserViewModel.getUser().getValue().getProfileImageData() != null) {
+            mBtPicture.setBackgroundResource(R.drawable.ic_check);
+        }
+    }
+    public void observeUserName() {
+        mEtFirstName.setText(mUserViewModel.getUser().getValue().getFirstName());
+        mEtLastName.setText(mUserViewModel.getUser().getValue().getLastName());
+    }
+    public void buildAgeSpinner() {
+        for (int i = 0; i < 120; i++) {
+            ageOptions[i] = String.valueOf(i + 1);
+        }
+        final String[] finalAgeOptions = ageOptions;
+        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalAgeOptions);
+        ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerAge.setAdapter(ageAdapter);
+
+        mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setAge(Integer.parseInt(finalAgeOptions[position]));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerAge.setSelection(1);
+            }
+        });
+    }
+    public void buildWeightSpinner() {
+        for (int i = 0; i < 400; i++) {
+            weightOptions[i] = String.valueOf(i + 1);
+        }
+        final String[] finalWeightOptions = weightOptions;
+        ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalWeightOptions);
+        weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerWeight.setAdapter(weightAdapter);
+
+        mSpinnerWeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerWeight.setSelection(149);
+            }
+        });
+    }
+    public void buildHeightSpinner() {
+        for (int i = 0; i < 96; i++) {
+            heightOptions[i] = String.valueOf(i + 1);
+        }
+        final String[] finalHeightOptions = heightOptions;
+        ArrayAdapter<String> heightAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalHeightOptions);
+        heightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerHeight.setAdapter(heightAdapter);
+
+        mSpinnerHeight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setHeightInches(Integer.parseInt(finalHeightOptions[position]));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerCity.setSelection(65);
+            }
+        });
+    }
+    public void buildCitySpinner() {
+        cityOptions[0] = "Salt Lake City";
+        cityOptions[1] = "New York";
+        cityOptions[2] = "San Francisco";
+        cityOptions[3] = "Kamas";
+        cityOptions[4] = "Iztapalapa";
+        cityOptions[5] = "London";
+        cityOptions[6] = "San Juan";
+        cityOptions[7] = "Vancouver";
+        final String[] finalCityOptions = cityOptions;
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCityOptions);
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerCity.setAdapter(cityAdapter);
+
+        mSpinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setCity(finalCityOptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerCity.setSelection(0);
+            }
+        });
+    }
+    public void buildCountrySpinner() {
+        //Easy to get country codes here - https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=40.3633&lon=-73.3447&zoom=7
+        countryOptions[0] = "US";
+        countryOptions[1] = "CA";
+        countryOptions[2] = "PR";
+        countryOptions[3] = "MX";
+        countryOptions[4] = "GB";
+        countryOptions[5] = "ES";
+        countryOptions[6] = "FR";
+        countryOptions[7] = "JP";
+        final String[] finalCountryOptions = countryOptions;
+        ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalCountryOptions);
+        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerCountry.setAdapter(countryAdapter);
+
+        mSpinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setCountry(finalCountryOptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerCountry.setSelection(0);
+            }
+        });
+    }
+    public void buildSexSpinner() {
+        final String[] finalSexOptions = sexOptions;
+        sexOptions[0] = "Male";
+        sexOptions[1] = "Female";
+        ArrayAdapter<String> sexAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, finalSexOptions);
+        sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerSex.setAdapter(sexAdapter);
+
+        mSpinnerSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                mUserViewModel.getUser().getValue().setSex(finalSexOptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                mSpinnerSex.setSelection(0);
+            }
+        });
+    }
 }
+
+
 

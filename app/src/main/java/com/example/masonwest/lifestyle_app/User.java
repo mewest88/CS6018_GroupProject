@@ -80,6 +80,9 @@ public class User implements Parcelable {
         setProfileImageData(profilePic);
     }
     public User(int userIDPassed) {
+        firstName = "";
+        lastName = "";
+        fullName = "";
         userID = userIDPassed;
         age = 14;
     }
@@ -169,9 +172,9 @@ public class User implements Parcelable {
     public void setProfilePic(Bitmap profilePicPassed) {
         setProfileImageData(profilePicPassed);
     }
-    public Bitmap getProfilePic() {
-        return getProfileImageDataInBitmap();
-    }
+//    public Bitmap getProfilePic() {
+//        return getProfileImageDataInBitmap();
+//    }
     public String getFirstName() {
         return firstName;
     }
@@ -276,10 +279,10 @@ public class User implements Parcelable {
     }
 
     // Convert profileImageData directly to bitmap
-    public Bitmap getProfileImageDataInBitmap() {
-        if (profileImageData != null) {
+    public static Bitmap calculateProfileImageDataInBitmap(byte[] profileImage) {
+        if (profileImage != null) {
             //turn byte[] to bitmap
-            return BitmapFactory.decodeByteArray(profileImageData, 0, profileImageData.length);
+            return BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
         }
         return null;
     }
@@ -312,7 +315,7 @@ public class User implements Parcelable {
         dest.writeDouble(weightChangeGoal);
         dest.writeDouble(recommendedDailyCalorieIntake);
 
-        Bitmap profilePic = getProfileImageDataInBitmap();
+        Bitmap profilePic = calculateProfileImageDataInBitmap(profileImageData);
         dest.writeParcelable(profilePic, flags);
     }
 }
