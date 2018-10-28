@@ -1,6 +1,11 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "weather_table")
 public class WeatherData {
+
     private LocationData mLocationData;
     private CurrentCondition mCurrentCondition = new CurrentCondition();
     private Temperature mTemperature = new Temperature();

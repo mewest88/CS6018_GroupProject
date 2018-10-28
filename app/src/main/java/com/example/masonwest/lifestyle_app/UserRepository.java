@@ -3,11 +3,14 @@ package com.example.masonwest.lifestyle_app;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -242,5 +245,15 @@ public class UserRepository {
             return result;
         }
 
+    }
+
+
+    public static File getDatabaseFile(Context context) {
+        String backupDBPath = UserDatabase.getDatabase(context).getOpenHelper().getWritableDatabase().getPath();
+        File dbPath = new File(backupDBPath) ;
+        if (dbPath.exists()) {
+            Log.d("UserRepository", "file worked!!") ;
+        }
+        return dbPath ;
     }
 }
