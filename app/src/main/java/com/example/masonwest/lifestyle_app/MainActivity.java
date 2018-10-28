@@ -36,21 +36,24 @@ public class MainActivity extends AppCompatActivity
     private int containerHeader;
     private Boolean userExists = false;
     private UserViewModel mUserViewModel;
-    private LiveData<User> mUser;
+//    private LiveData<User> mUser;
 
     //create an observer that watches the MutableLiveData<User> object
     //possibly not necessary here?
-    final Observer<User> userObserver  = new Observer<User>() {
-        @Override
-        public void onChanged(@Nullable final User user) {
-            // Update the UI if this data variable changes
-            if(user!=null) {
-                //what to do if user changes?
-//                mUserViewModel.getUser();
-//                Toast.makeText(getActivity(),"User in db changed", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
+//    final Observer<User> userObserver  = new Observer<User>() {
+//        @Override
+//        public void onChanged(@Nullable final User user) {
+//            // Update the UI if this data variable changes
+//            if(user!=null) {
+////                String test = "";
+////                User temp = mUserViewModel.getUser().getValue();
+////                int test2 = 7;
+//                //what to do if user changes?
+////                mUserViewModel.getUser();
+////                Toast.makeText(getActivity(),"User in db changed", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,13 @@ public class MainActivity extends AppCompatActivity
 
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-        mUserViewModel.getUser().observe(this, userObserver);
+//        mUserViewModel.getUser().observe(this, userObserver);
+
+        if(mUserViewModel.getUser().getValue() == null) {
+            User newUser = new User(0);
+            mUserViewModel.insert(newUser);
+        }
+//        User temp = mUserViewModel.getUser().getValue();
 
         VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
         task.execute();
@@ -86,8 +95,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-//        User temp = mUserViewModel.getUser().getValue();
-
         if (numUsersInDB > 0) {
             userExists = true;
         }
@@ -95,8 +102,6 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null /*&& userExists == false*/) {
             //TODO not sure if this is right
             isEditUser = true;
-//        } else if (savedInstanceState == null && userExists == true) {
-//            isEditUser = true;
         } else {
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
@@ -190,6 +195,25 @@ public class MainActivity extends AppCompatActivity
                     break;
                 }
             }
+            case 4: { //Steps Page
+                if (isTablet()) {
+                    //Create a new detail fragment
+                    StepCounterFragment stepFragment = new StepCounterFragment();
+                    stepFragment.setArguments(positionBundle);
+
+                    //Replace the detail fragment container
+                    FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+                    fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, stepFragment, "frag_step_tablet");
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
+                    break;
+                } else {
+                    Intent sendIntent = new Intent(this, ViewDetailActivity.class);
+                    sendIntent.putExtras(positionBundle);
+                    startActivity(sendIntent);
+                    break;
+                }
+            }
         }
     }
 
@@ -200,41 +224,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        FragmentManager fManager = getSupportFragmentManager();
+        Fragment editUserFragment = fManager.findFragmentByTag("editUserFragment");
+        if(editUserFragment != null && editUserFragment.isAdded()) {
+            isEditUser = true;
+        }
         outState.putBoolean("editUserBoolean", isEditUser);
     }
 
     public void changeDisplay() {
-        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-//         if (isEditUser /*&& userExists == false*/) {
-//             fTrans.replace(container, new EditUserDetailsFragment(), "editUserFragment");
-//             fTrans.replace(R.id.fl_header_phone, new SignUpHeaderFragment(), "editUserHeaderFragment");
-        if (isEditUser) {  /*&& userExists == false*/
-            fTrans.replace(containerBody, new EditUserDetailsFragment());
+        FragmentManager fManager = getSupportFragmentManager();
+        FragmentTransaction fTrans = fManager.beginTransaction();
+
+        if (isEditUser) {
+            fTrans.replace(containerBody, new EditUserDetailsFragment(),"editUserFragment");
             fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
-            fTrans.replace(containerBody, new MasterListFragment());
+            fTrans.replace(containerBody, new MasterListFragment(), "masterListFragment");
             fTrans.replace(containerHeader, new AppHeaderFragment());
         }
+
         fTrans.addToBackStack(null);
         fTrans.commit();
     }
-//              if (isTablet()) {
-//        //Create a new detail fragment
-//        HikesFragment hikesFragment = new HikesFragment();
-//        hikesFragment.setArguments(positionBundle);
-//
-//        //Replace the detail fragment container
-//        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-//        fTrans.replace(R.id.fl_frag_itemdetail_container_tablet, hikesFragment, "frag_hikes_tablet");
-//        fTrans.addToBackStack(null);
-//        fTrans.commit();
-//        break;
-//    } else {
-//        Intent sendIntent = new Intent(this, ViewDetailActivity.class);
-//        sendIntent.putExtras(positionBundle);
-//        startActivity(sendIntent);
-//        break;
-//    }
 
     @Override
     public void onEditUserSubmit() {
@@ -362,5 +374,16 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("YourActivity", "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
         Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fManager = getSupportFragmentManager();
+        Fragment editUserFragment = fManager.findFragmentByTag("editUserFragment");
+        if(editUserFragment != null && editUserFragment.isAdded()) {
+            return;
+        } else {
+            super.onBackPressed();
+        }
+
     }
 }
