@@ -29,6 +29,12 @@ public class BmiFragment extends Fragment {
             // Update the UI if this data variable changes
             if(user!=null) {
                 //what to do if user changes?
+                User temp = user;
+                double bmiValue = temp.getBMI();
+                String bmiValueString = Double.toString(bmiValue);
+
+                //Set the text in the fragment
+                mTvBMIData.setText(bmiValueString);
             }
         }
     };
@@ -43,8 +49,6 @@ public class BmiFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_bmi, container, false);
 
-        String bmiValueString;
-
         //Get the views
         mTvBMIData = fragmentView.findViewById(R.id.tv_bmi_data);
 
@@ -52,9 +56,8 @@ public class BmiFragment extends Fragment {
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         mUserViewModel.getUser().observe(this, userObserver);
 
-//        double bmiValue = mUserViewModel.getBMI();
-        double bmiValue = mUserViewModel.getUser().getValue().getBMI();
-        bmiValueString = Double.toString(bmiValue);
+        double bmiValue = 0.0;
+        String bmiValueString = Double.toString(bmiValue);
 
         //Set the text in the fragment
         mTvBMIData.setText(bmiValueString);

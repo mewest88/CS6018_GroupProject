@@ -29,35 +29,27 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 //    OnDataPass mDataPasser;
 //    User currentUser;
     private UserViewModel mUserViewModel;
+    private User mCurrentUser;
 //    String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
     Spinner activityLevelDropdown, weightChangeDropdown;
-//    double mvUserBMR, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
-//    int mvUserHeight, mvUserAge, mvUserWeight;
-//    Bitmap mvUserPic;
     TextView activityLevel, weightGoal, tvActualGoal, tvRecommendedCalories;
     public FitnessGoalsFragment() {
 
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//        //TODO: commented this out to make this fragment work on the tablet
-//        if(!isTablet()) {
-//            try {
-//                mDataPasser = (OnDataPass) context;
-//            } catch (ClassCastException e) {
-//                throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
-//            }
-//        }
-//    }
-
-    //Callback interface
-    // TODO: needs weight, height, sex, location added
-//    public interface OnDataPass{
-//        void onDataPass(User currentUser);
-//    }
+    //create an observer that watches the MutableLiveData<User> object
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                mCurrentUser = user;
+                tvActualGoal.setText(String.valueOf(mCurrentUser.getWeightChangeGoal()));
+//                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
+                tvRecommendedCalories.setText(String.valueOf(mCurrentUser.getRecommendedDailyCalorieIntake()));
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -74,8 +66,8 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         tvRecommendedCalories = fragmentView.findViewById(R.id.tv_recommendedCalories);
         String goalText = "";
         String calText = "";
-        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
+        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         mUserViewModel.getUser().observe(this, userObserver);
 
         if(savedInstanceState != null) {
@@ -172,20 +164,6 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
 
         return fragmentView;
     }
-    //create an observer that watches the MutableLiveData<User> object
-    final Observer<User> userObserver  = new Observer<User>() {
-        @Override
-        public void onChanged(@Nullable final User user) {
-            // Update the UI if this data variable changes
-            if(user!=null) {
-//                mUserViewModel.setUser(user);
-                tvActualGoal.setText(String.valueOf(mUserViewModel.getUser().getValue().getWeightChangeGoal()));
-//                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getDailyRecommendedCalorieIntake()));
-                tvRecommendedCalories.setText(String.valueOf(mUserViewModel.getUser().getValue().getRecommendedDailyCalorieIntake()));
-            }
-        }
-    };
-
 
     @Override
     public void onClick(View view) {
@@ -217,7 +195,7 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
         if(calories < calorieLimit) {
             Toast.makeText(getActivity(), "Warning: Potentially low calorie intake", Toast.LENGTH_SHORT).show();
         }
-
+        mUserViewModel.dumpInDB(mUserViewModel.getUser().getValue());
         tvRecommendedCalories.setText(String.valueOf(calories));
 //        if (!isTablet()) {
 //            mDataPasser.onDataPass(currentUser);

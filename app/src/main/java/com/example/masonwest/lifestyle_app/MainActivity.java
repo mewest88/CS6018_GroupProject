@@ -14,6 +14,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.AWSStartupHandler;
+import com.amazonaws.mobile.client.AWSStartupResult;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -25,28 +36,19 @@ public class MainActivity extends AppCompatActivity
     private int containerHeader;
     private Boolean userExists = false;
     private UserViewModel mUserViewModel;
-//    private LiveData<User> mUser;
-
-    //create an observer that watches the MutableLiveData<User> object
-    //possibly not necessary here?
-//    final Observer<User> userObserver  = new Observer<User>() {
-//        @Override
-//        public void onChanged(@Nullable final User user) {
-//            // Update the UI if this data variable changes
-//            if(user!=null) {
-////                String test = "";
-////                User temp = mUserViewModel.getUser().getValue();
-////                int test2 = 7;
-//                //what to do if user changes?
-////                mUserViewModel.getUser();
-////                Toast.makeText(getActivity(),"User in db changed", Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // AWS Connection
+//        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+//            @Override
+//            public void onComplete(AWSStartupResult awsStartupResult) {
+//                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+//            }
+//        }).execute();
+
         setContentView(R.layout.activity_main);
         containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
         containerHeader = isTablet() ? R.id.fl_header_tablet : R.id.fl_header_phone;
@@ -55,11 +57,11 @@ public class MainActivity extends AppCompatActivity
 
 //        mUserViewModel.getUser().observe(this, userObserver);
 
-        if(mUserViewModel.getUser().getValue() == null) {
+        if (mUserViewModel.getUser().getValue() == null) {
             User newUser = new User(0);
             mUserViewModel.insert(newUser);
+            mUserViewModel.setUser(newUser);
         }
-//        User temp = mUserViewModel.getUser().getValue();
 
         VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
         task.execute();
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
         changeDisplay();
+
+//        uploadWithTransferUtility();
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -203,7 +207,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         FragmentManager fManager = getSupportFragmentManager();
         Fragment editUserFragment = fManager.findFragmentByTag("editUserFragment");
-        if(editUserFragment != null && editUserFragment.isAdded()) {
+        if (editUserFragment != null && editUserFragment.isAdded()) {
             isEditUser = true;
         }
         outState.putBoolean("editUserBoolean", isEditUser);
@@ -214,7 +218,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fTrans = fManager.beginTransaction();
 
         if (isEditUser) {
-            fTrans.replace(containerBody, new EditUserDetailsFragment(),"editUserFragment");
+            fTrans.replace(containerBody, new EditUserDetailsFragment(), "editUserFragment");
             fTrans.replace(containerHeader, new SignUpHeaderFragment());
         } else {
             fTrans.replace(containerBody, new MasterListFragment(), "masterListFragment");
@@ -235,7 +239,7 @@ public class MainActivity extends AppCompatActivity
     public void onSettingsButtonClick() {
         isEditUser = true;
         changeDisplay();
-        if(isTablet()) {
+        if (isTablet()) {
             FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
             Fragment f = getSupportFragmentManager().findFragmentById(R.id.fl_frag_itemdetail_container_tablet);
             if (f != null) {
@@ -244,14 +248,124 @@ public class MainActivity extends AppCompatActivity
             fTrans.commit();
         }
     }
+
     @Override
     public void onBackPressed() {
         FragmentManager fManager = getSupportFragmentManager();
         Fragment editUserFragment = fManager.findFragmentByTag("editUserFragment");
-        if(editUserFragment != null && editUserFragment.isAdded()) {
+        if (editUserFragment != null && editUserFragment.isAdded()) {
             return;
         } else {
             super.onBackPressed();
         }
     }
+
+        public void uploadWithTransferUtility() {
+            String KEY = "AKIAJ3FQCHRW5PELY2RA";
+            String SECRET = "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";
+
+            BasicAWSCredentials credentials = new BasicAWSCredentials(KEY, SECRET);
+            AmazonS3Client client = new AmazonS3Client(credentials);
+
+            TransferUtility transferUtility =
+                    TransferUtility.builder()
+                            .context(getApplicationContext())
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(client)
+                            .build();
+
+            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+
+            TransferObserver uploadObserver =
+                    transferUtility.upload(
+                            databaseFile.getName(), databaseFile);
+
+            // Attach a listener to the observer to get state update and progress notifications
+            uploadObserver.setTransferListener(new TransferListener() {
+
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (TransferState.COMPLETED == state) {
+                        Log.d("YourMainActivity", "Uploaded a file!");
+
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    Log.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    // Handle errors
+                }
+
+            });
+
+            // If you prefer to poll for the data, instead of attaching a
+            // listener, check for the state and progress in the observer.
+            if (TransferState.COMPLETED == uploadObserver.getState()) {
+                Log.d("YourMainActivity", "Uploaded a file!");
+            }
+
+            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+        }
+
+        private void downloadWithTransferUtility () {
+
+            TransferUtility transferUtility =
+                    TransferUtility.builder()
+                            .context(getApplicationContext())
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
+                            .build();
+
+            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+
+            TransferObserver downloadObserver =
+                    transferUtility.download(
+                            "s3Folder/s3Key.txt",
+                            databaseFile);
+
+            // Attach a listener to the observer to get state update and progress notifications
+            downloadObserver.setTransferListener(new TransferListener() {
+
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (TransferState.COMPLETED == state) {
+                        // Handle a completed upload.
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    Log.d("YourActivity", "   ID:" + id + "   bytesCurrent: " + bytesCurrent + "   bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    // Handle errors
+                }
+
+            });
+
+            // If you prefer to poll for the data, instead of attaching a
+            // listener, check for the state and progress in the observer.
+            if (TransferState.COMPLETED == downloadObserver.getState()) {
+                // Handle a completed upload.
+            }
+
+            Log.d("YourActivity", "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
+            Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
+
+        }
 }

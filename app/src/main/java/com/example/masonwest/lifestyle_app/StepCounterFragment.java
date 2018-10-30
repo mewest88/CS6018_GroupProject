@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -32,6 +33,7 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     double last_y;
     double last_z;
     long lastTime;
+    private User mCurrentUser;
 
     //view model
     private UserViewModel mUserViewModel;
@@ -48,6 +50,19 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         super.onAttach(context);
     }
 
+    final Observer<User> userObserver  = new Observer<User>() {
+        @Override
+        public void onChanged(@Nullable final User user) {
+            // Update the UI if this data variable changes
+            if(user!=null) {
+                mCurrentUser = user;
+                mTvStepData.setText("" + mCurrentUser.getSteps());
+//                mTvFullName.setText(mUserViewModel.getUser().getValue().getFullName());
+//                mIvPicture.setImageBitmap(User.calculateProfileImageDataInBitmap(mUserViewModel.getUser().getValue().getProfileImageData()));
+            }
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +72,8 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 
         //Get the view model
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+
+        mUserViewModel.getUser().observe(this, userObserver);
 
         //Get the views
         mTvStepData = fragmentView.findViewById(R.id.tv_step_data);

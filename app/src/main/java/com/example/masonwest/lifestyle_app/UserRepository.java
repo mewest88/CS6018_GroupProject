@@ -3,37 +3,48 @@ package com.example.masonwest.lifestyle_app;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 public class UserRepository {
 
-    private User temp;
-//    private MutableLiveData<User> mUser = new MutableLiveData<>();
-    private LiveData<User> mUser;
+    // SINGLETON - static variable single_instance of type UserRepository
+    private static UserRepository single_instance = null;
+
+    //    private MutableLiveData<User> mUser = new MutableLiveData<>();
+    private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
 
-    public UserRepository(Application application) {
-        UserDatabase db = UserDatabase.getDatabase(application);
-        mUserDao = db.userDao();
-        mUser = mUserDao.getUser();
-//        temp = new User(-1);
-//        setUser(temp);
-        loadData();
+    // static method to create instance of Singleton class
+    public static UserRepository getInstance(Application application)
+    {
+        if (single_instance == null) {
+            single_instance = new UserRepository(application);
+        }
+        return single_instance;
     }
 
-    public void updateUser() {
-
+    private UserRepository(Application application) {
+        UserDatabase db = UserDatabase.getDatabase(application);
+        mUserDao = db.userDao();
+        loadData();
     }
 
     public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user);
+    }
+
+    public void setUser(User user) {
+        mUser.setValue(user);
     }
 
     // AsyncTask class
@@ -52,115 +63,39 @@ public class UserRepository {
         }
     }
 
-    public LiveData<User> getUser() {
+    public void update(User user) {
+        new updateAsyncTask(mUserDao, mUser).execute(user);
+    }
+
+    private static class updateAsyncTask extends AsyncTask<User, Void, User>{
+        private UserDao mAsyncTaskDao;
+        private MutableLiveData<User> mProfileData;
+
+        updateAsyncTask(UserDao dao, MutableLiveData<User> profile){
+            this.mAsyncTaskDao = dao;
+            this.mProfileData = profile;
+        }
+
+        @Override
+        protected User doInBackground(final User... user) {
+            mAsyncTaskDao.update(user[0]);
+            return user[0];
+        }
+
+        @Override
+        protected void onPostExecute(User profile) {
+            //mProfileData.setValue(profile);
+            mUser.setValue(profile);
+//            uploadWithTransferUtility(mAppContext);
+        }
+    }
+
+    public MutableLiveData<User> getUser() {
         return mUser;
     }
 
 //    public void setUser(User user) {
 //        mUser.setValue(user);
-//    }
-
-//    public String getFirstName() {
-//        if(mUser.getValue() != null) {
-//            return mUser.getValue().getFirstName();
-//        }
-//        return "loser";
-//    }
-//    public void setFirstName(String firstName) {
-//        mUser.getValue().setFirstName(firstName);
-//    }
-//    public String getLastName() {
-//        if(mUser.getValue() != null) {
-//            return mUser.getValue().getLastName();
-//        }
-//        return "last name";
-//    }
-//    public void setLastName(String lastName) {
-//        mUser.getValue().setLastName(lastName);
-//    }
-//    public String getFullName() {
-////        String first = this.getFirstName();
-//        String last = this.getLastName();
-////        return first + " " + last;
-//        return last;
-//    }
-//    public void setFullName(String fName, String lName) { mUser.getValue().setFullName(fName, lName); }
-//    public int getAge() {
-////        User tempUser = temp;
-//        User testUser = mUser.getValue();
-//         return mUser.getValue().getAge();
-//    }
-//    public void setAge(int age) {
-//        mUser.getValue().setAge(age);
-//    }
-//    public String getSex() {
-//        return mUser.getValue().getSex();
-//    }
-//    public void setSex(String sex) {
-//        mUser.getValue().setSex(sex);
-//    }
-//    public int getHeight() {
-//        return mUser.getValue().getHeightInches();
-//    }
-//    public void setHeight(int height) {
-//        mUser.getValue().setHeightInches(height);
-//    }
-//    public int getWeight() {
-//        return mUser.getValue().getWeightLBS();
-//    }
-//    public void setWeight(int weight) {
-//        mUser.getValue().setWeightLBS(weight);
-//    }
-//    public double getBMI() {
-//        return mUser.getValue().getBMI();
-//    }
-//    public void setBMI(double bmi) {
-//        mUser.getValue().setBMI(bmi);
-//    }
-//    public double getBMR() {
-//        return mUser.getValue().getBMR();
-//    }
-//    public void setBMR(double bmr) {
-//        mUser.getValue().setBMR(bmr);
-//    }
-//    public String getActivityLevel() {
-//        return mUser.getValue().getActivityLevel();
-//    }
-//    public void setActivityLevel(String activityLevel) {
-//        mUser.getValue().setActivityLevel(activityLevel);
-//    }
-//    public double getDailyRecommendedCalorieIntake() {
-//        return mUser.getValue().getRecommendedDailyCalorieIntake();
-//    }
-//    public void setDailyRecommendedCalorieIntake(double calorieIntake) {
-//        mUser.getValue().setRecommendedDailyCalorieIntake(calorieIntake);
-//    }
-//    public String getCity() {
-//        return mUser.getValue().getCity();
-//    }
-//    public void setCity(String city) {
-//        mUser.getValue().setCity(city);
-//    }
-//    public String getCountry() {
-//        return mUser.getValue().getCountry();
-//    }
-//    public void setCountry(String country) {
-//        mUser.getValue().setCountry(country);
-//    }
-//    public String getLocation() {
-//        return getCity() + "," + getCountry();
-//    }
-//    public double getWeightChangeGoal() {
-//        return mUser.getValue().getWeightChangeGoal();
-//    }
-//    public void setWeightChangeGoal(double weightChangeGoal) {
-//        mUser.getValue().setWeightChangeGoal(weightChangeGoal);
-//    }
-//    public Bitmap getProfilePic() {
-//        return mUser.getValue().getProfilePic();
-//    }
-//    public void setProfilePic(Bitmap profilePic) {
-//        mUser.getValue().setProfilePic(profilePic);
 //    }
 
     /*
@@ -242,5 +177,14 @@ public class UserRepository {
             return result;
         }
 
+    }
+
+    public static File getDatabaseFile(Context context) {
+        String backupDBPath = UserDatabase.getDatabase(context).getOpenHelper().getWritableDatabase().getPath();
+        File dbPath = new File(backupDBPath) ;
+        if (dbPath.exists()) {
+            Log.d("UserRepository", "file worked!!") ;
+        }
+        return dbPath ;
     }
 }

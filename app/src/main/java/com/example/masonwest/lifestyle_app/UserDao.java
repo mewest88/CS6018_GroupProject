@@ -6,6 +6,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(User user);
 
     @Query("DELETE from user_table WHERE userID = :userID")
     void delete(int userID);
@@ -28,6 +32,6 @@ public interface UserDao {
     int getNumberOfUserInDatabase();
 
     @Query("SELECT * from user_table LIMIT 1")//LIMIT 1
-    LiveData<User> getUser();
+    User getUser();
 }
 
