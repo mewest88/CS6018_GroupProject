@@ -26,11 +26,21 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     private UserViewModel mUserViewModel;
     private OnDataPass dataPasser;
     private LiveData<User> mUser;
+    private User mCurrentUser;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         dataPasser = (OnDataPass) context;
+//        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+//        mUserViewModel.getUser().observe(getActivity(), new Observer<User>() {
+//            @Override
+//            public void onChanged(@Nullable User user) {
+//                mCurrentUser = user;
+//                mTvFullName.setText(mCurrentUser.getFullName());
+//                mIvPicture.setImageBitmap(User.calculateProfileImageDataInBitmap(mCurrentUser.getProfileImageData()));
+//            }
+//        });
     }
     public void passData() {
         dataPasser.onSettingsButtonClick();
@@ -50,15 +60,21 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_app_header, container, false);
 
-        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-
-        mUserViewModel.getUser().observe(this, userObserver);
-
         //Get the text views and image view
         mTvFullName = (TextView) view.findViewById(R.id.tv_fn_data);
         mIvPicture = (ImageView) view.findViewById(R.id.iv_pic);
         mButtonSettings = view.findViewById(R.id.settingsButton);
         mButtonSettings.setOnClickListener(this);
+
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        mUserViewModel.getUser().observe(getActivity(), new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                mCurrentUser = user;
+                mTvFullName.setText(mCurrentUser.getFullName());
+                mIvPicture.setImageBitmap(User.calculateProfileImageDataInBitmap(mCurrentUser.getProfileImageData()));
+            }
+        });
 
         //Set the data
 //        mTvFullName.setText(mUserViewModel.getFullName());

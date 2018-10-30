@@ -303,6 +303,7 @@ public class EditUserDetailsFragment extends Fragment
                     mUserViewModel.getUser().getValue().setFirstName(mFirstName);
                     mUserViewModel.getUser().getValue().setLastName(mLastName);
                     mUserViewModel.getUser().getValue().setFullName(mFirstName, mLastName);
+                    mUserViewModel.dumpInDB(mUserViewModel.getUser().getValue());
                     passData();
                 }
                 break;
@@ -326,8 +327,8 @@ public class EditUserDetailsFragment extends Fragment
         //Collect input data (other data was input to the bundle through spinners)
         mFirstName = mEtFirstName.getText().toString();
         mLastName = mEtLastName.getText().toString();
-        mUserViewModel.getUser().getValue().setFirstName(mFirstName);
-        mUserViewModel.getUser().getValue().setLastName(mLastName);
+//        mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+//        mUserViewModel.getUser().getValue().setLastName(mLastName);
 
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
@@ -444,6 +445,7 @@ public class EditUserDetailsFragment extends Fragment
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
                 mUserViewModel.getUser().getValue().setWeightLBS(Integer.parseInt(finalWeightOptions[position]));
             }
 
