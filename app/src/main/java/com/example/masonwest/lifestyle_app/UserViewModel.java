@@ -25,11 +25,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public void update(User user) { mUserRepository.update(user);}
 
-    public void dumpInDB(User user) {
-//        User user = mUser.getValue();
-        update(user);
-//        mUser = mUserRepository.getUser();
-    }
+    public void dumpInDB(User user) { update(user); }
 
     public LiveData<User> getUser() { return mUser; }
 
