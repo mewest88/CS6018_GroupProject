@@ -66,6 +66,9 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 
         mPlayer = new MediaPlayer().create(getActivity(), R.raw.trimmed);
 
+        if(savedInstanceState != null) {
+            mNumSteps = mUserViewModel.getUser().getValue().getSteps();
+        }
         //Get the view model
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
