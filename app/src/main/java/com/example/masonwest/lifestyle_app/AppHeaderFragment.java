@@ -32,16 +32,8 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context context) {
         super.onAttach(context);
         dataPasser = (OnDataPass) context;
-//        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-//        mUserViewModel.getUser().observe(getActivity(), new Observer<User>() {
-//            @Override
-//            public void onChanged(@Nullable User user) {
-//                mCurrentUser = user;
-//                mTvFullName.setText(mCurrentUser.getFullName());
-//                mIvPicture.setImageBitmap(User.calculateProfileImageDataInBitmap(mCurrentUser.getProfileImageData()));
-//            }
-//        });
     }
+
     public void passData() {
         dataPasser.onSettingsButtonClick();
     }
@@ -75,12 +67,6 @@ public class AppHeaderFragment extends Fragment implements View.OnClickListener{
                 mIvPicture.setImageBitmap(User.calculateProfileImageDataInBitmap(mCurrentUser.getProfileImageData()));
             }
         });
-
-        //Set the data
-//        mTvFullName.setText(mUserViewModel.getFullName());
-//        mTvFullName.setText(mUserViewModel.getUser().getValue().getFullName());
-//        mIvPicture.setImageBitmap(mUserViewModel.getProfilePic());
-//        mIvPicture.setImageBitmap(mUserViewModel.getUser().getValue().getProfileImageDataInBitmap());
 
         return view;
     }

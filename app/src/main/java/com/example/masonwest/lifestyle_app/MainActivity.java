@@ -37,37 +37,18 @@ public class MainActivity extends AppCompatActivity
     private int containerHeader;
     private Boolean userExists = false;
     private UserViewModel mUserViewModel;
-//    private LiveData<User> mUser;
-
-    //create an observer that watches the MutableLiveData<User> object
-    //possibly not necessary here?
-//    final Observer<User> userObserver  = new Observer<User>() {
-//        @Override
-//        public void onChanged(@Nullable final User user) {
-//            // Update the UI if this data variable changes
-//            if(user!=null) {
-////                String test = "";
-////                User temp = mUserViewModel.getUser().getValue();
-////                int test2 = 7;
-//                //what to do if user changes?
-////                mUserViewModel.getUser();
-////                Toast.makeText(getActivity(),"User in db changed", Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // AWS Connection
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-            @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
-                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
-            }
-        }).execute();
-
+//        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+//            @Override
+//            public void onComplete(AWSStartupResult awsStartupResult) {
+//                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+//            }
+//        }).execute();
 
         setContentView(R.layout.activity_main);
         containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
@@ -82,7 +63,6 @@ public class MainActivity extends AppCompatActivity
             mUserViewModel.insert(newUser);
             mUserViewModel.setUser(newUser);
         }
-//        User temp = mUserViewModel.getUser().getValue();
 
         VoidAsyncTask task = mUserViewModel.getNumberOfUserInDatabase();
         task.execute();
@@ -108,6 +88,7 @@ public class MainActivity extends AppCompatActivity
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
         changeDisplay();
+
 
        // uploadWithTransferUtility();
     }
@@ -281,4 +262,112 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+        public void uploadWithTransferUtility() {
+            String KEY = "AKIAJ3FQCHRW5PELY2RA";
+            String SECRET = "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";
+
+            BasicAWSCredentials credentials = new BasicAWSCredentials(KEY, SECRET);
+            AmazonS3Client client = new AmazonS3Client(credentials);
+
+            TransferUtility transferUtility =
+                    TransferUtility.builder()
+                            .context(getApplicationContext())
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(client)
+                            .build();
+
+            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+
+            TransferObserver uploadObserver =
+                    transferUtility.upload(
+                            databaseFile.getName(), databaseFile);
+
+            // Attach a listener to the observer to get state update and progress notifications
+            uploadObserver.setTransferListener(new TransferListener() {
+
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (TransferState.COMPLETED == state) {
+                        Log.d("YourMainActivity", "Uploaded a file!");
+
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    Log.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    // Handle errors
+                }
+
+            });
+
+            // If you prefer to poll for the data, instead of attaching a
+            // listener, check for the state and progress in the observer.
+            if (TransferState.COMPLETED == uploadObserver.getState()) {
+                Log.d("YourMainActivity", "Uploaded a file!");
+            }
+
+            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+        }
+
+        private void downloadWithTransferUtility () {
+
+            TransferUtility transferUtility =
+                    TransferUtility.builder()
+                            .context(getApplicationContext())
+                            .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                            .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
+                            .build();
+
+            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+
+            TransferObserver downloadObserver =
+                    transferUtility.download(
+                            "s3Folder/s3Key.txt",
+                            databaseFile);
+
+            // Attach a listener to the observer to get state update and progress notifications
+            downloadObserver.setTransferListener(new TransferListener() {
+
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (TransferState.COMPLETED == state) {
+                        // Handle a completed upload.
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    Log.d("YourActivity", "   ID:" + id + "   bytesCurrent: " + bytesCurrent + "   bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    // Handle errors
+                }
+
+            });
+
+            // If you prefer to poll for the data, instead of attaching a
+            // listener, check for the state and progress in the observer.
+            if (TransferState.COMPLETED == downloadObserver.getState()) {
+                // Handle a completed upload.
+            }
+
+            Log.d("YourActivity", "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
+            Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
+
+        }
 }

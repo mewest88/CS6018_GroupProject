@@ -7,7 +7,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +26,13 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     private SensorManager mSensorManager;
     private Sensor mAccelSensor;
     private int mNumSteps;
+    private Sensor mLinearAccelerometer;
+    public MediaPlayer mPlayer;
+    private static final int SHAKE_THRESHOLD = 5;
+    double last_x;
+    double last_y;
+    double last_z;
+    long lastTime;
     private User mCurrentUser;
 
     //view model
@@ -31,7 +40,6 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 
     //xml stuff
     private TextView mTvStepData;
-    private Button mBtnStart, mBtnStop;
 
     public StepCounterFragment() {
         // Required empty public constructor
@@ -60,50 +68,63 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_step_counter, container, false);
 
+        mPlayer = new MediaPlayer().create(getActivity(), Settings.System.DEFAULT_RINGTONE_URI);
+
         //Get the view model
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+
         mUserViewModel.getUser().observe(this, userObserver);
 
         //Get the views
         mTvStepData = fragmentView.findViewById(R.id.tv_step_data);
-//        TvSteps = (TextView) findViewById(R.id.tv_steps);
-        mBtnStart = (Button) fragmentView.findViewById(R.id.btn_start);
-        mBtnStop = (Button) fragmentView.findViewById(R.id.btn_stop);
 
         // Get an instance of the SensorManager
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSimpleStepDetector = new StepDetector();
         mSimpleStepDetector.registerListener(StepCounterFragment.this);
-
-        //Turn on the step counter by clicking the button
-        mBtnStart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                mNumSteps = 0;
-                mTvStepData.setText("0");
-                mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
-
-            }
-        });
-
-
-        mBtnStop.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                mCurrentUser.setSteps(mNumSteps);
-                mUserViewModel.dumpInDB(mCurrentUser);
-                mSensorManager.unregisterListener(StepCounterFragment.this);
-
-            }
-        });
+        mLinearAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         return fragmentView;
     }
+
+    private SensorEventListener mShakeListener = new SensorEventListener() {
+
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+
+            //Get the acceleration rates along the y and z axes
+            double now_x = sensorEvent.values[0];
+            double now_y = sensorEvent.values[1];
+            double now_z = sensorEvent.values[2];
+            long currentTime = System.currentTimeMillis();
+            long dTime = currentTime - lastTime;
+
+            if (dTime > 100) {
+                lastTime = currentTime;
+                double startShake = Math.abs(last_x - now_x);
+                double stopShake = Math.abs(last_y - now_y);
+
+                if (startShake > SHAKE_THRESHOLD) {
+                    if(!mPlayer.isPlaying()) {
+                        mPlayer.start();
+                    }
+                    mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
+                } else if (stopShake > SHAKE_THRESHOLD) {
+                    mPlayer.stop();
+                    mSensorManager.unregisterListener(StepCounterFragment.this);
+                }
+            }
+            last_x = now_x;
+            last_y = now_y;
+            last_z = now_z;
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+
+        }
+    };
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -124,16 +145,19 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         mUserViewModel.getUser().getValue().setSteps(mNumSteps);
     }
 
-    /**
-     * Allows the page to be lifecycle aware
-     * @param outState
-     */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //Put them in the outgoing Bundle
-//        outState.putParcelable("user", currentUser);
+    public void onResume() {
+        super.onResume();
+        if(mLinearAccelerometer!=null){
+            mSensorManager.registerListener(mShakeListener, mLinearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
 
-        //Save the view hierarchy
-        super.onSaveInstanceState(outState);
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mLinearAccelerometer!=null){
+            mSensorManager.unregisterListener(mShakeListener);
+        }
     }
 }

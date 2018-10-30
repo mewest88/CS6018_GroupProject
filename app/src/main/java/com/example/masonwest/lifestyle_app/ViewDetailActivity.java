@@ -1,9 +1,19 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class ViewDetailActivity extends AppCompatActivity {
 
@@ -62,5 +72,4 @@ public class ViewDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedState);
         savedState.putBundle("extras", extras);
     }
-
 }
