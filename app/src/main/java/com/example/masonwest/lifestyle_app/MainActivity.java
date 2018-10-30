@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         if(mUserViewModel.getUser().getValue() == null) {
             User newUser = new User(0);
             mUserViewModel.insert(newUser);
+            mUserViewModel.setUser(newUser);
         }
 //        User temp = mUserViewModel.getUser().getValue();
 
