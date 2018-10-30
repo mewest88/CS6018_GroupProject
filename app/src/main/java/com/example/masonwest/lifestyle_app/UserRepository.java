@@ -1,12 +1,22 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 
 import org.json.JSONException;
 
@@ -15,7 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class UserRepository {
+public class UserRepository extends AppCompatActivity {
 
     // SINGLETON - static variable single_instance of type UserRepository
     private static UserRepository single_instance = null;
@@ -23,6 +33,7 @@ public class UserRepository {
     //    private MutableLiveData<User> mUser = new MutableLiveData<>();
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
+    private static Context mContext ;
 
     // static method to create instance of Singleton class
     public static UserRepository getInstance(Application application)
@@ -36,6 +47,7 @@ public class UserRepository {
 
     private UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
+        mContext = application.getApplicationContext() ;
         mUserDao = db.userDao();
 //        User tempUser;
 //        if(mUserDao.getUser() != null) {
@@ -102,7 +114,7 @@ public class UserRepository {
         protected void onPostExecute(User profile) {
             //mProfileData.setValue(profile);
             mUser.setValue(profile);
-//            uploadWithTransferUtility(mAppContext);
+            uploadWithTransferUtility() ;
         }
     }
 
@@ -204,4 +216,115 @@ public class UserRepository {
         }
         return dbPath ;
     }
+
+    public static void uploadWithTransferUtility() {
+        String KEY = "AKIAJ3FQCHRW5PELY2RA";
+        String SECRET = "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";
+
+        BasicAWSCredentials credentials = new BasicAWSCredentials(KEY, SECRET);
+        AmazonS3Client client = new AmazonS3Client(credentials);
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(mContext)
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(client)
+                        .build();
+
+        File databaseFile = getDatabaseFile(mContext);
+
+        TransferObserver uploadObserver =
+                transferUtility.upload(
+                        databaseFile.getName(), databaseFile);
+
+        // Attach a listener to the observer to get state update and progress notifications
+        uploadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    Log.d("YourMainActivity", "Uploaded a file!");
+
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int) percentDonef;
+
+                Log.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you prefer to poll for the data, instead of attaching a
+        // listener, check for the state and progress in the observer.
+        if (TransferState.COMPLETED == uploadObserver.getState()) {
+            Log.d("YourMainActivity", "Uploaded a file!");
+        }
+
+        Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+        Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+    }
+
+    private void downloadWithTransferUtility() {
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(getApplicationContext())
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
+                        .build();
+
+        File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+
+        TransferObserver downloadObserver =
+                transferUtility.download(
+                        "s3Folder/s3Key.txt",
+                        databaseFile);
+
+        // Attach a listener to the observer to get state update and progress notifications
+        downloadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    // Handle a completed upload.
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int) percentDonef;
+
+                Log.d("YourActivity", "   ID:" + id + "   bytesCurrent: " + bytesCurrent + "   bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you prefer to poll for the data, instead of attaching a
+        // listener, check for the state and progress in the observer.
+        if (TransferState.COMPLETED == downloadObserver.getState()) {
+            // Handle a completed upload.
+        }
+
+        Log.d("YourActivity", "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
+        Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
+
+    }
+
+
 }
