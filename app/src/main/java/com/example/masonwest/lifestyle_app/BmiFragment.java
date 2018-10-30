@@ -56,8 +56,6 @@ public class BmiFragment extends Fragment {
         mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         mUserViewModel.getUser().observe(this, userObserver);
 
-//        double bmiValue = mUserViewModel.getBMI();
-//        double bmiValue = mUserViewModel.getUser().getValue().getBMI();
         double bmiValue = 0.0;
         String bmiValueString = Double.toString(bmiValue);
 

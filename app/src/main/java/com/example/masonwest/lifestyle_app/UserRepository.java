@@ -30,30 +30,14 @@ public class UserRepository {
         if (single_instance == null) {
             single_instance = new UserRepository(application);
         }
-
         return single_instance;
     }
 
     private UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-//        User tempUser;
-//        if(mUserDao.getUser() != null) {
-//            tempUser = mUserDao.getUser();
-//            mUser.setValue(tempUser);
-//        } else {
-//
-//        }
-//        mUser = mUserDao.getUser();
         loadData();
     }
-
-//    public UserRepository(Application application) {
-//        UserDatabase db = UserDatabase.getDatabase(application);
-//        mUserDao = db.userDao();
-//        mUser = mUserDao.getUser();
-//        loadData();
-//    }
 
     public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user);
@@ -194,7 +178,6 @@ public class UserRepository {
         }
 
     }
-
 
     public static File getDatabaseFile(Context context) {
         String backupDBPath = UserDatabase.getDatabase(context).getOpenHelper().getWritableDatabase().getPath();

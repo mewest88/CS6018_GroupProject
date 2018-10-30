@@ -32,33 +32,10 @@ public class FitnessGoalsFragment extends Fragment implements View.OnClickListen
     private User mCurrentUser;
 //    String mvUserActivityLevel, mvUserSex, mUserFirstName, mUserLastName;
     Spinner activityLevelDropdown, weightChangeDropdown;
-//    double mvUserBMR, mvUserEnteredGoal, mvUserDailyRecommendedCalorieIntake;
-//    int mvUserHeight, mvUserAge, mvUserWeight;
-//    Bitmap mvUserPic;
     TextView activityLevel, weightGoal, tvActualGoal, tvRecommendedCalories;
     public FitnessGoalsFragment() {
 
     }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//        //TODO: commented this out to make this fragment work on the tablet
-//        if(!isTablet()) {
-//            try {
-//                mDataPasser = (OnDataPass) context;
-//            } catch (ClassCastException e) {
-//                throw new ClassCastException(context.toString() + " must implement HeaderDataPass");
-//            }
-//        }
-//    }
-
-    //Callback interface
-    // TODO: needs weight, height, sex, location added
-//    public interface OnDataPass{
-//        void onDataPass(User currentUser);
-//    }
 
     //create an observer that watches the MutableLiveData<User> object
     final Observer<User> userObserver  = new Observer<User>() {
