@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity
         }
         changeDisplay();
 
-//        uploadWithTransferUtility();
+
+       // uploadWithTransferUtility();
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
