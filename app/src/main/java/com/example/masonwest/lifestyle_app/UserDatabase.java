@@ -14,6 +14,7 @@ import java.io.File;
 public abstract class UserDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
+    public abstract WeatherDao weatherDao();
 
     private static volatile UserDatabase INSTANCE;
 

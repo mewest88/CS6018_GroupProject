@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.awareness.state.Weather;
+
 import org.json.JSONException;
 
 import java.io.File;
@@ -23,6 +25,7 @@ public class UserRepository {
     //    private MutableLiveData<User> mUser = new MutableLiveData<>();
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
+    private WeatherDao mWeatherDao;
 
     // static method to create instance of Singleton class
     public static UserRepository getInstance(Application application)
@@ -36,6 +39,7 @@ public class UserRepository {
     private UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
+        mWeatherDao = db.weatherDao();
         loadData();
     }
 
@@ -91,6 +95,7 @@ public class UserRepository {
     }
 
     public MutableLiveData<User> getUser() {
+        loadData();
         return mUser;
     }
 
@@ -107,6 +112,10 @@ public class UserRepository {
     public void setLocation(String location){
         mLocation = location;
         loadData();
+    }
+
+    public void insertWeather(WeatherData weather) {
+        new insertAsyncTask(mWeatherDao).execute(user);
     }
 
     public MutableLiveData<WeatherData> getData() {
