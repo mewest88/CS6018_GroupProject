@@ -30,7 +30,6 @@ public class UserRepository {
         if (single_instance == null) {
             single_instance = new UserRepository(application);
         }
-
         return single_instance;
     }
 
@@ -179,7 +178,6 @@ public class UserRepository {
         }
 
     }
-
 
     public static File getDatabaseFile(Context context) {
         String backupDBPath = UserDatabase.getDatabase(context).getOpenHelper().getWritableDatabase().getPath();
