@@ -107,11 +107,15 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
                 double stopShake = Math.abs(last_y - now_y);
 
                 if (startShake > SHAKE_THRESHOLD) {
-                    mPlayer.start();
+                    if(!mPlayer.isPlaying()) {
+                        mPlayer.start();
+                    }
                     mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
                 } else if (stopShake > SHAKE_THRESHOLD) {
-                    mPlayer.pause();
-                    mPlayer.seekTo(0);
+                    if(mPlayer.isPlaying()) {
+                        mPlayer.pause();
+                        mPlayer.seekTo(0);
+                    }
                     mSensorManager.unregisterListener(StepCounterFragment.this);
                 }
             }
