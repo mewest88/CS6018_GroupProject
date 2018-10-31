@@ -36,6 +36,7 @@ public class UserRepository extends AppCompatActivity {
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
     private LocationDao mLocationDao;
+    private CurrentConditionDao mConditionDao;
     private static Context mContext ;
 
     // static method to create instance of Singleton class
@@ -52,6 +53,7 @@ public class UserRepository extends AppCompatActivity {
         mContext = application.getApplicationContext() ;
         mUserDao = db.userDao();
         mLocationDao = db.locationDao();
+        mConditionDao = db.conditionDao();
         loadData();
     }
 
@@ -145,6 +147,25 @@ public class UserRepository extends AppCompatActivity {
         }
     }
 
+    public void insertCondition(CurrentCondition condition) {
+        new insertConditionAsyncTask(mConditionDao).execute(condition);
+    }
+    // AsyncTask class
+    private static class insertConditionAsyncTask extends AsyncTask<CurrentCondition, Void, Void> {
+
+        private CurrentConditionDao mAsyncTaskDao;
+
+        insertConditionAsyncTask(CurrentConditionDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final CurrentCondition... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
     public MutableLiveData<WeatherData> getData() {
         return jsonData;
     }
@@ -173,6 +194,7 @@ public class UserRepository extends AppCompatActivity {
                     try {
                         jsonData.setValue(JSONWeatherUtils.getWeatherData(s));
                         insertLocation(jsonData.getValue().getLocationData());
+                        insertCondition(jsonData.getValue().getCurrentCondition());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

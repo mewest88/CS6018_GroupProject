@@ -12,7 +12,8 @@ public class JSONWeatherUtils {
         //Start parsing JSON data
         JSONObject jsonObject = new JSONObject(data); //Must throw JSONException
 
-        WeatherData.CurrentCondition currentCondition = weatherData.getCurrentCondition();
+//        WeatherData.CurrentCondition currentCondition = weatherData.getCurrentCondition();
+        CurrentCondition currentCondition = weatherData.getCurrentCondition();
         JSONObject jsonMain = jsonObject.getJSONObject("main");
         currentCondition.setHumidity(jsonMain.getInt("humidity"));
         currentCondition.setPressure(jsonMain.getInt("pressure"));
