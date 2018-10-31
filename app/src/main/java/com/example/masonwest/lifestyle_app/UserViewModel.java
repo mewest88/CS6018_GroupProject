@@ -23,7 +23,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public void insert(User user) { mUserRepository.insert(user); }
 
-    public void update(User user) { mUserRepository.update(user);}
+    public void update(User user) { mUserRepository.update(user); }
 
     public void dumpInDB(User user) { update(user); }
 

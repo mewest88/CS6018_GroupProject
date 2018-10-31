@@ -18,6 +18,19 @@ public class JSONWeatherUtils {
         currentCondition.setPressure(jsonMain.getInt("pressure"));
         weatherData.setCurrentCondition(currentCondition);
 
+        //Location stuff
+        LocationData locationData = weatherData.getLocationData();
+        JSONObject jsonCoord = jsonObject.getJSONObject("coord");
+        locationData.setLongitude(jsonCoord.getLong("lon"));
+        locationData.setLatitude(jsonCoord.getLong("lat"));
+        JSONObject jsonSys = jsonObject.getJSONObject("sys");
+        locationData.setCountry(jsonSys.getString("country"));
+        locationData.setSunrise(jsonSys.getLong("sunrise"));
+        locationData.setSunset(jsonSys.getLong("sunset"));
+        locationData.setCity(jsonObject.getString("name"));
+        weatherData.setLocationData(locationData);
+
+
         //Get the temperature, wind and cloud data.
         WeatherData.Temperature temperature = weatherData.getTemperature();
         WeatherData.Wind wind = weatherData.getWind();

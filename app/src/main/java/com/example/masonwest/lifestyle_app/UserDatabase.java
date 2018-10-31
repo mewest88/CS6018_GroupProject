@@ -10,10 +10,11 @@ import android.support.annotation.NonNull;
 
 import java.io.File;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, LocationData.class}, version = 2, exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
+    public abstract LocationDao locationDao();
 
     private static volatile UserDatabase INSTANCE;
 
@@ -25,7 +26,7 @@ public abstract class UserDatabase extends RoomDatabase {
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             UserDatabase.class, "user_database")
-//                            .fallbackToDestructiveMigration() // Wipes and rebuilds instead of migrating if no Migration object.
+                            .fallbackToDestructiveMigration() // Wipes and rebuilds instead of migrating if no Migration object.
                             .build();
                 }
             }
