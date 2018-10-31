@@ -2,11 +2,11 @@ package com.example.masonwest.lifestyle_app;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
-@Entity(tableName = "weather_table")
 public class WeatherData {
 
-    private LocationData mLocationData;
+    private LocationData mLocationData = new LocationData(); //remove = to end if busted
     private CurrentCondition mCurrentCondition = new CurrentCondition();
     private Temperature mTemperature = new Temperature();
     private Wind mWind = new Wind();
@@ -14,12 +14,61 @@ public class WeatherData {
     private Snow mSnow = new Snow();
     private Clouds mClouds = new Clouds();
 
+    //Setters and Getters
+    public void setLocationData(LocationData locationData){
+        mLocationData = locationData;
+    }
+    public LocationData getLocationData(){
+        return mLocationData;
+    }
+
+    public void setCurrentCondition(CurrentCondition currentCondition){
+        mCurrentCondition = currentCondition;
+    }
+    public CurrentCondition getCurrentCondition(){
+        return mCurrentCondition;
+    }
+
+    public void setTemperature(Temperature temperature){
+        mTemperature = temperature;
+    }
+    public Temperature getTemperature(){
+        return mTemperature;
+    }
+
+    public void setWind(Wind wind){
+        mWind = wind;
+    }
+    public Wind getWind(){
+        return mWind;
+    }
+
+    public void setRain(Rain rain){
+        mRain = rain;
+    }
+    public Rain getRain(){
+        return mRain;
+    }
+
+    public void setSnow(Snow snow){
+        mSnow = snow;
+    }
+    public Snow getSnow(){
+        return mSnow;
+    }
+
+    public void setClouds(Clouds clouds){
+        mClouds = clouds;
+    }
+    public Clouds getClouds(){
+        return mClouds;
+    }
+
     public  class CurrentCondition {
         private long mWeatherId;
         private String mCondition;
         private String mDescr;
         private String mIcon;
-
 
         private double mPressure;
         private double mHumidity;
@@ -149,55 +198,5 @@ public class WeatherData {
             mPerc = perc;
         }
 
-    }
-
-    //Setters and Getters
-    public void setLocationData(LocationData locationData){
-        mLocationData = locationData;
-    }
-    public LocationData getLocationData(){
-        return mLocationData;
-    }
-
-    public void setCurrentCondition(CurrentCondition currentCondition){
-        mCurrentCondition = currentCondition;
-    }
-    public CurrentCondition getCurrentCondition(){
-        return mCurrentCondition;
-    }
-
-    public void setTemperature(Temperature temperature){
-        mTemperature = temperature;
-    }
-    public Temperature getTemperature(){
-        return mTemperature;
-    }
-
-    public void setWind(Wind wind){
-        mWind = wind;
-    }
-    public Wind getWind(){
-        return mWind;
-    }
-
-    public void setRain(Rain rain){
-        mRain = rain;
-    }
-    public Rain getRain(){
-        return mRain;
-    }
-
-    public void setSnow(Snow snow){
-        mSnow = snow;
-    }
-    public Snow getSnow(){
-        return mSnow;
-    }
-
-    public void setClouds(Clouds clouds){
-        mClouds = clouds;
-    }
-    public Clouds getClouds(){
-        return mClouds;
     }
 }

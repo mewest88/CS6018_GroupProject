@@ -6,10 +6,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.gms.awareness.state.Weather;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -33,6 +35,7 @@ public class UserRepository extends AppCompatActivity {
     //    private MutableLiveData<User> mUser = new MutableLiveData<>();
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
+    private LocationDao mLocationDao;
     private static Context mContext ;
 
     // static method to create instance of Singleton class
@@ -48,15 +51,16 @@ public class UserRepository extends AppCompatActivity {
         UserDatabase db = UserDatabase.getDatabase(application);
         mContext = application.getApplicationContext() ;
         mUserDao = db.userDao();
+        mLocationDao = db.locationDao();
         loadData();
-    }
-
-    public void insert(User user) {
-        new insertAsyncTask(mUserDao).execute(user);
     }
 
     public void setUser(User user) {
         mUser.setValue(user);
+    }
+
+    public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user);
     }
 
     // AsyncTask class
@@ -103,6 +107,7 @@ public class UserRepository extends AppCompatActivity {
     }
 
     public MutableLiveData<User> getUser() {
+        loadData();
         return mUser;
     }
 
@@ -119,6 +124,25 @@ public class UserRepository extends AppCompatActivity {
     public void setLocation(String location){
         mLocation = location;
         loadData();
+    }
+
+    public void insertLocation(LocationData location) {
+        new insertLocationAsyncTask(mLocationDao).execute(location);
+    }
+    // AsyncTask class
+    private static class insertLocationAsyncTask extends AsyncTask<LocationData, Void, Void> {
+
+        private LocationDao mAsyncTaskDao;
+
+        insertLocationAsyncTask(LocationDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final LocationData... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
     }
 
     public MutableLiveData<WeatherData> getData() {
@@ -148,6 +172,7 @@ public class UserRepository extends AppCompatActivity {
                 if(s != null) {
                     try {
                         jsonData.setValue(JSONWeatherUtils.getWeatherData(s));
+                        insertLocation(jsonData.getValue().getLocationData());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
