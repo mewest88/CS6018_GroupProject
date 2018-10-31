@@ -10,11 +10,12 @@ import android.support.annotation.NonNull;
 
 import java.io.File;
 
-@Database(entities = {User.class, LocationData.class}, version = 2, exportSchema = false)
+@Database(entities = {User.class, LocationData.class, CurrentCondition.class}, version = 3, exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
     public abstract LocationDao locationDao();
+    public abstract CurrentConditionDao conditionDao();
 
     private static volatile UserDatabase INSTANCE;
 
