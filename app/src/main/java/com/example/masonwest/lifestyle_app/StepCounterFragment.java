@@ -75,7 +75,7 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         if(savedInstanceState != null) {
             mNumSteps = mUserViewModel.getUser().getValue().getSteps();
         }
-        
+
         //Get the views
         mTvStepData = fragmentView.findViewById(R.id.tv_step_data);
 

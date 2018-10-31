@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity
 
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-//        mUserViewModel.getUser().observe(this, userObserver);
-
         if (mUserViewModel.getUser().getValue() == null) {
             User newUser = new User(0);
             mUserViewModel.insert(newUser);
@@ -81,16 +79,14 @@ public class MainActivity extends AppCompatActivity
             userExists = true;
         }
 
-        if (savedInstanceState == null /*&& userExists == false*/) {
-            //TODO not sure if this is right
+        if (savedInstanceState == null) {
             isEditUser = true;
         } else {
             isEditUser = savedInstanceState.getBoolean("editUserBoolean");
         }
+
         changeDisplay();
-
-
-       uploadWithTransferUtility();
+        uploadWithTransferUtility();
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -325,7 +321,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d("YourMainActivity", "Uploaded a file!");
             }
 
-            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+            Log.d("YourMainActivity", "Bytes Transferred: " + uploadObserver.getBytesTransferred());
             Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
         }
 
@@ -378,8 +374,5 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("YourActivity", "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
             Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
-
         }
-
-
 }
