@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 public class WeatherData {
 
-    private LocationData mLocationData;
+    private LocationData mLocationData = new LocationData(); //remove = to end if busted
     private CurrentCondition mCurrentCondition = new CurrentCondition();
     private Temperature mTemperature = new Temperature();
     private Wind mWind = new Wind();

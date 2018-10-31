@@ -146,7 +146,7 @@ public class UserRepository {
                 URL weatherDataURL = null;
                 String retrievedJsonData = null;
                 if(location!=null) {
-                    weatherDataURL = NetworkUtils.buildURLFromString(locat ion);
+                    weatherDataURL = NetworkUtils.buildURLFromString(location);
                     try {
                         retrievedJsonData = NetworkUtils.getDataFromURL(weatherDataURL);
                     } catch (IOException e) {
