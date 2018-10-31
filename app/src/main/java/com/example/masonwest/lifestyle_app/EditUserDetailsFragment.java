@@ -188,10 +188,10 @@ public class EditUserDetailsFragment extends Fragment
         mLastName = mEtLastName.getText().toString();
 
         //add a null user check in case rotated during load?
-//        if(mUserViewModel.getUser().getValue() != null) {
-//            mUserViewModel.getUser().getValue().setFirstName(mFirstName);
-//            mUserViewModel.getUser().getValue().setLastName(mLastName);
-//        }
+        if(mUserViewModel.getUser().getValue() != null) {
+            mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+            mUserViewModel.getUser().getValue().setLastName(mLastName);
+        }
         
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
