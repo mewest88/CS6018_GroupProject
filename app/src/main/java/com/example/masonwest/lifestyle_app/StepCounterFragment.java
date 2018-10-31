@@ -26,11 +26,11 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     private int mNumSteps;
     private Sensor mLinearAccelerometer;
     public MediaPlayer mPlayer;
-    private static final int SHAKE_THRESHOLD = 3;
+    long lastTime;
     double last_x;
     double last_y;
     double last_z;
-    long lastTime;
+
     private User mCurrentUser;
 
     //view model
@@ -98,10 +98,12 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
             double now_x = sensorEvent.values[0];
             double now_y = sensorEvent.values[1];
             double now_z = sensorEvent.values[2];
+            final int SHAKE_THRESHOLD = 3;
+
             long currentTime = System.currentTimeMillis();
             long dTime = currentTime - lastTime;
 
-            if (dTime > 50) {
+            if (dTime > 100) {
                 lastTime = currentTime;
                 double startShake = Math.abs(last_x - now_x);
                 double stopShake = Math.abs(last_y - now_y);
@@ -109,14 +111,14 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
                 if (startShake > SHAKE_THRESHOLD) {
                     if(!mPlayer.isPlaying()) {
                         mPlayer.start();
+                        mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
                     }
-                    mSensorManager.registerListener(StepCounterFragment.this, mAccelSensor, SensorManager.SENSOR_DELAY_FASTEST);
                 } else if (stopShake > SHAKE_THRESHOLD) {
                     if(mPlayer.isPlaying()) {
                         mPlayer.pause();
                         mPlayer.seekTo(0);
+                        mSensorManager.unregisterListener(StepCounterFragment.this);
                     }
-                    mSensorManager.unregisterListener(StepCounterFragment.this);
                 }
             }
             last_x = now_x;
