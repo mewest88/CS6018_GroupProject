@@ -8,6 +8,7 @@ import org.json.JSONObject;
 public class JSONWeatherUtils {
     public static WeatherData getWeatherData(String data) throws JSONException{
         WeatherData weatherData = new WeatherData();
+        LocationData locationData = new LocationData();
 
         //Start parsing JSON data
         JSONObject jsonObject = new JSONObject(data); //Must throw JSONException
@@ -17,6 +18,15 @@ public class JSONWeatherUtils {
         currentCondition.setHumidity(jsonMain.getInt("humidity"));
         currentCondition.setPressure(jsonMain.getInt("pressure"));
         weatherData.setCurrentCondition(currentCondition);
+
+        //Location stuff
+        locationData.setLongitude(jsonMain.getLong("lon"));
+        locationData.setLatitude(jsonMain.getLong("lat"));
+        locationData.setCity(jsonMain.getString("name"));
+        locationData.setCountry(jsonMain.getString("country"));
+        locationData.setSunrise(jsonMain.getLong("sunrise"));
+        locationData.setSunset(jsonMain.getLong("sunset"));
+        weatherData.setLocationData(locationData);
 
         //Get the temperature, wind and cloud data.
         WeatherData.Temperature temperature = weatherData.getTemperature();

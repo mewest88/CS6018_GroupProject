@@ -1,10 +1,17 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+@Entity(tableName = "location_table")
 public class LocationData {
+    @PrimaryKey
+    @NonNull
+    private String mCity;
+    private String mCountry;
     private double mLatitude;
     private double mLongitude;
-    private String mCountry;
-    private String mCity;
 
     private long mSunset;
     private long mSunrise;

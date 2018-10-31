@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,7 +26,7 @@ public class UserRepository {
     //    private MutableLiveData<User> mUser = new MutableLiveData<>();
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
-    private WeatherDao mWeatherDao;
+    private LocationDao mLocationDao;
 
     // static method to create instance of Singleton class
     public static UserRepository getInstance(Application application)
@@ -39,16 +40,16 @@ public class UserRepository {
     private UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mUserDao = db.userDao();
-        mWeatherDao = db.weatherDao();
+        mLocationDao = db.locationDao();
         loadData();
-    }
-
-    public void insert(User user) {
-        new insertAsyncTask(mUserDao).execute(user);
     }
 
     public void setUser(User user) {
         mUser.setValue(user);
+    }
+
+    public void insert(User user) {
+        new insertAsyncTask(mUserDao).execute(user);
     }
 
     // AsyncTask class
@@ -114,8 +115,23 @@ public class UserRepository {
         loadData();
     }
 
-    public void insertWeather(WeatherData weather) {
-        new insertAsyncTask(mWeatherDao).execute(user);
+    public void insertLocation(LocationData location) {
+        new insertLocationAsyncTask(mLocationDao).execute(location);
+    }
+    // AsyncTask class
+    private static class insertLocationAsyncTask extends AsyncTask<LocationData, Void, Void> {
+
+        private LocationDao mAsyncTaskDao;
+
+        insertLocationAsyncTask(LocationDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final LocationData... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
     }
 
     public MutableLiveData<WeatherData> getData() {
@@ -130,7 +146,7 @@ public class UserRepository {
                 URL weatherDataURL = null;
                 String retrievedJsonData = null;
                 if(location!=null) {
-                    weatherDataURL = NetworkUtils.buildURLFromString(location);
+                    weatherDataURL = NetworkUtils.buildURLFromString(locat ion);
                     try {
                         retrievedJsonData = NetworkUtils.getDataFromURL(weatherDataURL);
                     } catch (IOException e) {
@@ -145,6 +161,7 @@ public class UserRepository {
                 if(s != null) {
                     try {
                         jsonData.setValue(JSONWeatherUtils.getWeatherData(s));
+                        insertLocation(jsonData.getValue().getLocationData());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

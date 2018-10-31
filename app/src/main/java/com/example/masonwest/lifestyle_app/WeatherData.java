@@ -4,11 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "weather_table")
 public class WeatherData {
 
-    @PrimaryKey
-    @NonNull
     private LocationData mLocationData;
     private CurrentCondition mCurrentCondition = new CurrentCondition();
     private Temperature mTemperature = new Temperature();
@@ -18,52 +15,52 @@ public class WeatherData {
     private Clouds mClouds = new Clouds();
 
     //Setters and Getters
-    public void setmLocationData(LocationData locationData){
+    public void setLocationData(LocationData locationData){
         mLocationData = locationData;
     }
-    public LocationData getmLocationData(){
+    public LocationData getLocationData(){
         return mLocationData;
     }
 
-    public void setmCurrentCondition(CurrentCondition currentCondition){
+    public void setCurrentCondition(CurrentCondition currentCondition){
         mCurrentCondition = currentCondition;
     }
-    public CurrentCondition getmCurrentCondition(){
+    public CurrentCondition getCurrentCondition(){
         return mCurrentCondition;
     }
 
-    public void setmTemperature(Temperature temperature){
+    public void setTemperature(Temperature temperature){
         mTemperature = temperature;
     }
-    public Temperature getmTemperature(){
+    public Temperature getTemperature(){
         return mTemperature;
     }
 
-    public void setmWind(Wind wind){
+    public void setWind(Wind wind){
         mWind = wind;
     }
-    public Wind getmWind(){
+    public Wind getWind(){
         return mWind;
     }
 
-    public void setmRain(Rain rain){
+    public void setRain(Rain rain){
         mRain = rain;
     }
-    public Rain getmRain(){
+    public Rain getRain(){
         return mRain;
     }
 
-    public void setmSnow(Snow snow){
+    public void setSnow(Snow snow){
         mSnow = snow;
     }
-    public Snow getmSnow(){
+    public Snow getSnow(){
         return mSnow;
     }
 
-    public void setmClouds(Clouds clouds){
+    public void setClouds(Clouds clouds){
         mClouds = clouds;
     }
-    public Clouds getmClouds(){
+    public Clouds getClouds(){
         return mClouds;
     }
 
