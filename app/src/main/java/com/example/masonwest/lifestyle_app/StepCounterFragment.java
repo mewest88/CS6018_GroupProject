@@ -25,7 +25,7 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     private Sensor mAccelSensor;
     private int mNumSteps;
     private Sensor mLinearAccelerometer;
-    public MediaPlayer mPlayer;
+    private MediaPlayer mPlayer;
     long lastTime;
     double last_x;
     double last_y;
@@ -55,6 +55,7 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
             if(user!=null) {
                 mCurrentUser = user;
                 mTvStepData.setText("" + mCurrentUser.getSteps());
+//                mTvStepData.setText("" + mUserViewModel.getUser().getValue().getSteps());
             }
         }
     };
@@ -72,12 +73,20 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 
         mUserViewModel.getUser().observe(this, userObserver);
 
-        if(savedInstanceState != null) {
-            mNumSteps = mUserViewModel.getUser().getValue().getSteps();
-        }
-
         //Get the views
         mTvStepData = fragmentView.findViewById(R.id.tv_step_data);
+
+        mNumSteps = (mUserViewModel.getUser().getValue().getSteps());
+//        mTvStepData.setText("" + mNumSteps);
+
+        if(savedInstanceState != null) {
+            last_x = savedInstanceState.getDouble("x");
+            last_y = savedInstanceState.getDouble("y");
+            last_z = savedInstanceState.getDouble("z");
+            lastTime = savedInstanceState.getLong("time");
+//            mNumSteps = savedInstanceState.getInt("steps");
+//            mTvStepData.setText("" + mNumSteps);
+        }
 
         // Get an instance of the SensorManager
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -165,5 +174,17 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         if(mLinearAccelerometer!=null){
             mSensorManager.unregisterListener(mShakeListener);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outstate) {
+        outstate.putDouble("x", last_x);
+        outstate.putDouble("y", last_y);
+        outstate.putDouble("z", last_z);
+        outstate.putLong("time", lastTime);
+        outstate.putInt("steps", mNumSteps);
+        mPlayer.stop();
+        mPlayer.release();
+        super.onSaveInstanceState(outstate);
     }
 }

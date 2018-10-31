@@ -188,10 +188,10 @@ public class EditUserDetailsFragment extends Fragment
         mLastName = mEtLastName.getText().toString();
 
         //add a null user check in case rotated during load?
-        if(mUserViewModel.getUser().getValue() != null) {
-            mUserViewModel.getUser().getValue().setFirstName(mFirstName);
-            mUserViewModel.getUser().getValue().setLastName(mLastName);
-        }
+//        if(mUserViewModel.getUser().getValue() != null) {
+//            mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+//            mUserViewModel.getUser().getValue().setLastName(mLastName);
+//        }
         
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
@@ -220,15 +220,16 @@ public class EditUserDetailsFragment extends Fragment
         if (mUserViewModel.getUser().getValue().getCity() != null) {
             int index = 0;
             for (int i = 0; i < cityOptions.length; i++) {
-                if (cityOptions[i].equals(mUserViewModel.getUser().getValue().getCity())) {
+                if (cityOptions[i].equa
+                ls(mUserViewModel.getUser().getValue().getCity())) {
                     index = i;
-                    break;
+                    continue;
                 }
                 mSpinnerCity.setSelection(index);
             }
         } else {
             mSpinnerCity.setSelection(3);
-            mUserViewModel.getUser().getValue().setCity(cityOptions[0]);
+            mUserViewModel.getUser().getValue().setCity(cityOptions[3]);
         }
     }
     public void observeUserCountry() {
