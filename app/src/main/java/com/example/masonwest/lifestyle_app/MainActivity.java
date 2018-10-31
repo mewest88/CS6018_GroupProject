@@ -264,10 +264,9 @@ public class MainActivity extends AppCompatActivity
 
     public File getDatabaseFile() {
         String backupDBPath = UserDatabase.getDatabase(this).getOpenHelper().getWritableDatabase().getPath();
-        Log.d("DBPATH String", backupDBPath) ;
         File dbPath = new File(backupDBPath) ;
         if (dbPath.exists()) {
-            Log.d("UserRepository", "file worked!!") ;
+            Log.d("UserRepository", "File created successfully.") ;
         }
         return dbPath ;
     }
@@ -325,8 +324,8 @@ public class MainActivity extends AppCompatActivity
                 Log.d("YourMainActivity", "Uploaded a file!");
             }
 
-            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
-            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+//            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+//            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
         }
 
         private void downloadWithTransferUtility () {
