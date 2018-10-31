@@ -101,6 +101,7 @@ public class User implements Parcelable {
         double converted = unconverted * 703;
         return converted;
     }
+
     //should be called to calculate base BMR
     public static double calculateBMR(double currentWeightPassed, int heightPassed, int agePassed, String sexPassed) {
         double weightMetric = currentWeightPassed / 2.2;

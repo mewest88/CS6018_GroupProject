@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -7,9 +8,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.awareness.state.Weather;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 
 import org.json.JSONException;
 
@@ -18,7 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class UserRepository {
+public class UserRepository extends AppCompatActivity {
 
     // SINGLETON - static variable single_instance of type UserRepository
     private static UserRepository single_instance = null;
@@ -27,6 +36,7 @@ public class UserRepository {
     private static final MutableLiveData<User> mUser = new MutableLiveData<>();
     private UserDao mUserDao;
     private LocationDao mLocationDao;
+    private static Context mContext ;
 
     // static method to create instance of Singleton class
     public static UserRepository getInstance(Application application)
@@ -39,6 +49,7 @@ public class UserRepository {
 
     private UserRepository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
+        mContext = application.getApplicationContext() ;
         mUserDao = db.userDao();
         mLocationDao = db.locationDao();
         loadData();
@@ -91,7 +102,7 @@ public class UserRepository {
         protected void onPostExecute(User profile) {
             //mProfileData.setValue(profile);
             mUser.setValue(profile);
-//            uploadWithTransferUtility(mAppContext);
+            // uploadWithTransferUtility() ;
         }
     }
 
@@ -205,12 +216,4 @@ public class UserRepository {
 
     }
 
-    public static File getDatabaseFile(Context context) {
-        String backupDBPath = UserDatabase.getDatabase(context).getOpenHelper().getWritableDatabase().getPath();
-        File dbPath = new File(backupDBPath) ;
-        if (dbPath.exists()) {
-            Log.d("UserRepository", "file worked!!") ;
-        }
-        return dbPath ;
-    }
 }

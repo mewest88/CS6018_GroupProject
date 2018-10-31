@@ -1,5 +1,6 @@
 package com.example.masonwest.lifestyle_app;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -42,12 +43,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // AWS Connection
-//        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-//            @Override
-//            public void onComplete(AWSStartupResult awsStartupResult) {
-//                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
-//            }
-//        }).execute();
+        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+            @Override
+            public void onComplete(AWSStartupResult awsStartupResult) {
+                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+            }
+        }).execute();
 
         setContentView(R.layout.activity_main);
         containerBody = isTablet() ? R.id.fl_frag_edituser_container_tablet : R.id.fl_frag_masterlist_container_phone;
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity
         }
         changeDisplay();
 
-//        uploadWithTransferUtility();
+
+       uploadWithTransferUtility();
     }
 
     //This receives the position of the clicked item in the MasterListFragment's RecyclerView
@@ -260,6 +262,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public File getDatabaseFile() {
+        String backupDBPath = UserDatabase.getDatabase(this).getOpenHelper().getWritableDatabase().getPath();
+        File dbPath = new File(backupDBPath) ;
+        if (dbPath.exists()) {
+            Log.d("UserRepository", "File created successfully.") ;
+        }
+        return dbPath ;
+    }
+
         public void uploadWithTransferUtility() {
             String KEY = "AKIAJ3FQCHRW5PELY2RA";
             String SECRET = "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";
@@ -269,12 +280,12 @@ public class MainActivity extends AppCompatActivity
 
             TransferUtility transferUtility =
                     TransferUtility.builder()
-                            .context(getApplicationContext())
+                             .context(getApplicationContext())
                             .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
                             .s3Client(client)
                             .build();
 
-            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+            File databaseFile = getDatabaseFile();
 
             TransferObserver uploadObserver =
                     transferUtility.upload(
@@ -313,20 +324,20 @@ public class MainActivity extends AppCompatActivity
                 Log.d("YourMainActivity", "Uploaded a file!");
             }
 
-            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
-            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+//            Log.d("YourMainActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+//            Log.d("YourMainActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
         }
 
         private void downloadWithTransferUtility () {
 
             TransferUtility transferUtility =
                     TransferUtility.builder()
-                            .context(getApplicationContext())
+                            //.context(getApplicationContext())
                             .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
                             .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
                             .build();
 
-            File databaseFile = UserRepository.getDatabaseFile(getApplicationContext());
+            File databaseFile = getDatabaseFile();
 
             TransferObserver downloadObserver =
                     transferUtility.download(
@@ -368,4 +379,6 @@ public class MainActivity extends AppCompatActivity
             Log.d("YourActivity", "Bytes Total: " + downloadObserver.getBytesTotal());
 
         }
+
+
 }

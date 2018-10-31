@@ -33,7 +33,6 @@ public class EditUserDetailsFragment extends Fragment
     private ImageButton mBtSubmit ;
     private Button mBtPicture;
     private String mFirstName, mLastName;
-    private ImageView mIvPic;
     private UserViewModel mUserViewModel;
     private OnDataPass dataPasser;
     private String[] countryOptions = new String[8];
@@ -187,9 +186,13 @@ public class EditUserDetailsFragment extends Fragment
         //Collect input data (other data was input to the bundle through spinners)
         mFirstName = mEtFirstName.getText().toString();
         mLastName = mEtLastName.getText().toString();
-//        mUserViewModel.getUser().getValue().setFirstName(mFirstName);
-//        mUserViewModel.getUser().getValue().setLastName(mLastName);
 
+        //add a null user check in case rotated during load?
+        if(mUserViewModel.getUser().getValue() != null) {
+            mUserViewModel.getUser().getValue().setFirstName(mFirstName);
+            mUserViewModel.getUser().getValue().setLastName(mLastName);
+        }
+        
         //Save the view hierarchy
         super.onSaveInstanceState(outState);
     }
