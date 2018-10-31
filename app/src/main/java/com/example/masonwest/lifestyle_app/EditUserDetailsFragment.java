@@ -220,8 +220,7 @@ public class EditUserDetailsFragment extends Fragment
         if (mUserViewModel.getUser().getValue().getCity() != null) {
             int index = 0;
             for (int i = 0; i < cityOptions.length; i++) {
-                if (cityOptions[i].equa
-                ls(mUserViewModel.getUser().getValue().getCity())) {
+                if (cityOptions[i].equals(mUserViewModel.getUser().getValue().getCity())) {
                     index = i;
                     continue;
                 }
