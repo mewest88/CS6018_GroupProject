@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity
 
         if (mUserViewModel.getUser().getValue() == null) {
             User newUser = new User(0);
+            // Adds the new user to the database
             mUserViewModel.insert(newUser);
+            // Adds the new user to the live data in the repository
             mUserViewModel.setUser(newUser);
         }
 
@@ -66,7 +68,8 @@ public class MainActivity extends AppCompatActivity
         task.execute();
 
         int numUsersInDB = 0;
-
+        /* Counts the number of users saved in the database. This will be used to allow switching
+           between users in the future */
         try {
             numUsersInDB = (int) task.get();
         } catch (ExecutionException e) {
@@ -78,7 +81,6 @@ public class MainActivity extends AppCompatActivity
         if (numUsersInDB > 0) {
             userExists = true;
         }
-
         if (savedInstanceState == null) {
             isEditUser = true;
         } else {
@@ -89,7 +91,11 @@ public class MainActivity extends AppCompatActivity
         uploadWithTransferUtility();
     }
 
-    //This receives the position of the clicked item in the MasterListFragment's RecyclerView
+    /**
+     * This receives the position of the clicked item in the MasterListFragment's RecyclerView
+     * This Creates the new fragment for the new view the user expects to see
+     * @param position
+     */
     @Override
     public void passData(int position) {
         Bundle positionBundle = new Bundle();

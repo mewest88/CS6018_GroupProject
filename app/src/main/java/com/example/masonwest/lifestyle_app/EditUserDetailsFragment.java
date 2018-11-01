@@ -24,6 +24,10 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This class is used as the main screen to initially enter and then change the users details
+ * This class collects: Name, Age, Height, Weight, City, Country, Profile Picture, Sex
+ */
 public class EditUserDetailsFragment extends Fragment
                                     implements View.OnClickListener {
 
@@ -157,11 +161,13 @@ public class EditUserDetailsFragment extends Fragment
                     Toast.makeText(getActivity(), "Please use the button to take a picture!", Toast.LENGTH_SHORT).show();
                 } else {
                     //Start an activity and pass the EditText string to it.
-                    double bmi = User.calculateBMI(mUserViewModel.getUser().getValue().getWeightLBS(), mUserViewModel.getUser().getValue().getHeightInches());
+                    double bmi = User.calculateBMI(mUserViewModel.getUser().getValue().getWeightLBS(),
+                            mUserViewModel.getUser().getValue().getHeightInches());
                     mUserViewModel.getUser().getValue().setBMI(bmi);
                     mUserViewModel.getUser().getValue().setFirstName(mFirstName);
                     mUserViewModel.getUser().getValue().setLastName(mLastName);
                     mUserViewModel.getUser().getValue().setFullName(mFirstName, mLastName);
+                    // Saves the updated user information to the database with an update call imbedded in the dumpInDB()
                     mUserViewModel.dumpInDB(mUserViewModel.getUser().getValue());
                     passData();
                 }

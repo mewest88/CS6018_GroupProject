@@ -57,15 +57,17 @@ public class UserRepository extends AppCompatActivity {
         loadData();
     }
 
+    // set the user in the mutable live data
     public void setUser(User user) {
         mUser.setValue(user);
     }
 
+    // inserts the user in the database
     public void insert(User user) {
         new insertAsyncTask(mUserDao).execute(user);
     }
 
-    // AsyncTask class
+    // AsyncTask class used to insert in DB on seperate thread
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private UserDao mAsyncTaskDao;
@@ -81,10 +83,12 @@ public class UserRepository extends AppCompatActivity {
         }
     }
 
+    // Updates a user in the db
     public void update(User user) {
         new updateAsyncTask(mUserDao, mUser).execute(user);
     }
 
+    // AsyncTask class used to update user in DB on seperate thread
     private static class updateAsyncTask extends AsyncTask<User, Void, User>{
         private UserDao mAsyncTaskDao;
         private MutableLiveData<User> mProfileData;
@@ -108,6 +112,7 @@ public class UserRepository extends AppCompatActivity {
         }
     }
 
+    // gets the user for the view model
     public MutableLiveData<User> getUser() {
         loadData();
         return mUser;
@@ -170,6 +175,7 @@ public class UserRepository extends AppCompatActivity {
         return jsonData;
     }
 
+    //load the weather data from the open weather api
     private void loadData() {
         new AsyncTask<String,Void,String>() {
             @Override

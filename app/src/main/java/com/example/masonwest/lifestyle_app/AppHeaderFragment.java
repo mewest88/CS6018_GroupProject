@@ -17,6 +17,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Header on the screen when the Master List is up. Shows the user name and profile picture
+ */
 public class AppHeaderFragment extends Fragment implements View.OnClickListener{
 
     // Member Variables

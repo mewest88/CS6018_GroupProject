@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * Fragment to show the BMI information of the user
+ */
 public class BmiFragment extends Fragment {
 
     private TextView mTvBMIData;
-//    private User currentUser;
     private UserViewModel mUserViewModel;
 
     public BmiFragment() {
@@ -30,6 +32,7 @@ public class BmiFragment extends Fragment {
             if(user!=null) {
                 //what to do if user changes?
                 User temp = user;
+                // Gets the BMI of the updated user
                 double bmiValue = temp.getBMI();
                 String bmiValueString = Double.toString(bmiValue);
 
