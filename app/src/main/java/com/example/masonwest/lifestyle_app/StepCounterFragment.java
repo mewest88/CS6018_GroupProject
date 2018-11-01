@@ -26,10 +26,10 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     private int mNumSteps;
     private Sensor mLinearAccelerometer;
     private MediaPlayer mPlayer;
-    long lastTime;
-    double last_x;
-    double last_y;
-    double last_z;
+    long mLastTime;
+    double mLast_x;
+    double mLast_y;
+    double mLast_z;
 
     private User mCurrentUser;
 
@@ -80,10 +80,10 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 //        mTvStepData.setText("" + mNumSteps);
 
         if(savedInstanceState != null) {
-            last_x = savedInstanceState.getDouble("x");
-            last_y = savedInstanceState.getDouble("y");
-            last_z = savedInstanceState.getDouble("z");
-            lastTime = savedInstanceState.getLong("time");
+            mLast_x = savedInstanceState.getDouble("x");
+            mLast_y = savedInstanceState.getDouble("y");
+            mLast_z = savedInstanceState.getDouble("z");
+            mLastTime = savedInstanceState.getLong("time");
 //            mNumSteps = savedInstanceState.getInt("steps");
 //            mTvStepData.setText("" + mNumSteps);
         }
@@ -110,12 +110,12 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
             final int SHAKE_THRESHOLD = 3;
 
             long currentTime = System.currentTimeMillis();
-            long dTime = currentTime - lastTime;
+            long dTime = currentTime - mLastTime;
 
             if (dTime > 100) {
-                lastTime = currentTime;
-                double startShake = Math.abs(last_x - now_x);
-                double stopShake = Math.abs(last_y - now_y);
+                mLastTime = currentTime;
+                double startShake = Math.abs(mLast_x - now_x);
+                double stopShake = Math.abs(mLast_y - now_y);
 
                 if (startShake > SHAKE_THRESHOLD) {
                     if(!mPlayer.isPlaying()) {
@@ -126,13 +126,14 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
                     if(mPlayer.isPlaying()) {
                         mPlayer.pause();
                         mPlayer.seekTo(0);
+                        mUserViewModel.update(mUserViewModel.getUser().getValue());
                         mSensorManager.unregisterListener(StepCounterFragment.this);
                     }
                 }
             }
-            last_x = now_x;
-            last_y = now_y;
-            last_z = now_z;
+            mLast_x = now_x;
+            mLast_y = now_y;
+            mLast_z = now_z;
         }
 
         @Override
@@ -145,6 +146,10 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    /**
+     * Gets the x, y, and z coords from the accelerometer and calls the updateAccel method
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -153,6 +158,11 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
         }
     }
 
+    /**
+     * Changes the text view to show each new step
+     * Sets the new step in the User in the Repository
+     * @param timeNs
+     */
     @Override
     public void step(long timeNs) {
         mNumSteps++;
@@ -178,10 +188,10 @@ public class StepCounterFragment extends Fragment implements SensorEventListener
 
     @Override
     public void onSaveInstanceState(Bundle outstate) {
-        outstate.putDouble("x", last_x);
-        outstate.putDouble("y", last_y);
-        outstate.putDouble("z", last_z);
-        outstate.putLong("time", lastTime);
+        outstate.putDouble("x", mLast_x);
+        outstate.putDouble("y", mLast_y);
+        outstate.putDouble("z", mLast_z);
+        outstate.putLong("time", mLastTime);
         outstate.putInt("steps", mNumSteps);
         mPlayer.stop();
         mPlayer.release();
